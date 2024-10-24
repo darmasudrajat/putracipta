@@ -1,0 +1,210 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Memo' %}
+
+{% block body %}
+    <div class="memo">
+        <div class="header">
+            <h1 class="title">PT. Putracipta Karindomas</h1>
+            <h3 class="title">Kawasan Industri Millenium</h3>
+            <h3 class="title">Jl. Millenium 15A Blok I2 no. 5, Tangerang</h3>
+            <br />
+            <h2 class="title">PURCHASE ORDER KERTAS</h2>
+        </div>
+        
+        <br /><hr />
+        
+        <div class="note">
+            <div class="table full">
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label">Vendor</div>
+                            <div class="cell value">{{ purchaseOrderPaperHeader.supplier.company|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label"></div>
+                            <div class="cell value">{{ purchaseOrderPaperHeader.supplier.address|default|nl2br }}</div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="cell label">Ship to</div>
+                            <div class="cell value">PT. Putracipta Karindomas</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label"></div>
+                            <div class="cell value">Kawasan Industri Millenium</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label"></div>
+                            <div class="cell value">Jl. Millenium 15A Blok I2 no. 5, Tangerang</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label">PO #</div>
+                            <div class="cell value">{{ purchaseOrderPaperHeader.codeNumber|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Tanggal PO</div>
+                            <div class="cell value">{{ purchaseOrderPaperHeader.transactionDate|default ? purchaseOrderPaperHeader.transactionDate|date('d M Y') }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Currency</div>
+                            <div class="cell value">{{ purchaseOrderPaperHeader.supplier.currency.code|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Term of PO</div>
+                            <div class="cell value">{{ purchaseOrderPaperHeader.supplier.paymentTerm|default }} hari (dari tanggal tanda terima faktur)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <br />
+        
+        <table class="detail">
+            <thead>
+                <tr>
+                    <th class="center">Item code</th>
+                    <th class="center">Description</th>
+                    <th class="center">Tgl kirim</th>
+                    <th class="center">Qty</th>
+                    <th class="center">Unit</th>
+                    <th class="center">Price</th>
+                    <th class="center">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set rowspan = 25 %}
+                {% for row in purchaseOrderPaperHeader.purchaseOrderPaperDetails|filter(purchaseOrderPaperDetail => not purchaseOrderPaperDetail.isCanceled and purchaseOrderPaperDetail.quantity > 0)|batch(rowspan, '') %}
+                    {% for purchaseOrderPaperDetail in row %}
+                        <tr>
+                            {% if purchaseOrderPaperDetail %}
+                                <td class="left">{{ purchaseOrderPaperDetail.paper.codeNumber|default }}</td>
+                                <td class="left">{{ purchaseOrderPaperDetail.paper.name|default }}</td>
+                                <td class="left">{{ purchaseOrderPaperDetail.deliveryDate|default ? purchaseOrderPaperDetail.deliveryDate|date('d M Y') }}</td>
+                                <td class="center">{{ purchaseOrderPaperDetail.quantity|default|number_format(2) }}</td>
+                                <td class="left">{{ purchaseOrderPaperDetail.unit.name|default }}</td>
+                                <td class="right">{{ purchaseOrderPaperDetail.unitPriceBeforeTax|default|number_format(2) }}</td>
+                                <td class="right">{{ purchaseOrderPaperDetail.total|default|number_format(2) }}</td>
+                            {% else %}
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" class="label right">Sub Total</td>
+                    <td class="right">{{ purchaseOrderPaperHeader.subTotal|default|number_format(0) }}</td>
+                </tr>
+                {% if purchaseOrderPaperHeader.discountNominal > 0.00 %}
+                    <tr>
+                        <td colspan="6" class="label right">
+                            Diskon
+                            {% if purchaseOrderPaperHeader.discountValueType == constant('DISCOUNT_VALUE_TYPE_PERCENTAGE', purchaseOrderPaperHeader) %}
+                                {{ purchaseOrderPaperHeader.discountValue|default }}%
+                            {% endif %}
+                        </td>
+                        <td class="right">{{ purchaseOrderPaperHeader.discountNominal|default|number_format(0) }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td colspan="6" class="label right">
+                        {% if purchaseOrderPaperHeader.taxMode == constant('TAX_MODE_NON_TAX', purchaseOrderPaperHeader) %}
+                            Non PPn 0%
+                        {% elseif purchaseOrderPaperHeader.taxMode == constant('TAX_MODE_TAX_EXCLUSION', purchaseOrderPaperHeader) %}
+                            PPn {{ purchaseOrderPaperHeader.taxPercentage }}%
+                        {% elseif purchaseOrderPaperHeader.taxMode == constant('TAX_MODE_TAX_INCLUSION', purchaseOrderPaperHeader) %}
+                            PPn {{ purchaseOrderPaperHeader.taxPercentage }}%
+                        {% endif %}
+                    </td>
+                    <td class="right">{{ purchaseOrderPaperHeader.taxNominal|default|number_format(0) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="label right">Grand Total</td>
+                    <td class="right">{{ purchaseOrderPaperHeader.grandTotal|default|number_format(0) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="7">Terbilang: {{ purchaseOrderPaperHeader.grandTotal|default|number_format(0, '.', '')|say|capitalize }} rupiah.</td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <br />
+        
+        <div class="note">
+            <div class="table">
+                <div class="cell label">Catatan:</div>
+                <div class="cell">&nbsp;&nbsp;</div>
+                <div class="cell">{{ purchaseOrderPaperHeader.note|default }}</div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <table class="detail">
+                <tr>
+                    <td class="cell label">PENERBITAN FAKTUR PAJAK</td>
+                    <td>PERHATIAN:</td>
+                </tr>
+                <tr>
+                    <td>PT. Putracipta Karindomas</td>
+                    <td>1. Pada waktu penagihan, PO ini harus dilampirkan</td>
+                </tr>
+                <tr>
+                    <td>01.539.872.0-452.001</td>
+                    <td>2. Barang-barang yang rusak-susut atau tidak memenuhi yang tidak ditentukan, tidak dibayar</td>
+                </tr>
+                <tr>
+                    <td>Kawasan Industri Millenium</td>
+                    <td>3. Pengiriman barang lebih dari yang ditentukan akan ditolak</td>
+                </tr>
+                <tr>
+                    <td>Jl. Millenium 15A Blok I2 no. 5, Tangerang</td>
+                    <td>4. PO ini tidak membutuhkan tanda tangan.</td>
+                </tr>
+            </table>
+        </div>
+        
+        <br />
+        
+        <div class="signature">
+            <div class="table full">
+                <div class="cell sig">
+                    <div>PO created by: {{ purchaseOrderPaperHeader.createdTransactionUser.name|default }}</div>
+                    <div>&nbsp;&nbsp;</div>
+                    <div><img id="signature" width="128px" alt="Signature Image" src="{{ asset('images/purchasing.jpg') }}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('memo') }}
+    <style>
+        .col:nth-child(1) { width: 50% }
+        .col:nth-child(2) { width: 50% }
+        
+        .col:nth-child(1) .label { width: 35% }
+        .col:nth-child(1) .value { width: 65% }
+        .col:nth-child(2) .label { width: 35% }
+        .col:nth-child(2) .value { width: 65% }
+        
+        .sig:nth-child(1) { width: 50% }
+        .sig:nth-child(2) { width: 50% }
+    </style>
+{% endblock %}

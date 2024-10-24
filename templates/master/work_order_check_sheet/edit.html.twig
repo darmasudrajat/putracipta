@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Work Order Check Sheet' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_work_order_check_sheet_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_master_work_order_check_sheet_show', {'id': workOrderCheckSheet.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/work_order_check_sheet/_form.html.twig') }}
+{% endblock %}

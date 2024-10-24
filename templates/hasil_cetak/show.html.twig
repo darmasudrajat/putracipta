@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}HasilCetak{% endblock %}
+
+{% block body %}
+    <h1>HasilCetak</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ hasil_cetak.id }}</td>
+            </tr>
+            <tr>
+                <th>Nomo</th>
+                <td>{{ hasil_cetak.nomo }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ hasil_cetak.tanggal ? hasil_cetak.tanggal|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Operator</th>
+                <td>{{ hasil_cetak.operator }}</td>
+            </tr>
+            <tr>
+                <th>Good</th>
+                <td>{{ hasil_cetak.good }}</td>
+            </tr>
+            <tr>
+                <th>Ng</th>
+                <td>{{ hasil_cetak.ng }}</td>
+            </tr>
+            <tr>
+                <th>Mesin</th>
+                <td>{{ hasil_cetak.mesin }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_hasil_cetak_index') }}">back to list</a>
+
+    <a href="{{ path('app_hasil_cetak_edit', {'id': hasil_cetak.id}) }}">edit</a>
+
+    {{ include('hasil_cetak/_delete_form.html.twig') }}
+{% endblock %}

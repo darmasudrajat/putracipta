@@ -1,0 +1,185 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Report Lists' %}
+
+{% block content %}
+    <div class="row">
+        {% if user_menu.authorized('MENU_REPORT_PURCHASE') %}
+            <div class="col">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table-info">
+                            <th>Pembelian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_PURCHASE_ORDER_MATERIAL'].route) }}" class="d-block text-start btn btn-light">Pembelian Material</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_PURCHASE_ORDER_PAPER'].route) }}" class="d-block text-start btn btn-light">Pembelian Kertas</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+        {% if user_menu.authorized('MENU_REPORT_SALE') %}
+            <div class="col"> 
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table-info">
+                            <th class="w-50">Penjualan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_SALE_ORDER'].route) }}" class="d-block text-start btn btn-light">PO Customer</a></td>
+                        </tr>   
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+        {% if user_menu.authorized('MENU_REPORT_WAREHOUSE_FINISHED_GOODS') %}
+            <div class="col">  
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table-info">
+                            <th>Gudang Barang Jadi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_SALE_DELIVERY'].route) }}" class="d-block text-start btn btn-light">Pengiriman</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_SALE_RETURN'].route) }}" class="d-block text-start btn btn-light">Retur Penjualan</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_PRODUCTION_RECEIVE'].route) }}" class="d-block text-start btn btn-light">Penerimaan Produksi</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_INVENTORY_STOCK_FINISHED_GOODS'].route) }}" class="d-block text-start btn btn-light">Stok Gudang Finished Goods</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+         
+    <div class="row">
+        {% if user_menu.authorized('MENU_REPORT_PRODUCTION') %}
+            <div class="col"> 
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table-info">
+                            <th class="w-50">Produksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_NEW_PRODUCT'].route) }}" class="d-block text-start btn btn-light">Formulir Produk Baru</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_DEVELOPMENT_PRODUCT'].route) }}" class="d-block text-start btn btn-light">Development Produk</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_MASTER_ORDER'].route) }}" class="d-block text-start btn btn-light">Master Order</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_QUALITY_CONTROL_SORTING'].route) }}" class="d-block text-start btn btn-light">QC Sortir</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_MATERIAL_REQUEST'].route) }}" class="d-block text-start btn btn-light">Permintaan Produksi</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_DESIGN_CODE'].route) }}" class="d-block text-start btn btn-light">Design Code</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_DIECUT_KNIFE'].route) }}" class="d-block text-start btn btn-light">Pisau Diecut</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_DIELINE_MILLAR'].route) }}" class="d-block text-start btn btn-light">Millar</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+        {% if user_menu.authorized('MENU_REPORT_FINANCE') %}
+            <div class="col"> 
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table-info">
+                            <th class="w-50">Accounting Finance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_ACCOUNT_RECEIVABLE'].route) }}" class="d-block text-start btn btn-light">Piutang Customer</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_ACCOUNT_PAYABLE'].route) }}" class="d-block text-start btn btn-light">Hutang Supplier</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_SALE_INVOICE'].route) }}" class="d-block text-start btn btn-light">Invoice Penjualan</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_SALE_PAYMENT'].route) }}" class="d-block text-start btn btn-light">Pelunasan Penjualan</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_PURCHASE_INVOICE'].route) }}" class="d-block text-start btn btn-light">Invoice Pembelian</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_PURCHASE_PAYMENT'].route) }}" class="d-block text-start btn btn-light">Pembayaran Pembelian</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_DEPOSIT'].route) }}" class="d-block text-start btn btn-light">Penerimaan Kas/Bank</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_EXPENSE'].route) }}" class="d-block text-start btn btn-light">Pengeluaran Kas/Bank</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+        {% if user_menu.authorized('MENU_REPORT_WAREHOUSE_MATERIAL') %}
+            <div class="col">  
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table-info">
+                            <th>Gudang Material</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_PURCHASE_REQUEST_MATERIAL'].route) }}" class="d-block text-start btn btn-light">Permintaan Pembelian Material</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_PURCHASE_REQUEST_PAPER'].route) }}" class="d-block text-start btn btn-light">Permintaan Pembelian Kertas</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_PURCHASE_RECEIVE'].route) }}" class="d-block text-start btn btn-light">Penerimaan Pembelian</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_PURCHASE_RETURN'].route) }}" class="d-block text-start btn btn-light">Retur Pembelian</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_ADJUSTMENT_STOCK'].route) }}" class="d-block text-start btn btn-light">Penyesuaian Stok</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_MATERIAL_RELEASE'].route) }}" class="d-block text-start btn btn-light">Pengeluaran Material</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_STOCK_TRANSFER'].route) }}" class="d-block text-start btn btn-light">Transfer Antar Gudang</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_INVENTORY_STOCK_MATERIAL'].route) }}" class="d-block text-start btn btn-light">Stok Gudang Material</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_REPORT_INVENTORY_STOCK_PAPER'].route) }}" class="d-block text-start btn btn-light">Stok Gudang Kertas</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

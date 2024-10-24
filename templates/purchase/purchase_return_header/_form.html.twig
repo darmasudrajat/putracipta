@@ -1,0 +1,107 @@
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id'}|json_encode }}"
+     data-json-loader-url-value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}"
+     data-json-loader-form-target-value="{{ "form[name=#{form.vars.name}]" }}">
+
+    {{ form_start(form) }}
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Header</legend>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.transactionDate, {'label': 'Tanggal Retur', 'attr': {'data-controller': 'flatpickr-element', 'class': 'readonly-form-input', 'data-flatpickr-element-options-value': {'dateFormat': 'j M Y'}|json_encode}}) }}
+                    {{ form_row(form.warehouse, {'label': 'Gudang'}) }}
+                    {{ form_row(form.isProductExchange, {'label': 'Tukar Guling'}) }}
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="{{ form.receiveHeader.vars.id }}-text" class="form-label">Penerimaan #</label>
+                        {{ form_row(form.receiveHeader, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'receive-header-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].receiveHeaderId'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        <input type="text" id="{{ form.receiveHeader.vars.id }}-text" class="form-control readonly-form-input {% if not form.receiveHeader.vars.valid %}is-invalid{% endif %}" value="{{ purchaseReturnHeader.receiveHeader.codeNumber|default }}" readonly="readonly"
+                               {% if purchaseReturnHeader.id == null %}data-bs-toggle="modal" data-bs-target="#receive-header-dialog"{% endif %}
+                               data-controller="dom-element"
+                               data-action="receive-header-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].receiveHeaderCodeNumber'}},
+                               ]|json_encode }}" />
+                        {{ form_errors(form.receiveHeader) }}
+                    </div>
+                    {#<div class="mb-3">
+                        <label class="form-label">PO #</label>
+                        <input type="text" class="form-control" value="{{ purchaseReturnHeader.receiveHeader.purchaseOrderHeader is null ? purchaseReturnHeader.receiveHeader.purchaseOrderPaperHeader.codeNumber|default : purchaseReturnHeader.receiveHeader.purchaseOrderHeader.codeNumber|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="receive-header-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].purchaseOrderHeaderCodeNumber'}},
+                               ]|json_encode }}" />
+                    </div>#}
+                    <div class="mb-3">
+                        <label class="form-label">Supplier</label>
+                        <input type="text" class="form-control" value="{{ purchaseReturnHeader.supplier.company|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="receive-header-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].supplierCompany'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">SJ #</label>
+                        <input type="text" class="form-control" value="{{ purchaseReturnHeader.receiveHeader.supplierDeliveryCodeNumber|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="receive-header-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].supplierDeliveryCodeNumber'}},
+                               ]|json_encode }}" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.note) }}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Details</legend>
+            {{ include('purchase/purchase_return_header/_details_form.html.twig') }}
+        </fieldset>
+
+        <div class="d-grid">
+            <div class="row">
+                <div class="col text-center">
+                    <a class="btn btn-danger" href="{{ path('app_purchase_purchase_return_header_index') }}"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                        Cancel
+                    </a>
+                    <button class="btn btn-success"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                        Save
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+        </div>
+    {{ form_end(form) }}
+
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('receive-header-dialog', 'Receive List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_receive_header__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+</div>

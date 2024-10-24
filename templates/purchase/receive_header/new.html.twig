@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'New Receive' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_purchase_receive_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('purchase/receive_header/_form.html.twig') }}
+{% endblock %}

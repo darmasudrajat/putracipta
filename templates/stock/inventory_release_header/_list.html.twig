@@ -1,0 +1,94 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, inventoryReleaseHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button" {{ grid.sort_link_item(form, 'codeNumberOrdinal') }}>
+                    Pengeluaran # {{ grid.sort_char(form.sort.codeNumberOrdinal.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 350px" {{ grid.sort_link_item(form, 'inventoryReleaseItemList') }}>
+                    Item {{ grid.sort_char(form.sort.inventoryReleaseItemList.vars.value) }}
+                </th>
+                <th style="min-width: 350px">WO #</th>
+                <th style="min-width: 350px">Keterangan</th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'releaseMode') }}>
+                    Jenis {{ grid.sort_char(form.sort.releaseMode.vars.value) }}
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberOrdinal') }} value="{{ form.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Stock\\InventoryRequestHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\StockHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberYear') }} value="{{ form.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'inventoryReleaseItemList') }} value="{{ form.filter.inventoryReleaseItemList.1.vars.value }}" />
+                </th>
+                <th></th>
+                <th></th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'releaseMode') }}>
+                        <option value="" {% if form.filter.releaseMode.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.releaseMode.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.releaseMode.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inventoryReleaseHeader in inventoryReleaseHeaders %}
+                {% set currentInventoryReleaseHeader = inventoryReleaseHeaderData[inventoryReleaseHeader.id]|default(inventoryReleaseHeader) %}
+                {% set inventoryReleasePaperDetails = currentInventoryReleaseHeader.inventoryReleasePaperDetails %}
+                {% set inventoryReleaseMaterialDetails = currentInventoryReleaseHeader.inventoryReleaseMaterialDetails %}
+                <tr>
+                    <td>{{ inventoryReleaseHeader.codeNumber }}</td>
+                    <td>{{ inventoryReleaseHeader.transactionDate ? inventoryReleaseHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ inventoryReleaseHeader.inventoryReleaseItemList|default }}</td>
+                    <td>{{ inventoryReleasePaperDetails|map(inventoryReleasePaperDetail => inventoryReleasePaperDetail.inventoryRequestPaperDetail.masterOrderHeader.codeNumber|default)|reduce((a, b) => b in a ? a : a|merge([b]), [])|join(', ') }}</td>
+                    <td>
+                        {% if (inventoryReleaseHeader.releaseMode == 'paper') %}
+                            {{ inventoryReleasePaperDetails|map(inventoryReleasePaperDetail => inventoryReleasePaperDetail.memo)|reduce((a, b) => b in a ? a : a|merge([b]), [])|join(', ') }}
+                        {% else %}
+                            {{ inventoryReleaseMaterialDetails|map(inventoryReleaseMaterialDetail => inventoryReleaseMaterialDetail.memo)|reduce((a, b) => b in a ? a : a|merge([b]), [])|join(', ') }}
+                        {%  endif %}
+                    </td>
+                    <td>{{ inventoryReleaseHeader.releaseMode|default }}</td>
+                    <td>
+                        {% if is_granted('ROLE_MATERIAL_RELEASE_VIEW') or is_granted('ROLE_MATERIAL_RELEASE_EDIT') or is_granted('ROLE_MATERIAL_RELEASE_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_stock_inventory_release_header_show', {'id': inventoryReleaseHeader.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_MATERIAL_RELEASE_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_stock_inventory_release_header_edit', {'id': inventoryReleaseHeader.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, inventoryReleaseHeaders) }}

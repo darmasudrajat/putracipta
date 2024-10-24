@@ -1,0 +1,34 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Transportation' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_transportation_index') }}">Manage</a>
+    {% if is_granted('ROLE_TRANSPORTATION_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_master_transportation_edit', {'id': transportation.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_TRANSPORTATION_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_master_transportation_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{ transportation.name }}</td>
+            </tr>
+            <tr>
+                <th>Plate Number</th>
+                <td>{{ transportation.plateNumber }}</td>
+            </tr>
+            <tr>
+                <th>Is Inactive</th>
+                <td>{{ transportation.isInactive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {#{{ include('master/transportation/_delete_form.html.twig') }}#}
+{% endblock %}

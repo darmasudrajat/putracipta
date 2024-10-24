@@ -1,0 +1,103 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Product' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_product_index') }}">Manage</a>
+    {% if is_granted('ROLE_PRODUCT_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_master_product_edit', {'id': product.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_PRODUCT_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_master_product_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Customer</th>
+                <td>{{ product.customer.company|default }}</td>
+            </tr>
+            <tr>
+                <th>Code</th>
+                <td>{{ product.code }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ product.name }}</td>
+            </tr>
+            <tr>
+                <th>Panjang (mm)</th>
+                <td>{{ product.length }}</td>
+            </tr>
+            <tr>
+                <th>Lebar (mm)</th>
+                <td>{{ product.width }}</td>
+            </tr>
+            <tr>
+                <th>Tinggi (mm)</th>
+                <td>{{ product.height }}</td>
+            </tr>
+            <tr>
+                <th>Berat (gr)</th>
+                <td>{{ product.weight }}</td>
+            </tr>
+            <tr>
+                <th>Satuan</th>
+                <td>{{ product.unit.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Material Kertas</th>
+                <td>{{ product.material|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ product.note }}</td>
+            </tr>
+            <tr>
+                <th>Inactive</th>
+                <td>{{ product.isInactive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="text-center">
+        <h4>Layout</h4>
+        {% if product.fileExtension == 'pdf' %}
+            <a target="_blank" href="{{ asset('uploads/product/' ~ product.id ~ '.' ~ product.fileExtension) }}">Layout PDF File</a>
+        {% elseif product.fileExtension == 'jpg' or product.fileExtension == 'jpeg' or product.fileExtension == 'png' %}
+            <img width="256px" src="{{ asset('uploads/product/' ~ product.id ~ '.' ~ product.fileExtension) }}" alt="Product Image" />
+        {% endif %}
+    </div>
+
+    <hr />
+    
+    <legend class="float-none w-auto text-dark px-1">Design Code List</legend>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class='text-center bg-info'>Code</th>
+                <th class='text-center bg-info'>Name</th>
+                <th class='text-center bg-info'>Warna</th>
+                <th class='text-center bg-info'>Pantone</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for designCodeProductDetail in product.designCodeProductDetails %}
+                {% if (designCodeProductDetail.isInactive == false and designCodeProductDetail.designCode.status == 'fa') %}
+                    <tr>
+                        <td>
+                            <a target="_blank" href="{{ path('app_master_design_code_show', {'id': designCodeProductDetail.designCode.id}) }}">{{ designCodeProductDetail.designCode.codeNumber|default }}</a>
+                        </td>
+                        <td>{{ designCodeProductDetail.designCode.name|default }}</td>
+                        <td>{{ designCodeProductDetail.designCode.color|default }}</td>
+                        <td>{{ designCodeProductDetail.designCode.pantone|default }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {#{{ include('master/product/_delete_form.html.twig') }}#}
+{% endblock %}

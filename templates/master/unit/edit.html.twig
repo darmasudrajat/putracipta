@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Unit' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_unit_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_master_unit_show', {'id': unit.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/unit/_form.html.twig') }}
+{% endblock %}

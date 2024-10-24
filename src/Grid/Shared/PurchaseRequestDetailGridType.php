@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Grid\Shared;
+
+use App\Common\Data\Criteria\DataCriteria;
+use App\Common\Data\Operator\FilterContain;
+use App\Common\Data\Operator\FilterEqual;
+use App\Common\Data\Operator\FilterNotContain;
+use App\Common\Data\Operator\FilterNotEqual;
+use App\Common\Data\Operator\SortAscending;
+use App\Common\Data\Operator\SortDescending;
+use App\Common\Form\Type\FilterType;
+use App\Common\Form\Type\PaginationType;
+use App\Common\Form\Type\SortType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class PurchaseRequestDetailGridType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('filter', FilterType::class, [
+                'field_names' => ['quantity', 'usageDate', 'memo', 'material:name', 'unit:name'],
+                'field_label_list' => [
+                    'quantity' => 'Qty',
+                    'usageDate' => 'Tgl Pakai',
+                    'unit:name' => 'Satuan',
+                    'material:name' => 'Material',
+                ],
+                'field_operators_list' => [
+                    'quantity' => [FilterEqual::class, FilterNotEqual::class],
+                    'usageDate' => [FilterEqual::class, FilterNotEqual::class],
+                    'memo' => [FilterContain::class, FilterNotContain::class],
+                    'unit:name' => [FilterContain::class, FilterNotContain::class],
+                    'material:name' => [FilterContain::class, FilterNotContain::class],
+                ],
+            ])
+            ->add('sort', SortType::class, [
+                'field_names' => ['quantity', 'usageDate', 'memo', 'material:name', 'unit:name'],
+                'field_label_list' => [
+                    'name' => 'Nama',
+                    'code' => 'Code',
+                    'unit:name' => 'Category',
+                    'material:name' => 'Sub Category',
+                ],
+                'field_operators_list' => [
+                    'quantity' => [SortAscending::class, SortDescending::class],
+                    'usageDate' => [SortAscending::class, SortDescending::class],
+                    'memo' => [SortAscending::class, SortDescending::class],
+                    'unit:name' => [SortAscending::class, SortDescending::class],
+                    'material:name' => [SortAscending::class, SortDescending::class],
+                ],
+            ])
+            ->add('pagination', PaginationType::class, ['size_choices' => [10, 20, 50, 100]])
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => DataCriteria::class,
+            'csrf_protection' => false,
+        ]);
+    }
+}

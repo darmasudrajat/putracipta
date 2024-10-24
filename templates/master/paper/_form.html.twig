@@ -1,0 +1,90 @@
+{{ form_start(form) }}
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.materialSubCategory) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.type) }}
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.length) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.width) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.weight) }}
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.unit) }}
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label class="form-label">Metode Input Harga</label>
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group">
+                            {{ form_widget(form.pricingMode) }}
+                            {{ form_errors(form.pricingMode) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label class="form-label">Note</label>
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group">
+                            {{ form_widget(form.note) }}
+                            {{ form_errors(form.note) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="mb-3">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.isInactive) }}
+                        {{ form_errors(form.isInactive) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <div class="d-grid">
+        <div class="row">
+            <div class="col text-center">
+                <a class="btn btn-danger" href="{{ path('app_master_paper_index') }}"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                    Cancel
+                </a>
+                <button class="btn btn-success"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                    Save
+                </button>
+            </div>
+        </div>
+        <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+    </div>
+{{ form_end(form) }}

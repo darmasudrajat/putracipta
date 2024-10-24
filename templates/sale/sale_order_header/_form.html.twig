@@ -1,0 +1,249 @@
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id'}|json_encode }}"
+     data-json-loader-url-value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}"
+     data-json-loader-form-target-value="{{ "form[name=#{form.vars.name}]" }}">
+
+    {{ form_start(form) }}
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Header</legend>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.transactionType, {'label': 'Jenis Order'}) }}
+                    {{ form_row(form.transactionDate, {'label': 'Tanggal SO', 'attr': {'data-controller': 'flatpickr-element', 'class': 'readonly-form-input', 'data-flatpickr-element-options-value': {'dateFormat': 'j M Y'}|json_encode}}) }}
+                    {{ form_row(form.orderReceiveDate, {'label': 'Tanggal Terima PO', 'attr': {'data-controller': 'flatpickr-element', 'class': 'readonly-form-input', 'data-flatpickr-element-options-value': {'dateFormat': 'j M Y'}|json_encode}}) }}
+                    {{ form_row(form.referenceNumber, {'label': 'Customer PO #'}) }}
+                    {{ form_row(form.employee, {'label': 'Marketing'}) }}
+                    {{ form_row(form.transactionFile, {
+                        'label': transactionFileExists ? 'A File has been uploaded' : 'Upload File', 
+                        'label_attr': {
+                            'class': transactionFileExists ? 'text-danger fw-bold' : ''
+                        }
+                    }) }}
+                    {{ form_row(form.isUsingFscPaper, {'label': 'Using FSC Paper'}) }}
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="{{ form.customer.vars.id }}-text" class="form-label">Customer</label>
+                        {{ form_row(form.customer, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'customer-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.customerId'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        <input type="text" id="{{ form.customer.vars.id }}-text" class="form-control readonly-form-input {% if not form.customer.vars.valid %}is-invalid{% endif %}" value="{{ saleOrderHeader.customer.company|default }}" readonly="readonly"
+                               {% if saleOrderHeader.id == null %}data-bs-toggle="modal" data-bs-target="#customer-dialog"{% endif %}
+                               data-controller="dom-element"
+                               data-action="customer-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.customerCompany'}},
+                               ]|json_encode }}" />
+                        {{ form_errors(form.customer) }}
+                    </div>
+                    <div id="customer-delivery-address-1" class="d-none">{{ saleOrderHeader.customer.addressDelivery1|default }}</div>
+                    <div id="customer-delivery-address-2" class="d-none">{{ saleOrderHeader.customer.addressDelivery2|default }}</div>
+                    <div id="customer-delivery-address-3" class="d-none">{{ saleOrderHeader.customer.addressDelivery3|default }}</div>
+                    <div id="customer-delivery-address-4" class="d-none">{{ saleOrderHeader.customer.addressDelivery4|default }}</div>
+                    <div id="customer-delivery-address-5" class="d-none">{{ saleOrderHeader.customer.addressDelivery5|default }}</div>
+                    <div id="customer-delivery-address-6" class="d-none">{{ saleOrderHeader.customer.addressDelivery6|default }}</div>
+                    <div id="customer-delivery-address-7" class="d-none">{{ saleOrderHeader.customer.addressDelivery7|default }}</div>
+                    <div id="customer-delivery-address-8" class="d-none">{{ saleOrderHeader.customer.addressDelivery8|default }}</div>
+                    <div id="customer-delivery-address-9" class="d-none">{{ saleOrderHeader.customer.addressDelivery9|default }}</div>
+                    <div id="customer-delivery-address-10" class="d-none">{{ saleOrderHeader.customer.addressDelivery10|default }}</div>
+                    <div id="customer-delivery-address-11" class="d-none">{{ saleOrderHeader.customer.addressDelivery11|default }}</div>
+                    <div id="customer-delivery-address-12" class="d-none">{{ saleOrderHeader.customer.addressDelivery12|default }}</div>
+                    <div id="customer-delivery-address-13" class="d-none">{{ saleOrderHeader.customer.addressDelivery13|default }}</div>
+                    <div id="customer-delivery-address-14" class="d-none">{{ saleOrderHeader.customer.addressDelivery14|default }}</div>
+                    <div id="customer-delivery-address-15" class="d-none">{{ saleOrderHeader.customer.addressDelivery15|default }}</div>
+                    <div class="mb-3">
+                        <label class="form-label">Alamat Kirim</label>
+                        <select class="form-select"
+                                data-controller="dom-element"
+                                data-action="DOMContentLoaded@document->dom-element#bind customer-table:data-table:select@document->dom-element#bind change->dom-element#bind"
+                                data-dom-element-bind-specifications-param="{{ [
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': '""'}},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="0"></option>`'}},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="1"' ~ (saleOrderHeader.deliveryAddressOrdinal == 1 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-1").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-1").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="2"' ~ (saleOrderHeader.deliveryAddressOrdinal == 2 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-2").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-2").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="3"' ~ (saleOrderHeader.deliveryAddressOrdinal == 3 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-3").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-3").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="4"' ~ (saleOrderHeader.deliveryAddressOrdinal == 4 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-4").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-4").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="5"' ~ (saleOrderHeader.deliveryAddressOrdinal == 5 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-5").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-5").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="6"' ~ (saleOrderHeader.deliveryAddressOrdinal == 6 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-6").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-6").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="7"' ~ (saleOrderHeader.deliveryAddressOrdinal == 7 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-7").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-7").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="8"' ~ (saleOrderHeader.deliveryAddressOrdinal == 8 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-8").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-8").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="9"' ~ (saleOrderHeader.deliveryAddressOrdinal == 9 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-9").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-9").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="10"' ~ (saleOrderHeader.deliveryAddressOrdinal == 10 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-10").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-10").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="11"' ~ (saleOrderHeader.deliveryAddressOrdinal == 11 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-11").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-11").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="12"' ~ (saleOrderHeader.deliveryAddressOrdinal == 12 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-12").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-12").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="13"' ~ (saleOrderHeader.deliveryAddressOrdinal == 13 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-13").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-13").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="14"' ~ (saleOrderHeader.deliveryAddressOrdinal == 14 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-14").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-14").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="15"' ~ (saleOrderHeader.deliveryAddressOrdinal == 15 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-delivery-address-15").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-delivery-address-15").textContent !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': '""'}},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="0"></option>`'}},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="1">${$event.detail.addressDelivery1}</option>`'}, 'condition': '$event.detail.addressDelivery1 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="2">${$event.detail.addressDelivery2}</option>`'}, 'condition': '$event.detail.addressDelivery2 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="3">${$event.detail.addressDelivery3}</option>`'}, 'condition': '$event.detail.addressDelivery3 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="4">${$event.detail.addressDelivery4}</option>`'}, 'condition': '$event.detail.addressDelivery4 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="5">${$event.detail.addressDelivery5}</option>`'}, 'condition': '$event.detail.addressDelivery5 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="6">${$event.detail.addressDelivery6}</option>`'}, 'condition': '$event.detail.addressDelivery6 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="7">${$event.detail.addressDelivery7}</option>`'}, 'condition': '$event.detail.addressDelivery7 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="8">${$event.detail.addressDelivery8}</option>`'}, 'condition': '$event.detail.addressDelivery8 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="9">${$event.detail.addressDelivery9}</option>`'}, 'condition': '$event.detail.addressDelivery9 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="10">${$event.detail.addressDelivery10}</option>`'}, 'condition': '$event.detail.addressDelivery10 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="11">${$event.detail.addressDelivery11}</option>`'}, 'condition': '$event.detail.addressDelivery11 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="12">${$event.detail.addressDelivery12}</option>`'}, 'condition': '$event.detail.addressDelivery12 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="13">${$event.detail.addressDelivery13}</option>`'}, 'condition': '$event.detail.addressDelivery13 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="14">${$event.detail.addressDelivery14}</option>`'}, 'condition': '$event.detail.addressDelivery14 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="15">${$event.detail.addressDelivery15}</option>`'}, 'condition': '$event.detail.addressDelivery15 !== ""'},
+                                    {'eventTypes': ['change'], 'destinationsTarget': '#' ~ form.deliveryAddressOrdinal.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$element.value'}},
+                                ]|json_encode }}">
+                        </select>
+                        {{ form_row(form.deliveryAddressOrdinal, {'label': false, 'attr': {'class': 'd-none'}}) }}
+                    </div>
+                    <div id="customer-name-1" class="d-none">{{ saleOrderHeader.customer.name|default }}</div>
+                    <div id="customer-name-2" class="d-none">{{ saleOrderHeader.customer.name2|default }}</div>
+                    <div id="customer-name-3" class="d-none">{{ saleOrderHeader.customer.name3|default }}</div>
+                    <div id="customer-name-4" class="d-none">{{ saleOrderHeader.customer.name4|default }}</div>
+                    <div id="customer-name-5" class="d-none">{{ saleOrderHeader.customer.name5|default }}</div>
+                    <div id="customer-name-6" class="d-none">{{ saleOrderHeader.customer.name6|default }}</div>
+                    <div id="customer-name-7" class="d-none">{{ saleOrderHeader.customer.name7|default }}</div>
+                    <div id="customer-name-8" class="d-none">{{ saleOrderHeader.customer.name8|default }}</div>
+                    <div id="customer-name-9" class="d-none">{{ saleOrderHeader.customer.name9|default }}</div>
+                    <div id="customer-name-10" class="d-none">{{ saleOrderHeader.customer.name10|default }}</div>
+                    <div id="customer-name-11" class="d-none">{{ saleOrderHeader.customer.name11|default }}</div>
+                    <div id="customer-name-12" class="d-none">{{ saleOrderHeader.customer.name12|default }}</div>
+                    <div id="customer-name-13" class="d-none">{{ saleOrderHeader.customer.name13|default }}</div>
+                    <div id="customer-name-14" class="d-none">{{ saleOrderHeader.customer.name14|default }}</div>
+                    <div id="customer-name-15" class="d-none">{{ saleOrderHeader.customer.name15|default }}</div>
+                    <div class="mb-3">
+                        <label class="form-label">PIC</label>
+                        <select class="form-select"
+                                data-controller="dom-element"
+                                data-action="DOMContentLoaded@document->dom-element#bind customer-table:data-table:select@document->dom-element#bind change->dom-element#bind"
+                                data-dom-element-bind-specifications-param="{{ [
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': '""'}},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value=""></option>`'}},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-1").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-1").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-1").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-2").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name2 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-2").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-2").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-3").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name3 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-3").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-3").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-4").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name4 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-4").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-4").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-5").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name5 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-5").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-5").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-6").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name6 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-6").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-6").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-7").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name7 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-7").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-7").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-8").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name8 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-8").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-8").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-9").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name9 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-9").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-9").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-10").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name10 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-10").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-10").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-11").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name11 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-11").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-11").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-12").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name12 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-12").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-12").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-13").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name13 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-13").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-13").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-14").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name14 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-14").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-14").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${document.querySelector("#customer-name-15").textContent}"' ~ (saleOrderHeader.customer is not null and saleOrderHeader.customerName == saleOrderHeader.customer.name15 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-name-15").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-name-15").textContent !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': '""'}},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value=""></option>`'}},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name}">${$event.detail.name}</option>`'}, 'condition': '$event.detail.name !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name2}">${$event.detail.name2}</option>`'}, 'condition': '$event.detail.name2 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name3}">${$event.detail.name3}</option>`'}, 'condition': '$event.detail.name3 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name4}">${$event.detail.name4}</option>`'}, 'condition': '$event.detail.name4 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name5}">${$event.detail.name5}</option>`'}, 'condition': '$event.detail.name5 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name6}">${$event.detail.name6}</option>`'}, 'condition': '$event.detail.name6 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name7}">${$event.detail.name7}</option>`'}, 'condition': '$event.detail.name7 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name8}">${$event.detail.name8}</option>`'}, 'condition': '$event.detail.name8 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name9}">${$event.detail.name9}</option>`'}, 'condition': '$event.detail.name9 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name10}">${$event.detail.name10}</option>`'}, 'condition': '$event.detail.name10 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name11}">${$event.detail.name11}</option>`'}, 'condition': '$event.detail.name11 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name12}">${$event.detail.name12}</option>`'}, 'condition': '$event.detail.name12 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name13}">${$event.detail.name13}</option>`'}, 'condition': '$event.detail.name13 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name14}">${$event.detail.name14}</option>`'}, 'condition': '$event.detail.name14 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="${$event.detail.name15}">${$event.detail.name15}</option>`'}, 'condition': '$event.detail.name15 !== ""'},
+                                    {'eventTypes': ['change'], 'destinationsTarget': '#' ~ form.customerName.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$element.value'}},
+                                ]|json_encode }}">
+                        </select>
+                        {{ form_row(form.customerName, {'label': false, 'attr': {'class': 'd-none'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">TOP (hari)</label>
+                        <input type="text" class="form-control" value="{{ saleOrderHeader.customer.paymentTerm|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="customer-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.paymentTerm'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Toleransi Bawah Quantity Kirim (%)</label>
+                        <input type="text" class="form-control" value="{{ saleOrderHeader.customer.minimumTolerancePercentage|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="customer-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.minimumTolerancePercentage'}},
+                                   ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Toleransi Atas Quantity Kirim (%)</label>
+                        <input type="text" class="form-control" value="{{ saleOrderHeader.customer.maximumTolerancePercentage|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="customer-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.maximumTolerancePercentage'}},
+                               ]|json_encode }}" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.note) }}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Details</legend>
+            <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#product-dialog">Add Product</button>
+            {{ include('sale/sale_order_header/_details_form.html.twig') }}
+        </fieldset>
+
+        <div class="d-grid">
+            <div class="row">
+                <div class="col text-center">
+                    <a class="btn btn-danger" href="{{ path('app_sale_sale_order_header_index') }}"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                        Cancel
+                    </a>
+                    <button class="btn btn-success"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                        Save
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+        </div>
+    {{ form_end(form) }}
+
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('customer-dialog', 'Customer List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_customer__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+
+    {{ dialog.start('product-dialog', 'Product List') }}
+        <input type="hidden" id="product-table-identifiers" />
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_product__list') }}"
+             data-html-loader-auto-load-value="true"
+             data-action="customer-table:data-table:select@document->html-loader#load">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+            Done
+        </button>
+    {{ dialog.end() }}
+</div>

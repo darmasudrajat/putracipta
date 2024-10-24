@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+for class in $@
+do
+  php bin/console custom:clear:crud $class && composer dump-autoload && php bin/console make:crud $class && php bin/console custom:finish:crud $class
+done

@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Expense Header' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_accounting_expense_header_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_accounting_expense_header_show', {'id': expenseHeader.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('accounting/expense_header/_form.html.twig') }}
+{% endblock %}

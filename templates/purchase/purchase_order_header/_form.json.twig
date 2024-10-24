@@ -1,0 +1,17 @@
+{
+    "subTotal": "{{ purchaseOrderHeader.subTotal|default|number_format(2) }}",
+    "discountNominal": "{{ purchaseOrderHeader.discountNominal|default|number_format(2) }}",
+    "taxNominal": "{{ purchaseOrderHeader.taxNominal|default|number_format(2) }}",
+    "shippingFee": "{{ purchaseOrderHeader.shippingFee|default|number_format(2) }}",
+    "grandTotal": "{{ purchaseOrderHeader.grandTotal|default|number_format(2) }}",
+    "purchaseOrderDetails": {
+        {%- for purchaseOrderDetailForm in form.purchaseOrderDetails -%}
+            {%- set purchaseOrderDetail = purchaseOrderDetailForm.vars.data -%}
+            "{{ purchaseOrderDetailForm.vars.name }}": {
+                "unitPriceBeforeTax": "{{ purchaseOrderDetail.unitPriceBeforeTax|default|number_format(2) }}",
+                "total": "{{ purchaseOrderDetail.total|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

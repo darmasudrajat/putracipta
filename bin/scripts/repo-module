@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+for module in $@
+do
+  for file in ./src/Entity/$module/*
+  do
+    name=${file%.php}
+    name=${name##*/}
+    class="$module\\$name"
+    composer dump-autoload && php bin/console custom:make:repository $class
+  done
+done

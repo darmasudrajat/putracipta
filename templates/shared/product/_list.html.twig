@@ -1,0 +1,69 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, products) }}
+
+{% if app.request.request.has('product_prototype') %}
+    {% set selectMultiple = false %}
+{% else %}
+    {% set selectMultiple = true %}
+{% endif %}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="product-table" 
+           data-controller="data-table"
+           {% if selectMultiple == true %}
+               data-data-table-selected-identifiers-target-value="#product-table-identifiers"
+               data-data-table-selected-class="table-primary"
+               data-data-table-active-class="table-active"
+           {% endif %}>
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'code') }}>
+                    Code {{ grid.sort_char(form.sort.code.vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    Name {{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'unit:name') }}>
+                    Satuan {{ grid.sort_char(form.sort['unit:name'].vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'code') }} value="{{ form.filter.code.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'unit:name') }} value="{{ form.filter['unit:name'].1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr {% if selectMultiple == true %}data-data-table-target="selectable" data-selected-identifier="{{ product.id }}"{% else %}data-bs-dismiss="modal"{% endif %} data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'productId': product.id, 
+                    'productName': product.name, 
+                    'productCode': product.code,
+                    'productWeight': product.weight,
+                    'productMaterial': product.material,
+                    'productMeasurement': product.productLengthWidthHeightCombination,
+                    'unitName': product.unit.name,
+                    'unitId': product.unit.id}|json_encode }}">
+                    <td>{{ product.code }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.unit.name|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, products) }}

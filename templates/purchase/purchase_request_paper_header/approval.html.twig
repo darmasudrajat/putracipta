@@ -1,0 +1,10 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Approved Purchase Request Kertas' %}
+
+{% block content %}
+    <div data-controller="html-loader"
+         data-html-loader-url-value="{{ path('app_purchase_purchase_request_paper_header__approval') }}"
+         data-html-loader-auto-load-value="true">
+    </div>
+{% endblock %}

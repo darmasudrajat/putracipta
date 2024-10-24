@@ -1,0 +1,101 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, inventoryRequestPaperDetails) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="inventory-request-paper-detail-table" 
+           data-controller="data-table"
+           data-data-table-selected-identifiers-target-value="#paper-table-identifiers"
+           data-data-table-selected-class="table-primary"
+           data-data-table-active-class="table-active">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button" {{ grid.sort_link_item(form, 'inventoryRequestPaperHeader:codeNumberOrdinal') }}>
+                    Permintaan # {{ grid.sort_char(form.sort['inventoryRequestPaperHeader:codeNumberOrdinal'].vars.value) }}
+                </th>
+                <th style="min-width: 150px">WO #</th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'paper:name') }}>
+                    Kertas {{ grid.sort_char(form.sort['paper:name'].vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'inventoryRequestPaperHeader:pickupDate') }}>
+                    Tanggal Pakai {{ grid.sort_char(form.sort['inventoryRequestPaperHeader:pickupDate'].vars.value) }}
+                </th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'paper:code') }}>
+                    Kode Kertas {{ grid.sort_char(form.sort['paper:code'].vars.value) }}
+                </th>
+                <th style="min-width: 80px" role="button" {{ grid.sort_link_item(form, 'quantity') }}>
+                    Quantity {{ grid.sort_char(form.sort.quantity.vars.value) }}
+                </th>
+                <th style="min-width: 100px">Satuan</th>
+                <th style="min-width: 380px" role="button" {{ grid.sort_link_item(form, 'memo') }}>
+                    Memo {{ grid.sort_char(form.sort.memo.vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'inventoryRequestPaperHeader:codeNumberOrdinal') }} value="{{ form.filter['inventoryRequestPaperHeader:codeNumberOrdinal'].1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Stock\\InventoryRequestHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'inventoryRequestPaperHeader:codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\StockHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter['inventoryRequestPaperHeader:codeNumberMonth'].1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'inventoryRequestPaperHeader:codeNumberYear') }} value="{{ form.filter['inventoryRequestPaperHeader:codeNumberYear'].1.vars.value }}" />
+                </th>
+                <th></th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'paper:name') }} value="{{ form.filter['paper:name'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'inventoryRequestPaperHeader:pickupDate') }} value="{{ form.filter['inventoryRequestPaperHeader:pickupDate'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'paper:code') }} value="{{ form.filter['paper:code'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'quantity') }} value="{{ form.filter.quantity.1.vars.value }}" />
+                </th>
+                <th></th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'memo') }} value="{{ form.filter.memo.1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inventoryRequestPaperDetail in inventoryRequestPaperDetails %}
+                <tr data-data-table-target="selectable" data-selected-identifier="{{ inventoryRequestPaperDetail.id }}" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'inventoryRequestHeaderCodeNumber': inventoryRequestPaperDetail.inventoryRequestHeader.codeNumber, 
+                    'inventoryRequestHeaderTransactionDate': inventoryRequestPaperDetail.inventoryRequestHeader.transactionDate ? inventoryRequestPaperDetail.inventoryRequestHeader.transactionDate|date('d M Y') : '', 
+                    'paperName': inventoryRequestPaperDetail.paper.name|default,
+                    'paperCode': inventoryRequestPaperDetail.paper.codeNumber|default,
+                    'paperId': inventoryRequestPaperDetail.paper.id|default,
+                    'paperWeight': inventoryRequestPaperDetail.paper.weight|default,
+                    'inventoryRequestPaperDetailId': inventoryRequestPaperDetail.id|default,
+                    'inventoryRequestPaperDetailQuantity': inventoryRequestPaperDetail.quantity|default|number_format(2),
+                    'inventoryRequestPaperDetailQuantityRemaining': inventoryRequestPaperDetail.quantityRemaining|default|number_format(2),
+                    'masterOrderCodeNumber': inventoryRequestPaperDetail.masterOrderHeader.codeNumber|default,
+                    'inventoryRequestPaperDetailMemo': inventoryRequestPaperDetail.memo|default,
+                    'unitId': inventoryRequestPaperDetail.unit.id,
+                    'unitName': inventoryRequestPaperDetail.unit.name}|json_encode }}">
+                    <td>{{ inventoryRequestPaperDetail.inventoryRequestHeader.codeNumber }}</td>
+                    <td>{{ inventoryRequestPaperDetail.masterOrderHeader.codeNumber }}</td>
+                    <td>{{ inventoryRequestPaperDetail.paper.name|default }}</td>
+                    <td>{{ inventoryRequestPaperDetail.inventoryRequestHeader.pickupDate ? inventoryRequestPaperDetail.inventoryRequestHeader.pickupDate|date('d M Y') : '' }}</td>
+                    <td>{{ inventoryRequestPaperDetail.paper.codeNumber|default }}</td>
+                    <td>{{ inventoryRequestPaperDetail.quantity|default|number_format(0) }}</td>
+                    <td>{{ inventoryRequestPaperDetail.unit.name|default }}</td>
+                    <td>{{ inventoryRequestPaperDetail.memo|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, inventoryRequestPaperDetails) }}

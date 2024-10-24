@@ -1,0 +1,69 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="15"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="15"><strong>Laporan Penerimaan Produksi per Produk</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="15">
+                <strong>
+                    {% set startDate = form.vars.value.filter['saleOrderHeader:transactionDate'].1|default %}
+                    {% set endDate = form.vars.value.filter['saleOrderHeader:transactionDate'].2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="15"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Nama Produk</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Customer</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Penerimaan #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>MO #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Gudang</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>PO #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty PO</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty pcs/box</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Box</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty pcs</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Total</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Keterangan</strong></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+            {% set totalSum = '0.00' %}
+            {% for inventoryProductReceiveDetail in inventoryProductReceiveDetails[product.id] %}
+                <tr>
+                    <td style="text-align: left">{{ product.name|default }}</td>
+                    <td style="text-align: left">{{ product.customer.company|default }}</td>
+                    <td style="text-align: left">{{ product.note|default }}</td>
+                    <td style="text-align: left">{{ inventoryProductReceiveDetail.inventoryProductReceiveHeader.codeNumber|default }}</td>
+                    <td style="text-align: left">{{ inventoryProductReceiveDetail.inventoryProductReceiveHeader.transactionDate|default ? inventoryProductReceiveDetail.inventoryProductReceiveHeader.transactionDate|date('j F Y') }}</td>
+                    <td style="text-align: left">{{ inventoryProductReceiveDetail.inventoryProductReceiveHeader.masterOrderHeader.codeNumber|default }}</td>
+                    <td style="text-align: left">{{ inventoryProductReceiveDetail.inventoryProductReceiveHeader.warehouse.name|default }}</td>
+                    <td style="text-align: left">{{ inventoryProductReceiveDetail.masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                    <td style="text-align: center">{{ inventoryProductReceiveDetail.masterOrderProductDetail.remainingProduction|default }}</td>
+                    <td style="text-align: center">{{ inventoryProductReceiveDetail.quantityPiecePerBox|default }}</td>
+                    <td style="text-align: center">{{ inventoryProductReceiveDetail.quantityBox|default }}</td>
+                    <td style="text-align: center">{{ inventoryProductReceiveDetail.quantityBoxExtraPieces|default }}</td>
+                    <td style="text-align: center">{{ inventoryProductReceiveDetail.quantityTotalPieces|default }}</td>
+                    <td style="text-align: left">{{ inventoryProductReceiveDetail.memo|default }}</td>
+                </tr>
+                {% set totalSum = totalSum + inventoryProductReceiveDetail.quantityTotalPieces %}
+            {% endfor %}
+            <tr>
+                <td style="text-align: right; border-top: 1px solid" colspan="12"><strong>Grand Total</strong></td>
+                <td style="text-align: right; border-top: 1px solid"><strong>{{ totalSum|default }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="15"></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

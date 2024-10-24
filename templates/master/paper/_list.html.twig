@@ -1,0 +1,87 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, papers) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button"{{ grid.sort_link_item(form, 'code') }}>
+                    Code {{ grid.sort_char(form.sort.code.vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    Nama{{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'weight') }}>
+                    Berat (gsm){{ grid.sort_char(form.sort.weight.vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'materialSubCategory:name') }}>
+                    Jenis{{ grid.sort_char(form.sort['materialSubCategory:name'].vars.value) }}
+                </th>
+                <th style="min-width: 70px" role="button" {{ grid.sort_link_item(form, 'isInactive') }}>
+                    Status {{ grid.sort_char(form.sort.isInactive.vars.value) }}
+                </th>
+                <th style="min-width: 70px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="text" {{ grid.filter_link_item(form, 'materialSubCategory:name') }} value="{{ form.filter['materialSubCategory:name'].1.vars.value }}" />
+                    <span><small>-</small></span>
+                    <input style="width: 64px" type="text" {{ grid.filter_link_item(form, 'weight') }} value="{{ form.filter.weight.1.vars.value }}" />
+                    <span><small>-</small></span>
+                    <select {{ grid.filter_link_item(form, 'type') }}>
+                        <option value="" {% if form.filter.type.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.type.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.type.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>-</small></span>
+                    <input style="width: 64px" type="text" {{ grid.filter_link_item(form, 'code') }} value="{{ form.filter.code.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'weight') }} value="{{ form.filter.weight.1.vars.value }}" />
+                </th>
+                <th></th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'isInactive') }}>
+                        <option value="" {% if form.filter.isInactive.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.isInactive.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.isInactive.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paper in papers %}
+                <tr>
+                    <td>{{ paper.codeNumber }}</td>
+                    <td>{{ paper.name }}</td>
+                    <td>{{ paper.weight }}</td>
+                    <td>{{ paper.materialSubCategory.name }}</td>
+                    <td>{{ paper.isInactive ? 'InActive' : 'Active' }}</td>
+                    <td>
+                        {% if is_granted('ROLE_PAPER_VIEW') or is_granted('ROLE_PAPER_EDIT')  or is_granted('ROLE_PAPER_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_master_paper_show', {'id': paper.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_PAPER_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_master_paper_edit', {'id': paper.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, papers) }}

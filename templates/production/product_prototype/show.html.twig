@@ -1,0 +1,157 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Formulir Produk Baru' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_product_prototype_index') }}">Manage</a>
+    {% if is_granted('ROLE_NEW_PRODUCT_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_production_product_prototype_edit', {'id': productPrototype.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_NEW_PRODUCT_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_production_product_prototype_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Proses Development</th>
+                <td>{{ productPrototype.developmentTypeList ? productPrototype.developmentTypeList|join(', ') : '' }}</td>
+                <th>Sumber Data</th>
+                <td>{{ productPrototype.dataSource ? productPrototype.dataSource|join(', ') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Produk Baru #</th>
+                <td>{{ productPrototype.getCodeNumber }}</td>
+                <th>Tanggal</th>
+                <td>{{ productPrototype.transactionDate ? productPrototype.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Customer</th>
+                <td>{{ productPrototype.customer.company|default }}</td>
+                <th>Marketing</th>
+                <td>{{ productPrototype.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>PIC Design</th>
+                <td>{{ productPrototype.employee.name|default }}</td>
+                <th>Transaction Canceled?</th>
+                <td>{{ productPrototype.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ productPrototype.createdTransactionUser.username|default }}</td>
+                <th>User Edited</th>
+                <td>{{ productPrototype.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ productPrototype.createdTransactionDateTime ? productPrototype.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+                <th>Edited Date</th>
+                <td>{{ productPrototype.modifiedTransactionDateTime ? productPrototype.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+                
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan='5' class='text-center bg-info'>PRODUCTS</th>
+            </tr>
+            <tr>
+                <th class="text-center">Item Code</th>
+                <th class="text-center">Item Name</th>
+                <th class="text-center">Ukuran Jadi</th>
+                <th class="text-center">Kertas</th>
+                <th class="text-center">Quantity (pcs)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for productPrototypeDetail in productPrototype.productPrototypeDetails %}
+            <tr>
+                <td>{{ productPrototypeDetail.product.code|default }}</td>
+                <td>{{ productPrototypeDetail.product.name|default }}</td>
+                <td>{{ productPrototypeDetail.product.productLengthWidthHeightCombination }}</td>
+                <td>{{ productPrototypeDetail.product.material|default }}</td>
+                <td>{{ productPrototypeDetail.quantity|default|number_format(2) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+                
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan='6' class='text-center bg-info'>SPESIFIKASI</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if productPrototype.paper is not null %}
+                <tr>
+                    <th>Material Kertas</th>
+                    <td>{{ productPrototype.paper.codeNumber|default }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>Material Name</th>
+                <td>{{ productPrototype.materialName|default }}</td>
+            </tr>
+            <tr>
+                <th>Warna (TC/Pantone)</th>
+                <td>{{ productPrototype.color }}</td>
+            </tr>
+            <tr>
+                <th>Jumlah Mata (up/sheet)</th>
+                <td>{{ productPrototype.quantityBlade|number_format(0) }}</td>
+            </tr>
+        </tbody>
+    </table>
+                      
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan='6' class='text-center bg-info'>FINISHING</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Laminating</th>
+                <td>{{ productPrototype.dataSource ? productPrototype.laminatingList|join(', ') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Coating</th>
+                <td>{{ productPrototype.dataSource ? productPrototype.coatingList|join(', ') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Proses</th>
+                <td>{{ productPrototype.dataSource ? productPrototype.processList|join(', ') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Keterangan</th>
+                <td>{{ productPrototype.note|default|nl2br }}</td>
+            </tr>
+            <tr>
+                <th>Is Canceled</th>
+                <td>{{ productPrototype.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+            
+    <br />
+    
+    <div class="d-inline-block">
+        <a target="_blank" class="btn btn-success btn-sm" href="{{ path('app_production_product_prototype_memo', {'id': productPrototype.id}) }}">Print Formulir Produk Baru</a>
+    </div>
+    
+    <div class="text-center">
+        <h4>Layout</h4>
+        {% if productPrototype.transactionFileExtension == 'pdf' %}
+            <a target="_blank" href="{{ asset('uploads/product-prototype/' ~ productPrototype.fileName) }}">Layout PDF File</a>
+        {% elseif productPrototype.transactionFileExtension == 'jpg' or productPrototype.transactionFileExtension == 'jpeg' or productPrototype.transactionFileExtension == 'png' %}
+            <img width="256px" src="{{ asset('uploads/product-prototype/' ~ productPrototype.fileName) }}" alt="Product Layout Image" />
+        {% endif %}
+    </div>
+
+    {#{{ include('production/product_prototype/_delete_form.html.twig') }}#}
+{% endblock %}

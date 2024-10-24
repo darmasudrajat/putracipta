@@ -1,0 +1,21 @@
+<form method="post" action="{{ path('app_purchase_purchase_order_header_reject', {'id': purchaseOrderHeader.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ purchaseOrderHeader.id) }}">
+    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#reject-dialog">
+        Reject
+    </button>
+
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('reject-dialog', 'Reject Note', 'sm') }}
+        <div class="text-center">
+            <textarea name="reject_note"></textarea>
+            <br />
+            <button class="btn btn-danger btn-sm"
+                    data-controller="dom-element"
+                    data-action="dom-element#confirm"
+                    data-dom-element-confirm-message-param="Are you sure you want to reject this transaction?">
+                Reject
+            </button>
+        </div>
+    {{ dialog.end() }}
+</form>

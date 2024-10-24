@@ -1,0 +1,102 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, saleInvoiceHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button"{{ grid.sort_link_item(form, ['codeNumberOrdinal', 'codeNumberMonth', 'codeNumberYear']) }}>
+                    Invoice # {{ grid.sort_char(form.sort.codeNumberOrdinal.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'customer:company') }}>
+                    Customer {{ grid.sort_char(form.sort['customer:company'].vars.value) }}
+                </th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'saleOrderReferenceNumbers') }}>
+                    PO # {{ grid.sort_char(form.sort.saleOrderReferenceNumbers.vars.value) }}
+                </th>
+                <th style="min-width: 150px">
+                    Total
+                </th>
+                <th style="min-width: 150px">
+                    Retur
+                </th>
+                <th style="min-width: 150px">
+                    Payment
+                </th>
+                <th style="min-width: 150px">
+                    Remaining
+                </th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'transactionStatus') }}>
+                    Status {{ grid.sort_char(form.sort.transactionStatus.vars.value) }}
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberOrdinal') }} value="{{ form.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Sale\\SaleInvoiceHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\SaleHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>/</small></span>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberYear') }} value="{{ form.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'customer:company') }} value="{{ form.filter['customer:company'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'saleOrderReferenceNumbers') }} value="{{ form.filter.saleOrderReferenceNumbers.1.vars.value }}" />
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'transactionStatus') }} value="{{ form.filter.transactionStatus.1.vars.value }}" />
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for saleInvoiceHeader in saleInvoiceHeaders %}
+                <tr>
+                    <td>{{ saleInvoiceHeader.codeNumber|default }}</td>
+                    <td>{{ saleInvoiceHeader.transactionDate ? saleInvoiceHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ saleInvoiceHeader.customer.company|default }}</td>
+                    <td>{{ saleInvoiceHeader.saleOrderReferenceNumbers|default }}</td>
+                    <td class="text-end">{{ saleInvoiceHeader.grandTotal|number_format(0) }}</td>
+                    <td class="text-end">{{ saleInvoiceHeader.totalReturn|number_format(0) }}</td>
+                    <td class="text-end">{{ saleInvoiceHeader.totalPayment|number_format(0) }}</td>
+                    <td class="text-end">{{ saleInvoiceHeader.remainingPayment|number_format(0) }}</td>
+                    <td>{{ saleInvoiceHeader.transactionStatus|default }}</td>
+                    <td>
+                        {% if is_granted('ROLE_SALE_INVOICE_VIEW') or is_granted('ROLE_SALE_INVOICE_EDIT') or is_granted('ROLE_SALE_INVOICE_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_sale_sale_invoice_header_show', {'id': saleInvoiceHeader.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_SALE_INVOICE_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_sale_sale_invoice_header_edit', {'id': saleInvoiceHeader.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="10">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, saleInvoiceHeaders) }}

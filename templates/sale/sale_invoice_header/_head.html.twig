@@ -1,0 +1,58 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, saleInvoiceHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 200px">
+                    Invoice # 
+                </th>
+                <th style="min-width: 150px">
+                    Tanggal
+                </th>
+                <th style="min-width: 250px">
+                    Customer
+                </th>
+                <th style="min-width: 150px">
+                    Total
+                </th>
+                <th style="min-width: 150px">
+                    Payment
+                </th>
+                <th style="min-width: 150px">
+                    Remaining
+                </th>
+                <th style="min-width: 100px">
+                    Status
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for saleInvoiceHeader in saleInvoiceHeaders %}
+                <tr>
+                    <td>{{ saleInvoiceHeader.codeNumber }}</td>
+                    <td>{{ saleInvoiceHeader.transactionDate ? saleInvoiceHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ saleInvoiceHeader.customer.company|default }}</td>
+                    <td class="text-end">{{ saleInvoiceHeader.grandTotal|number_format(0) }}</td>
+                    <td class="text-end">{{ saleInvoiceHeader.totalPayment|number_format(0) }}</td>
+                    <td class="text-end">{{ saleInvoiceHeader.remainingPayment|number_format(0) }}</td>
+                    <td>{{ saleInvoiceHeader.transactionStatus }}</td>
+                    <td>
+                        {{ include('sale/sale_invoice_header/_read_form.html.twig') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="9">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, saleInvoiceHeaders) }}

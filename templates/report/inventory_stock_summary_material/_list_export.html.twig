@@ -1,0 +1,44 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="3"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="3"><strong>Laporan Stok Gudang Material</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="3">
+                <strong>
+                    {% set endDate = form.vars.value.filter['inventory:transactionDate'].1|default %}
+                    {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="3"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Kode Material</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Nama Material</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Stok</strong></th>
+        </tr>
+        <tr>
+            <th colspan="3"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for material in materials %}
+            {% set endingStock = endingStockList[material.id]|default(0) %}
+            {% if (endingStock != 0) %}
+                <tr>
+                    <td style="text-align: left">{{ material.code|default }}</td>
+                    <td style="text-align: left">{{ material.name|default }}</td>
+                    <td style="text-align: center">{{ endingStock|default }}</td>
+                </tr>
+                <tr>
+                    <th colspan="3"></th>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>

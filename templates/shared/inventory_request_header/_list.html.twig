@@ -1,0 +1,93 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, inventoryRequestHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped" id="inventory-request-header-table" data-controller="data-table">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button" {{ grid.sort_link_item(form, 'codeNumberOrdinal') }}>
+                    Permintaan # {{ grid.sort_char(form.sort.codeNumberOrdinal.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 250px" {{ grid.sort_link_item(form, 'inventoryRequestProductList') }}>
+                    Material {{ grid.sort_char(form.sort.inventoryRequestProductList.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'departmentName') }}>
+                    Department {{ grid.sort_char(form.sort.departmentName.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'workOrderNumber') }}>
+                    WO # {{ grid.sort_char(form.sort.workOrderNumber.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'requestMode') }}>
+                    Jenis {{ grid.sort_char(form.sort.requestMode.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'warehouse') }}>
+                    Gudang {{ grid.sort_char(form.sort['warehouse'].vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th></th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'inventoryRequestProductList') }} value="{{ form.filter.inventoryRequestProductList.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'departmentName') }} value="{{ form.filter.departmentName.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'workOrderNumber') }} value="{{ form.filter.workOrderNumber.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'requestMode') }} value="{{ form.filter.requestMode.1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inventoryRequestHeader in inventoryRequestHeaders %}
+                {% set details = inventoryRequestHeader.requestMode == 'material' ? inventoryRequestHeader.inventoryRequestMaterialDetails : inventoryRequestHeader.inventoryRequestPaperDetails %}
+                <tr data-action="click->data-table#select" data-data-table-values-param="{{ details|filter(inventoryRequestMaterialDetail => not inventoryRequestMaterialDetail.isCanceled)|slice(0)|map(detail => {
+                    'inventoryRequestHeaderId': inventoryRequestHeader.id, 
+                    'inventoryRequestHeaderCodeNumber': inventoryRequestHeader.codeNumber, 
+                    'inventoryRequestHeaderTransactionDate': inventoryRequestHeader.transactionDate ? inventoryRequestHeader.transactionDate|date('d M Y') : '', 
+                    'divisionId': inventoryRequestHeader.division.id|default,
+                    'divisionName': inventoryRequestHeader.division.name|default,
+                    'masterOrderHeaderCodeNumber': inventoryRequestHeader.masterOrderHeader.codeNumber|default, 
+                    'inventoryRequestHeaderPartNumber': inventoryRequestHeader.partNumber|default, 
+                    'inventoryRequestHeaderMode': inventoryRequestHeader.requestMode|default,
+                    'materialId': inventoryRequestHeader.requestMode == 'material' ? detail.material.id|default : '',
+                    'materialCode': inventoryRequestHeader.requestMode == 'material' ? detail.material.code|default : '',
+                    'materialName': inventoryRequestHeader.requestMode == 'material' ? detail.material.name|default : '',
+                    'materialUnitName': inventoryRequestHeader.requestMode == 'material' ? detail.unit.name|default : '',
+                    'inventoryRequestMaterialDetailQuantity': inventoryRequestHeader.requestMode == 'material' ? detail.quantity|number_format(0) : '',
+                    'inventoryRequestMaterialDetailId': inventoryRequestHeader.requestMode == 'material' ? detail.id : '',
+                    'paperId': inventoryRequestHeader.requestMode == 'paper' ? detail.paper.id|default : '',
+                    'paperCode': inventoryRequestHeader.requestMode == 'paper' ? detail.paper.codeNumber|default : '',
+                    'paperName': inventoryRequestHeader.requestMode == 'paper' ? detail.paper.name|default : '',
+                    'paperUnitName': inventoryRequestHeader.requestMode == 'paper' ? detail.unit.name|default : '',
+                    'inventoryRequestPaperDetailQuantity': inventoryRequestHeader.requestMode == 'paper' ? detail.quantity|number_format(0) : '',
+                    'inventoryRequestPaperDetailId': inventoryRequestHeader.requestMode == 'paper' ? detail.id : ''})|json_encode }}">
+                    <td>{{ inventoryRequestHeader.codeNumber }}</td>
+                    <td>{{ inventoryRequestHeader.transactionDate ? inventoryRequestHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ inventoryRequestHeader.inventoryRequestProductList|default }}</td>
+                    <td>{{ inventoryRequestHeader.division.name|default }}</td>
+                    <td>{{ inventoryRequestHeader.masterOrderHeader.codeNumber|default }}</td>
+                    <td>{{ inventoryRequestHeader.requestMode|default }}</td>
+                    <td>{{ inventoryRequestHeader.warehouse.name|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, inventoryRequestHeaders) }}

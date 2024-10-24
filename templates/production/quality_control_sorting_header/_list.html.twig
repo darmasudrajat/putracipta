@@ -1,0 +1,90 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, qualityControlSortingHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px">
+                    QC #
+                </th>
+                <th role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 280px">
+                    WO #
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'customer:company') }}>
+                    Customer {{ grid.sort_char(form.sort['customer:company'].vars.value) }}
+                </th>
+                <th role="button" {{ grid.sort_link_item(form, 'employeeInCharge') }}>
+                    PIC {{ grid.sort_char(form.sort.employeeInCharge.vars.value) }}
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberOrdinal') }} value="{{ form.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Production\\QualityControlSortingHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\ProductionHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberYear') }} value="{{ form.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'masterOrderHeader:codeNumberOrdinal') }} value="{{ form.filter['masterOrderHeader:codeNumberOrdinal'].1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Production\\MasterOrderHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'masterOrderHeader:codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\ProductionHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter['masterOrderHeader:codeNumberMonth'].1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>/</small></span>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'masterOrderHeader:codeNumberYear') }} value="{{ form.filter['masterOrderHeader:codeNumberYear'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'customer:company') }} value="{{ form.filter['customer:company'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'employeeInCharge') }} value="{{ form.filter.employeeInCharge.1.vars.value }}" />
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for qualityControlSortingHeader in qualityControlSortingHeaders %}
+                <tr>
+                    <td>{{ qualityControlSortingHeader.codeNumber|default }}</td>
+                    <td>{{ qualityControlSortingHeader.transactionDate ? qualityControlSortingHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ qualityControlSortingHeader.masterOrderHeader.codeNumber|default }}</td>
+                    <td>{{ qualityControlSortingHeader.customer.company|default }}</td>
+                    <td>{{ qualityControlSortingHeader.employeeInCharge|default }}</td>
+                    <td>
+                        {% if is_granted('ROLE_QUALITY_CONTROL_SORTING_VIEW') or is_granted('ROLE_QUALITY_CONTROL_SORTING_EDIT') or is_granted('ROLE_QUALITY_CONTROL_SORTING_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_production_quality_control_sorting_header_show', {'id': qualityControlSortingHeader.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_QUALITY_CONTROL_SORTING_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_production_quality_control_sorting_header_edit', {'id': qualityControlSortingHeader.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="11">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, qualityControlSortingHeaders) }}

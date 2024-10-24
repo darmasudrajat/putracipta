@@ -1,0 +1,38 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Machine Printing' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_machine_printing_index') }}">Manage</a>
+    {% if is_granted('ROLE_PRINTING_MACHINE_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_master_machine_printing_edit', {'id': machinePrinting.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_PRINTING_MACHINE_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_master_machine_printing_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{ machinePrinting.name }}</td>
+            </tr>
+            <tr>
+                <th>Jenis</th>
+                <td>{{ machinePrinting.type }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ machinePrinting.note }}</td>
+            </tr>
+            <tr>
+                <th>Is Inactive</th>
+                <td>{{ machinePrinting.isInactive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {#{{ include('master/machine_printing/_delete_form.html.twig') }}#}
+{% endblock %}

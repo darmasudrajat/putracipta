@@ -1,0 +1,57 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, paymentTypes) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    Name {{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th style="min-width: 280px" role="button" {{ grid.sort_link_item(form, 'isInactive') }}>
+                    Status {{ grid.sort_char(form.sort.isInactive.vars.value) }}
+                </th>
+                <th style="min-width: 280px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'isInactive') }}>
+                        <option value="" {% if form.filter.isInactive.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.isInactive.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.isInactive.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paymentType in paymentTypes %}
+                <tr>
+                    <td>{{ paymentType.name }}</td>
+                    <td>{{ paymentType.isInactive ? 'Inactive' : 'Active' }}</td>
+                    <td>
+                        {% if is_granted('ROLE_PAYMENT_TYPE_VIEW') or is_granted('ROLE_PAYMENT_TYPE_EDIT') or is_granted('ROLE_PAYMENT_TYPE_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_master_payment_type_show', {'id': paymentType.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_PAYMENT_TYPE_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_master_payment_type_edit', {'id': paymentType.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, paymentTypes) }}

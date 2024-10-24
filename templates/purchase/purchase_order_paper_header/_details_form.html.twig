@@ -1,0 +1,216 @@
+<div class="table-responsive">
+    <table class="table table-bordered"
+       data-controller="form-collection"
+       data-form-collection-start-index-value="{{ form.purchaseOrderPaperDetails|length > 0 ? form.purchaseOrderPaperDetails|last.vars.name + 1 : 0 }}"
+       data-form-collection-prototype-value="{{ _self.collection_item(form.purchaseOrderPaperDetails.vars.prototype)|e('html_attr') }}"
+       data-action="form-collection:collection-item-removed->json-loader#load:self">
+        <thead class="table-secondary">
+            <tr>
+                <th class="d-none">Material Id</th>
+                <th style="min-width: 250px">Item Code</th>
+                <th style="min-width: 250px">Description</th>
+                <th style="min-width: 150px">Tgl Kirim</th>
+                <th style="min-width: 100px">Qty</th>
+                <th style="min-width: 100px">Unit</th>
+                <th style="min-width: 150px">APKI</th>
+                <th style="min-width: 150px">H. Asosiasi</th>
+                <th style="min-width: 150px">H. KG</th>
+                <th style="min-width: 150px">H. Satuan</th>
+                <th style="min-width: 150px">DPP</th>
+                <th style="min-width: 150px">Total</th>
+                <th style="width: 0">{% if (form.vars.value.id != null) %}Close{% endif %}</th>
+                <th style="width: 0"></th>
+            </tr>
+        </thead>
+        <tbody data-form-collection-target="items" data-action="paper-table:data-table:select@document->form-collection#addCollectionItem purchase-request-paper-detail-table:data-table:select@document->form-collection#addCollectionItem">
+            {% macro collection_item(detailForm) %}
+                <tr data-form-collection-target="item" {% if detailForm.isCanceled.vars.data %}class="d-none"{% endif %}>
+                    <td class="d-none">{{ form_widget(detailForm.paper, {'attr': {'data-item-field-name': 'paperId'}}) }}</td>
+                    <td class="d-none">{{ form_widget(detailForm.purchaseRequestPaperDetail, {'attr': {'data-item-field-name': 'purchaseRequestPaperDetailId'}}) }}</td>
+                    <td class="d-none" data-item-field-name="pricingMode">{{ detailForm.vars.value.paper.pricingMode|default }}</td>
+                    <td data-item-field-name="paperCode">{{ detailForm.vars.value.paper.codeNumber|default }}</td>
+                    <td data-item-field-name="paperName">{{ detailForm.vars.value.paper.name|default }}</td>
+                    <td>
+                        {{ form_row(detailForm.deliveryDate, {'label': false, 'attr': {
+                            'data-controller': 'flatpickr-element', 
+                            'data-action': 'change->json-loader#load',
+                            'data-item-field-name': 'usageDate',
+                            'class': 'readonly-form-input',
+                        }}) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.quantity, {'label': false, 'attr': {
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-item-field-name': 'purchaseRequestPaperDetailQuantity',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 2)'}}
+                            ]|json_encode,
+                        }}) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.unit, {'label': false, 'attr': {
+                            'data-item-field-name': 'unitId',
+                        }}) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.apkiValue, {'label': false, 'attr': {
+                            'readonly': detailForm.vars.value.paper.pricingMode|default == 'weight' or detailForm.vars.value.paper.pricingMode|default == 'unit',
+                            'data-action': 'change->json-loader#load',
+                            'data-item-field-action': '
+                                const pricingMode = $row.querySelector("[data-item-field-name=pricingMode]").textContent;
+                                if (pricingMode === "weight" || pricingMode === "unit") {
+                                    $element.setAttribute("readonly", "readonly");
+                                } else {
+                                    $element.removeAttribute("readonly");
+                                }
+                            ',
+                        }}) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.associationPrice, {'label': false, 'attr': {
+                            'readonly': detailForm.vars.value.paper.pricingMode|default == 'weight' or detailForm.vars.value.paper.pricingMode|default == 'unit',
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 2)'}}
+                            ]|json_encode,
+                            'data-item-field-action': '
+                                const pricingMode = $row.querySelector("[data-item-field-name=pricingMode]").textContent;
+                                if (pricingMode === "weight" || pricingMode === "unit") {
+                                    $element.setAttribute("readonly", "readonly");
+                                } else {
+                                    $element.removeAttribute("readonly");
+                                }
+                            ',
+                        }}) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.weightPrice, {'label': false, 'attr': {
+                            'readonly': detailForm.vars.value.paper.pricingMode|default == 'association' or detailForm.vars.value.paper.pricingMode|default == 'unit',
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 2)'}}
+                            ]|json_encode,
+                            'data-json-loader-target': 'placeholder',
+                            'data-property-path': "purchaseOrderPaperDetails.#{ detailForm.vars.name }.weightPrice",
+                            'data-item-field-action': '
+                                const pricingMode = $row.querySelector("[data-item-field-name=pricingMode]").textContent;
+                                if (pricingMode === "association" || pricingMode === "unit") {
+                                    $element.setAttribute("readonly", "readonly");
+                                } else {
+                                    $element.removeAttribute("readonly");
+                                }
+                            ',
+                        }}) }}
+                        {#<div id="{{ detailForm.weightPrice.vars.id }}-format" class="text-end" data-json-loader-target="placeholder"
+                             data-property-path="purchaseOrderPaperDetails.{{ detailForm.vars.name }}.weightPrice">
+                            {{ detailForm.vars.value.weightPrice|default|number_format(2) }}
+                        </div>#}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.unitPrice, {'label': false, 'attr': {
+                            'readonly': detailForm.vars.value.paper.pricingMode|default == 'association' or detailForm.vars.value.paper.pricingMode|default == 'weight',
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-json-loader-target': 'placeholder',
+                            'data-property-path': "purchaseOrderPaperDetails.#{ detailForm.vars.name }.unitPrice",
+                            'data-item-field-action': '
+                                const pricingMode = $row.querySelector("[data-item-field-name=pricingMode]").textContent;
+                                if (pricingMode === "association" || pricingMode === "weight") {
+                                    $element.setAttribute("readonly", "readonly");
+                                } else {
+                                    $element.removeAttribute("readonly");
+                                }
+                            ',
+                        }}) }}
+                        {#<div id="{{ detailForm.unitPrice.vars.id }}-format" class="text-end" data-json-loader-target="placeholder"
+                             data-property-path="purchaseOrderPaperDetails.{{ detailForm.vars.name }}.unitPrice">
+                            {{ detailForm.vars.value.unitPrice|default|number_format(2) }}
+                        </div>#}
+                    </td>
+                    <td class="text-end" data-json-loader-target="placeholder"
+                        data-property-path="purchaseOrderPaperDetails.{{ detailForm.vars.name }}.unitPriceBeforeTax">
+                        {{ detailForm.vars.value.unitPriceBeforeTax|default|number_format(2) }}
+                    </td>
+                    <td class="text-end" data-json-loader-target="placeholder"
+                        data-property-path="purchaseOrderPaperDetails.{{ detailForm.vars.name }}.total">
+                        {{ detailForm.vars.value.total|default|number_format(2) }}
+                    </td>
+                    <td>
+                        <div {% if (detailForm.vars.value.id == null) %}class="d-none"{% endif %}>
+                            {{ form_row(detailForm.isTransactionClosed, {'label': false}) }}
+                        </div>
+                    </td>
+                    <td>
+                        {% if (detailForm.vars.value.id == null) %}
+                            <button type="button" class="btn btn-outline-dark" data-action="form-collection#removeCollectionItem"><i class="bi-x-lg"></i></button>
+                        {% else %}
+                            <button type="button" class="btn btn-danger"
+                                    data-controller="dom-element"
+                                    data-action="dom-element#bind json-loader#load"
+                                    data-dom-element-bind-specifications-param="{{ [
+                                        {'destinationsTarget': '#' ~ detailForm.isCanceled.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'checked', 'value': 'true'}},
+                                        {'destinations': '[$element.closest("tr")]', 'action': 'addClass', 'descriptor': {'name': 'd-none'}},
+                                    ]|json_encode }}">
+                                <i class="bi-x-lg"></i>
+                            </button>
+                        {% endif %}
+                        <div class="d-none">
+                            {{ form_row(detailForm.isCanceled) }}
+                        </div>
+                    </td>
+                </tr>
+            {% endmacro %}
+            {% for detailForm in form.purchaseOrderPaperDetails %}
+                {{ _self.collection_item(detailForm) }}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-end" colspan="10">Sub Total</td>
+                <td class="text-end" data-json-loader-target="placeholder"
+                    data-property-path="subTotal">
+                    {{ purchaseOrderPaperHeader.subTotal|default|number_format(2) }}
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="text-end" colspan="10">
+                    <span class="d-inline-block">Discount</span>
+                    <span class="d-inline-block">{{ form_row(form.discountValueType, {'label': false, 'attr': {'data-action': 'change->json-loader#load'}}) }}</span>
+                    <span class="d-inline-block">{{ form_row(form.discountValue, {'label': false, 'attr': {'data-action': 'change->json-loader#load', 'size': 3}}) }}</span>
+                </td>
+                <td class="text-end" data-json-loader-target="placeholder"
+                    data-property-path="discountNominal">
+                    {{ purchaseOrderPaperHeader.discountNominal|default|number_format(2) }}
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="text-end" colspan="10">
+                    <span class="d-inline-block">PPn </span>
+                    <span class="d-inline-block">{{ form_row(form.taxMode, {'label': false, 'attr': {'data-action': 'change->json-loader#load'}}) }}</span>
+                </td>
+                <td class="text-end" data-json-loader-target="placeholder"
+                    data-property-path="taxNominal">
+                    {{ purchaseOrderPaperHeader.taxNominal|default|number_format(2) }}
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="text-end" colspan="10">Grand Total</td>
+                <td class="text-end" data-json-loader-target="placeholder"
+                    data-property-path="grandTotal">
+                    {{ purchaseOrderPaperHeader.grandTotal|default|number_format(2) }}
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

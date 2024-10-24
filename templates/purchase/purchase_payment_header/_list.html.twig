@@ -1,0 +1,75 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, purchasePaymentHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" style="min-width: 400px" role="button"{{ grid.sort_link_item(form, ['codeNumberOrdinal', 'codeNumberMonth', 'codeNumberYear']) }}>
+                    Payment # {{ grid.sort_char(form.sort.codeNumberOrdinal.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'supplier:company') }}>
+                    Supplier {{ grid.sort_char(form.sort['supplier:company'].vars.value) }}
+                </th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'supplierInvoiceCodeNumbers') }}>
+                    Invoice # {{ grid.sort_char(form.sort.supplierInvoiceCodeNumbers.vars.value) }}
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberOrdinal') }} value="{{ form.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Purchase\\PurchasePaymentHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\PurchaseHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>/</small></span>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberYear') }} value="{{ form.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'supplier:company') }} value="{{ form.filter['supplier:company'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'supplierInvoiceCodeNumbers') }} value="{{ form.filter.supplierInvoiceCodeNumbers.1.vars.value }}" />
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchasePaymentHeader in purchasePaymentHeaders %}
+                <tr>
+                    <td>{{ purchasePaymentHeader.codeNumber }}</td>
+                    <td>{{ purchasePaymentHeader.transactionDate ? purchasePaymentHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ purchasePaymentHeader.supplier.company|default }}</td>
+                    <td>{{ purchasePaymentHeader.supplierInvoiceCodeNumbers }}</td>
+                    <td>
+                        {% if is_granted('ROLE_PURCHASE_PAYMENT_VIEW') or is_granted('ROLE_PURCHASE_PAYMENT_EDIT') or is_granted('ROLE_PURCHASE_PAYMENT_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_purchase_purchase_payment_header_show', {'id': purchasePaymentHeader.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_PURCHASE_PAYMENT_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_purchase_purchase_payment_header_edit', {'id': purchasePaymentHeader.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, purchasePaymentHeaders) }}

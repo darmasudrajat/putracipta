@@ -1,0 +1,110 @@
+<div class="table-responsive">
+    <table class="table table-bordered"
+       data-controller="form-collection"
+       data-form-collection-start-index-value="{{ form.salePaymentDetails|length > 0 ? form.salePaymentDetails|last.vars.name + 1 : 0 }}"
+       data-form-collection-prototype-value="{{ _self.collection_item(form.salePaymentDetails.vars.prototype)|e('html_attr') }}"
+       data-action="form-collection:collection-item-removed->json-loader#load:self">
+        <thead class="table-secondary">
+            <tr>
+                <th class="d-none">Purchase Invoice Header Id</th>
+                <th style="min-width: 150px">Invoice #</th>
+                <th style="min-width: 150px">Memo</th>
+                <th style="min-width: 150px">Account</th>
+                <th style="min-width: 150px">Invoice</th>
+                <th style="min-width: 90px" colspan="2">PPh</th>
+                <th style="min-width: 150px">Piutang</th>
+                <th style="min-width: 150px">Amount</th>
+                <th style="min-width: 0"></th>
+            </tr>
+        </thead>
+        <tbody data-form-collection-target="items" data-action="sale-invoice-header-table:data-table:select@document->form-collection#addCollectionItem">
+            {% macro collection_item(detailForm) %}
+                <tr data-form-collection-target="item" data-item-identifier-name="saleInvoiceHeaderId" data-item-identifier-value="{{ detailForm.vars.value.saleInvoiceHeader.id|default }}" {% if detailForm.isCanceled.vars.data %}class="d-none"{% endif %}>
+                    <td class="d-none">{{ form_widget(detailForm.saleInvoiceHeader, {'attr': {'data-item-field-name': 'saleInvoiceHeaderId'}}) }}</td>
+                    <td data-item-field-name="saleInvoiceHeaderCodeNumber">{{ detailForm.vars.value.saleInvoiceHeader.codeNumber|default }}</td>
+                    <td>{{ form_row(detailForm.memo, {'label': false}) }}</td>
+                    <td>{{ form_row(detailForm.account, {'label': false}) }}</td>
+                    <td class="text-end" data-item-field-name="saleInvoiceHeaderRemainingPayment">{{ detailForm.vars.value.invoiceAmount|default|number_format(0) }}</td>
+                    <td>{{ form_row(detailForm.serviceTaxMode, {'label': false, 'attr': {'data-action': 'change->json-loader#load'}}) }}</td>
+                    <td class="text-end" data-json-loader-target="placeholder"
+                        data-property-path="salePaymentDetails.{{ detailForm.vars.name }}.serviceTaxNominal">
+                        {{ detailForm.vars.value.serviceTaxNominal|default|number_format(2) }}
+                    </td>
+                    <td class="text-end" 
+                        data-item-field-name="saleInvoiceHeaderRemainingPayment"
+                        data-json-loader-target="placeholder"
+                        data-property-path="salePaymentDetails.{{ detailForm.vars.name }}.receivableAmount">
+                        {{ detailForm.vars.value.receivableAmount|default|number_format(0) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.amount, {'label': false, 'attr': {
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load', 
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 2)'}}
+                            ]|json_encode,
+                        }}) }}
+                        {#<div id="{{ detailForm.amount.vars.id }}-format" class="text-end">{{ detailForm.vars.value.amount|default|number_format(0) }}</div>#}
+                    </td>
+                    <td>
+                        {% if (detailForm.vars.value.id == null) %}
+                            <button type="button" class="btn btn-outline-dark" data-action="form-collection#removeCollectionItem"><i class="bi-x-lg"></i></button>
+                        {% else %}
+                            <button type="button" class="btn btn-danger"
+                                    data-controller="dom-element"
+                                    data-action="dom-element#bind json-loader#load"
+                                    data-dom-element-bind-specifications-param="{{ [
+                                        {'destinationsTarget': '#' ~ detailForm.isCanceled.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'checked', 'value': 'true'}},
+                                        {'destinations': '[$element.closest("tr")]', 'action': 'addClass', 'descriptor': {'name': 'd-none'}},
+                                    ]|json_encode }}">
+                                <i class="bi-x-lg"></i>
+                            </button>
+                        {% endif %}
+                        <div class="d-none">
+                            {{ form_row(detailForm.isCanceled) }}
+                        </div>
+                    </td>
+                </tr>
+            {% endmacro %}
+            {% for detailForm in form.salePaymentDetails %}
+                {{ _self.collection_item(detailForm) }}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-end font-weight-bolder" colspan="6">Total</td>
+                <td class="text-end" data-json-loader-target="placeholder"
+                    data-property-path="totalReceivable">
+                    {{ salePaymentHeader.totalReceivable|default|number_format(2) }}
+                </td>
+                <td class="text-end" data-json-loader-target="placeholder"
+                    data-property-path="totalAmount">
+                    {{ salePaymentHeader.totalAmount|default|number_format(2) }}
+                </td>
+                <td></td>
+            </tr>
+            {#<tr>
+                <td class="text-end" colspan="4">Total Retur</td>
+                <td>
+                    {{ form_row(form.returnAmount, {'label': false, 'attr': {'data-action': 'change->json-loader#load', 'size': 3}}) }}
+                </td>
+                <td></td>
+            </tr>#}
+            <tr>
+                <td class="text-end font-weight-bolder" colspan="7">Admin Fee</td>
+                <td>
+                    {{ form_row(form.administrationFee, {'label': false, 'attr': {'data-action': 'change->json-loader#load', 'size': 3}}) }}
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="text-end font-weight-bold" colspan="7">Jumlah Diterima</td>
+                <td class="text-end" data-json-loader-target="placeholder"
+                    data-property-path="receivedAmount">
+                    {{ salePaymentHeader.receivedAmount|default|number_format(2) }}
+                </td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

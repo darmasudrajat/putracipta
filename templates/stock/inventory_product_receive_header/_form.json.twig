@@ -1,0 +1,12 @@
+{
+    "totalQuantity": "{{ inventoryProductReceiveHeader.totalQuantity|default|number_format(0) }}",
+    "inventoryProductReceiveDetails": {
+        {%- for inventoryProductReceiveDetailForm in form.inventoryProductReceiveDetails -%}
+            {%- set inventoryProductReceiveDetail = inventoryProductReceiveDetailForm.vars.data -%}
+            "{{ inventoryProductReceiveDetailForm.vars.name }}": {
+                "quantityTotalPieces": "{{ inventoryProductReceiveDetail.quantityTotalPieces|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

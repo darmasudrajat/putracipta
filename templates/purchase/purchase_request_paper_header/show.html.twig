@@ -1,0 +1,197 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Purchase Request Kertas' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_purchase_purchase_request_paper_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_PURCHASE_REQUEST_PAPER_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_purchase_purchase_request_paper_header_edit', {'id': purchaseRequestPaperHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_PURCHASE_REQUEST_PAPER_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_purchase_purchase_request_paper_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-brequested table-striped">
+        <tbody>
+            <tr>
+                <th>Permintaan Pembelian #</th>
+                <td>{{ purchaseRequestPaperHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ purchaseRequestPaperHeader.transactionDate ? purchaseRequestPaperHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Gudang</th>
+                <td>{{ purchaseRequestPaperHeader.warehouse.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ purchaseRequestPaperHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ purchaseRequestPaperHeader.transactionStatus }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ purchaseRequestPaperHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ purchaseRequestPaperHeader.createdTransactionDateTime ? purchaseRequestPaperHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ purchaseRequestPaperHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ purchaseRequestPaperHeader.modifiedTransactionDateTime ? purchaseRequestPaperHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction On Hold?</th>
+                <td>{{ purchaseRequestPaperHeader.isOnHold ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ purchaseRequestPaperHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+            {% if purchaseRequestPaperHeader.transactionStatus == constant('TRANSACTION_STATUS_REJECT', purchaseRequestPaperHeader)  %}
+                <tr>
+                    <th>Reject Note</th>
+                    <td>{{ purchaseRequestPaperHeader.rejectNote|default }}</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <table class="table table-brequested table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Kode</th>
+                <th>Nama Kertas</th>
+                <th>Quantity</th>
+                <th>Satuan</th>
+                <th>Tanggal Pakai</th>
+                <th>Keterangan</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseRequestPaperDetail in purchaseRequestPaperHeader.purchaseRequestPaperDetails %}
+                {% if purchaseRequestPaperDetail.isCanceled == false and purchaseRequestPaperDetail.quantity > 0 %}
+                    <tr>
+                        <td>{{ purchaseRequestPaperDetail.paper.codeNumber|default }}</td>
+                        <td>{{ purchaseRequestPaperDetail.paper.name|default }}</td>
+                        <td style="text-align: center">{{ purchaseRequestPaperDetail.quantity|default|number_format(2) }}</td>
+                        <td>{{ purchaseRequestPaperDetail.unit.name|default }}</td>
+                        <td>{{ purchaseRequestPaperDetail.usageDate ? purchaseRequestPaperDetail.usageDate|date('d M Y') : '' }}</td>
+                        <td>{{ purchaseRequestPaperDetail.memo|default }}</td>
+                        <td>{{ purchaseRequestPaperDetail.transactionStatus|default }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" style="text-align: right"><strong>Total</strong></td>
+                <td style="text-align: center"><strong>{{ purchaseRequestPaperHeader.totalQuantity|default|number_format(0) }}</strong></td>
+                <td colspan="4"></td>
+            </tr>
+        </tfoot>
+    </table>
+       
+    <ul class="nav nav-tabs" id="purchase-order-paper-receive-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="purchase-order-paper-header-tab" data-bs-toggle="tab" data-bs-target="#purchase-order-paper-header-tab-pane" type="button" role="tab" aria-controls="purchase-order-paper-header-tab-pane" aria-selected="true">Purchase Order</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="receive-header-tab" data-bs-toggle="tab" data-bs-target="#receive-header-tab-pane" type="button" role="tab" aria-controls="receive-header-tab-pane" aria-selected="false">Penerimaan</button>
+        </li>
+    </ul>
+        
+    <div class="tab-content" id="purchase-order-paper-receive-tab-content">
+        <div class="tab-pane fade show active" id="purchase-order-paper-header-tab-pane" role="tabpanel" aria-labelledby="purchase-order-paper-header-tab" tabindex="0">
+            <legend class="float-none w-auto text-dark px-1">Data Order Pembelian Kertas</legend>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr class="bg-warning">
+                        <th>PO Kertas #</th>
+                        <th>Tanggal</th>
+                        <th>Note</th>
+                        <th>Kertas</th>
+                        <th>Quantity</th>
+                        <th>Satuan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchaseRequestPaperDetail in purchaseRequestPaperHeader.purchaseRequestPaperDetails %}
+                        {% for purchaseOrderPaperDetail in purchaseRequestPaperDetail.purchaseOrderPaperDetails %}
+                            <tr>
+                                <td>{{ purchaseOrderPaperDetail.purchaseOrderPaperHeader.codeNumber|default }}</td>
+                                <td>{{ purchaseOrderPaperDetail.purchaseOrderPaperHeader.transactionDate|default ? purchaseOrderPaperDetail.purchaseOrderPaperHeader.transactionDate|date('d M Y') : '' }}</td>
+                                <td>{{ purchaseOrderPaperDetail.purchaseOrderPaperHeader.note|default }}</td>
+                                <td>{{ purchaseOrderPaperDetail.paper.paperNameSizeCombination|default }}</td>
+                                <td>{{ purchaseOrderPaperDetail.quantity|default|number_format(0) }}</td>
+                                <td>{{ purchaseOrderPaperDetail.unit.name|default }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="receive-header-tab-pane" role="tabpanel" aria-labelledby="receive-header-tab" tabindex="0">
+            {% set showReceive = purchaseRequestPaperHeader.purchaseRequestPaperDetails|map(purchaseRequestPaperDetail => purchaseRequestPaperDetail.purchaseOrderPaperDetails is not null)|reduce((a, b) => a or b, false) %}
+            {% if showReceive %}
+                <legend class="float-none w-auto text-dark px-1">Data Penerimaan</legend>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="bg-primary">
+                            <th>Penerimaan #</th>
+                            <th>Tanggal</th>
+                            <th>Material</th>
+                            <th>Quantity</th>
+                            <th>Satuan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for purchaseRequestPaperDetail in purchaseRequestPaperHeader.purchaseRequestPaperDetails %}
+                            {% for purchaseOrderPaperDetail in purchaseRequestPaperDetail.purchaseOrderPaperDetails %}
+                                {% for receiveDetail in purchaseOrderPaperDetail.receiveDetails %}
+                                    <tr>
+                                        <td>{{ receiveDetail.receiveHeader.codeNumber|default }}</td>
+                                        <td>{{ receiveDetail.receiveHeader.transactionDate|default ? receiveDetail.receiveHeader.transactionDate|date('d M Y') : '' }}</td>
+                                        <td>{{ receiveDetail.material.name|default }}</td>
+                                        <td>{{ receiveDetail.quantity|default|number_format(0) }}</td>
+                                        <td>{{ receiveDetail.unit.name|default }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+       
+    <div class="d-inline-block">{{ include('purchase/purchase_request_paper_header/_delete_form.html.twig') }}</div>
+    
+    {#{{ include('purchase/purchase_request_paper_header/_delete_form.html.twig') }}#}
+    {% if (purchaseRequestPaperHeader.transactionStatus == constant('TRANSACTION_STATUS_DRAFT', purchaseRequestPaperHeader) or purchaseRequestPaperHeader.transactionStatus == constant('TRANSACTION_STATUS_RELEASE', purchaseRequestPaperHeader)) and is_granted('ROLE_APPROVAL') %}
+        <div class="d-inline-block">{{ include('purchase/purchase_request_paper_header/_reject_form.html.twig') }}</div>
+        <div class="d-inline-block">{{ include('purchase/purchase_request_paper_header/_approve_form.html.twig') }}</div>
+    {% endif %}
+    
+    {% if purchaseRequestPaperHeader.transactionStatus != constant('TRANSACTION_STATUS_REJECT', purchaseRequestPaperHeader) and purchaseRequestPaperHeader.transactionStatus != constant('TRANSACTION_STATUS_APPROVE', purchaseRequestPaperHeader) %}
+        {% if purchaseRequestPaperHeader.isOnHold == false %}
+            <div class="d-inline-block">{{ include('purchase/purchase_request_paper_header/_hold_form.html.twig') }}</div>
+        {% else %}
+            <div class="d-inline-block">{{ include('purchase/purchase_request_paper_header/_release_form.html.twig') }}</div>
+        {% endif %}
+    {% endif %}
+    
+    <div class="d-inline-block"><a target="_blank" class="btn btn-info btn-sm" href="{{ path('app_purchase_purchase_request_paper_header_memo', {'id': purchaseRequestPaperHeader.id}) }}">Print Request</a></div>
+{% endblock %}

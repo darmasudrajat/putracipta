@@ -1,0 +1,53 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>Laporan Permintaan Produksi</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Permintaan #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Gudang</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Jenis</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kode</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Nama Item</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Keluar</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Satuan</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Memo</strong></th>
+        </tr>
+        <tr>
+            <th colspan="8"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for inventoryRequestMaterialDetail in inventoryRequestMaterialDetails %}
+            <tr>
+                <td style="text-align: left">{{ inventoryRequestMaterialDetail.inventoryRequestHeader.codeNumber|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestMaterialDetail.inventoryRequestHeader.transactionDate|default ? inventoryRequestMaterialDetail.inventoryRequestHeader.transactionDate|date('j M Y') }}</td>
+                <td style="text-align: left">{{ inventoryRequestMaterialDetail.inventoryRequestHeader.warehouse.name|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestMaterialDetail.inventoryRequestHeader.requestMode|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestMaterialDetail.inventoryRequestHeader.note|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestMaterialDetail.material.code|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestMaterialDetail.material.name|default }}</td>
+                <td style="text-align: center">{{ inventoryRequestMaterialDetail.quantity|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestMaterialDetail.unit.name|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestMaterialDetail.memo|default }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

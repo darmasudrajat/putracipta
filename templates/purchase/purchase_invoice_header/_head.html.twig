@@ -1,0 +1,63 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, purchaseInvoiceHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 200px">
+                    S. Invoice # 
+                </th>
+                <th style="min-width: 150px">
+                    Tanggal
+                </th>
+                <th style="min-width: 250px">
+                    Supplier
+                </th>
+                <th style="min-width: 150px">
+                    Total
+                </th>
+                <th style="min-width: 150px">
+                    Payment
+                </th>
+                <th style="min-width: 150px">
+                    Return
+                </th>
+                <th style="min-width: 150px">
+                    Remaining
+                </th>
+                <th style="min-width: 100px">
+                    Status
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseInvoiceHeader in purchaseInvoiceHeaders %}
+                <tr>
+                    {#<td>{{ purchaseInvoiceHeader.codeNumber }}</td>#}
+                    <td>{{ purchaseInvoiceHeader.supplierInvoiceCodeNumber }}</td>
+                    <td>{{ purchaseInvoiceHeader.transactionDate ? purchaseInvoiceHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ purchaseInvoiceHeader.supplier.company|default }}</td>
+                    <td class="text-end">{{ purchaseInvoiceHeader.grandTotal|number_format(0) }}</td>
+                    <td class="text-end">{{ purchaseInvoiceHeader.totalPayment|number_format(0) }}</td>
+                    <td class="text-end">{{ purchaseInvoiceHeader.totalReturn|number_format(0) }}</td>
+                    <td class="text-end">{{ purchaseInvoiceHeader.remainingPayment|number_format(0) }}</td>
+                    <td>{{ purchaseInvoiceHeader.transactionStatus }}</td>
+                    <td>
+                        {{ include('purchase/purchase_invoice_header/_read_form.html.twig') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="9">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, purchaseInvoiceHeaders) }}

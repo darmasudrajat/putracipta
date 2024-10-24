@@ -1,0 +1,48 @@
+{
+    "totalQuantityOrder": "{{ masterOrderHeader.totalQuantityOrder|default|number_format(0) }}",
+    "totalQuantityProduction": "{{ masterOrderHeader.totalQuantityProduction|default|number_format(0) }}",
+    "totalQuantityStock": "{{ masterOrderHeader.totalQuantityStock|default|number_format(0) }}",
+    "totalQuantityShortage": "{{ masterOrderHeader.totalQuantityShortage|default|number_format(0) }}",
+    "quantityPaper": "{{ masterOrderHeader.quantityPaper|default|number_format(2) }}",
+    "paperTotal": "{{ masterOrderHeader.paperTotal|default|number_format(0) }}",
+    "insitPrintingQuantity": "{{ masterOrderHeader.insitPrintingQuantity|default|number_format(0) }}",
+    "insitSortingQuantity": "{{ masterOrderHeader.insitSortingQuantity|default|number_format(0) }}",
+    "paperRequirement": "{{ masterOrderHeader.paperRequirement|default|number_format(0) }}",
+    "inkCyanWeight": "{{ masterOrderHeader.inkCyanWeight|default|number_format(2) }}",
+    "inkMagentaWeight": "{{ masterOrderHeader.inkMagentaWeight|default|number_format(2) }}",
+    "inkYellowWeight": "{{ masterOrderHeader.inkYellowWeight|default|number_format(2) }}",
+    "inkBlackWeight": "{{ masterOrderHeader.inkBlackWeight|default|number_format(2) }}",
+    "inkOpvWeight": "{{ masterOrderHeader.inkOpvWeight|default|number_format(2) }}",
+    "inkHotStampingQuantity": "{{ masterOrderHeader.inkHotStampingQuantity|default|number_format(0) }}",
+    "inkK1Weight": "{{ masterOrderHeader.inkK1Weight|default|number_format(2) }}",
+    "inkK2Weight": "{{ masterOrderHeader.inkK2Weight|default|number_format(2) }}",
+    "inkK3Weight": "{{ masterOrderHeader.inkK3Weight|default|number_format(2) }}",
+    "inkK4Weight": "{{ masterOrderHeader.inkK4Weight|default|number_format(2) }}",
+    "inkLaminatingQuantity": "{{ masterOrderHeader.inkLaminatingQuantity|default|number_format(0) }}",
+    "packagingGlueWeight": "{{ masterOrderHeader.packagingGlueWeight|default|number_format(2) }}",
+    "packagingRubberWeight": "{{ masterOrderHeader.packagingRubberWeight|default|number_format(2) }}",
+    "packagingPaperWeight": "{{ masterOrderHeader.packagingPaperWeight|default|number_format(2) }}",
+    "packagingBoxWeight": "{{ masterOrderHeader.packagingBoxWeight|default|number_format(2) }}",
+    "packagingTapeLargeSize": "{{ masterOrderHeader.packagingTapeLargeSize|default|number_format(2) }}",
+    "packagingTapeSmallSize": "{{ masterOrderHeader.packagingTapeSmallSize|default|number_format(2) }}",
+    "packagingPlasticSize": "{{ masterOrderHeader.packagingPlasticSize|default|number_format(2) }}",
+    "quantityStockPaper": "{{ masterOrderHeader.quantityStockPaper|default|number_format(0) }}",    
+    "masterOrderProductDetails": {
+        {%- for masterOrderProductDetailForm in form.masterOrderProductDetails -%}
+            {%- set masterOrderProductDetail = masterOrderProductDetailForm.vars.data -%}
+            "{{ masterOrderProductDetailForm.vars.name }}": {
+                "quantityShortage": "{{ masterOrderProductDetail.quantityShortage|default|number_format(0) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    },
+    "masterOrderPrototypeDetails": {
+        {%- for masterOrderPrototypeDetailForm in form.masterOrderPrototypeDetails -%}
+            {%- set masterOrderPrototypeDetail = masterOrderPrototypeDetailForm.vars.data -%}
+            "{{ masterOrderPrototypeDetailForm.vars.name }}": {
+                "quantityShortage": "{{ masterOrderPrototypeDetail.quantityShortage|default|number_format(0) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

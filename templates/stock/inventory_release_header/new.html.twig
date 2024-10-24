@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add Pengeluaran Material ke Produksi' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_stock_inventory_release_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('stock/inventory_release_header/_form.html.twig') }}
+{% endblock %}

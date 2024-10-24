@@ -1,0 +1,70 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Material' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_material_index') }}">Manage</a>
+    {% if is_granted('ROLE_MATERIAL_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_master_material_edit', {'id': material.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_MATERIAL_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_master_material_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td>{{ material.id }}</td>
+            </tr>
+            <tr>
+                <th>Code</th>
+                <td>{{ material.codeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ material.name }}</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>{{ material.materialSubCategory.materialCategory.name }}</td>
+            </tr>
+            <tr>
+                <th>Sub Category</th>
+                <td>{{ material.materialSubCategory.name }}</td>
+            </tr>
+            <tr>
+                <th>Varian</th>
+                <td>{{ material.variant }}</td>
+            </tr>
+            <tr>
+                <th>Ketebalan</th>
+                <td>{{ material.thickness }}</td>
+            </tr>
+            <tr>
+                <th>Density</th>
+                <td>{{ material.density }}</td>
+            </tr>
+            <tr>
+                <th>Viskositas</th>
+                <td>{{ material.viscosity }}</td>
+            </tr>
+            <tr>
+                <th>Satuan</th>
+                <td>{{ material.unit.name }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ material.note }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ material.isInactive ? 'Inactive' : 'Active' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {#{{ include('master/material/_delete_form.html.twig') }}#}
+{% endblock %}

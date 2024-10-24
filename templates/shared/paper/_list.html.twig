@@ -1,0 +1,77 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, papers) }}
+
+{% if app.request.request.has('design_code') or app.request.request.has('product_prototype') or app.request.request.has('master_order_header') %}
+    {% set selectMultiple = false %}
+{% else %}
+    {% set selectMultiple = true %}
+{% endif %}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="paper-table" 
+           data-controller="data-table"
+           {% if selectMultiple == true %}
+               data-data-table-selected-identifiers-target-value="#paper-table-identifiers"
+               data-data-table-selected-class="table-primary"
+               data-data-table-active-class="table-active"
+           {% endif %}>
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 300px" role="button" {{ grid.sort_link_item(form, 'code') }}>
+                    Code {{ grid.sort_char(form.sort.code.vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    Nama{{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'weight') }}>
+                    Berat (gsm){{ grid.sort_char(form.sort.weight.vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'materialSubCategory:name') }}>
+                    Jenis{{ grid.sort_char(form.sort['materialSubCategory:name'].vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input type="text" {{ grid.filter_link_item(form, 'code') }} value="{{ form.filter.code.1.vars.value }}" />
+                </th>
+                <th>
+                    <input type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th>
+                    <input type="text" {{ grid.filter_link_item(form, 'weight') }} value="{{ form.filter.weight.1.vars.value }}" />
+                </th>
+                <th>
+                    <input type="text" {{ grid.filter_link_item(form, 'materialSubCategory:name') }} value="{{ form.filter['materialSubCategory:name'].1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paper in papers %}
+                <tr {% if selectMultiple == true %}data-data-table-target="selectable" data-selected-identifier="{{ paper.id }}"{% else %}data-bs-dismiss="modal"{% endif %} data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'paperId': paper.id, 
+                    'paperCode': paper.codeNumber, 
+                    'paperName': paper.name, 
+                    'unitId': paper.unit.id, 
+                    'unitName': paper.unit.name,
+                    'pricingMode': paper.pricingMode,
+                    'paperLength': paper.length, 
+                    'paperWidth': paper.width, 
+                    'paperWeight': paper.weight}|json_encode }}">
+                    <td>{{ paper.codeNumber }}</td>
+                    <td>{{ paper.name }}</td>
+                    <td>{{ paper.weight }}</td>
+                    <td>{{ paper.materialSubCategory.name|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+            
+{{ grid.navigation(form, count, papers) }}

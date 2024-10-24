@@ -1,0 +1,474 @@
+<div class="memo">
+    <div class="header" style="font-size: 10px; text-align: left">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label"><img id="logo" alt="logo" max-height="300px" src="{{ asset('images/Logo.jpg') }}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label" style="font-size: 14px; text-align: center">FORMULIR</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label" style="font-size: 18px; text-align: center">OUTGOING QUALITY SHEET</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">No Dokumen</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">F/PCK/PPIC/9.1-4</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Revisi</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">0</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Tanggal</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label"></div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Halaman</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">1 dari 1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="note">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">No WO</div>
+                        <div class="cell value">: {{ masterOrderHeader.getCodeNumber|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Customer</div>
+                        <div class="cell value">: {{ masterOrderHeader.customer.company|default }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <table  class="detail">
+        <thead class="table-secondary">
+            <tr>
+                <th>PO#</th>
+                <th>Kode</th>
+                <th>Nama Produk</th>
+                <th>Tanggal Kirim</th>
+                <th>Qty Order</th>
+                <th>Qty Produksi</th>
+                <th>Stock</th>
+                <th>Kekurangan</th>
+                <th>Up Cetak</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderProductDetail in masterOrderHeader.masterOrderProductDetails %}
+                <tr>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.product.code|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.product.name|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.deliveryDate ? masterOrderProductDetail.saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityOrder|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityProduction|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityStock|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityShortage|default|number_format(0) }}</td>
+                    <td>{{ masterOrderProductDetail.quantityPrinting|default|number_format(0) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br />
+
+    <table class="detail">
+        <thead>
+            <tr>
+                <th style="width: 5%">No.</th>
+                <th style="width: 30%" colspan="2">Parameter</th>
+                <th style="width: 5%">Units</th>
+                <th style="width: 30%">Target</th>
+                <th style="width: 20%">Result</th>
+                <th style="width: 10%">Test Method</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td style="text-align: center">1</td>
+                <td colspan="2">Material</td>
+                <td>-</td>
+                <td>{{ masterOrderHeader.paper.name|default }}</td>
+                <td>&nbsp;</td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">2</td>
+                <td colspan="2">Gramatur</td>
+                <td>gsm</td>
+                <td>{{ masterOrderHeader.paper.weight|default }} +/- 3%</td>
+                <td></td>
+                <td>Measurement</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">3</td>
+                <td colspan="2">Grain Direction (Arah Serat)</td>
+                <td>-</td>
+                <td>Horisontal</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">4</td>
+                <td colspan="2">Colour-Design-Text</td>
+                <td>-</td>
+                <td>Refers to color range</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">5</td>
+                <td colspan="2">QR / Barcode</td>
+                <td>-</td>
+                <td>Refers to color range</td>
+                <td></td>
+                <td>Measurement</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">6</td>
+                <td>Dimension :</td>
+                <td>Length</td>
+                <td>mm</td>
+                <td> +/- 1</td>
+                <td></td>
+                <td>Measurement</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>&nbsp;</td>
+                <td>Width</td>
+                <td>mm</td>
+                <td> +/- 1</td>
+                <td></td>
+                <td>Measurement</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>&nbsp;</td>
+                <td>Height</td>
+                <td>mm</td>
+                <td> +/- 1</td>
+                <td></td>
+                <td>Measurement</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">7</td>
+                <td colspan="2">Weight per pcs (berat per pcs)</td>
+                <td>gram</td>
+                <td></td>
+                <td></td>
+                <td>Measurement</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">8</td>
+                <td colspan="2">Miss print (cetakan lari)</td>
+                <td>mm</td>
+                <td>Max 0,2</td>
+                <td></td>
+                <td>Measurement</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">9</td>
+                <td colspan="2">Defect print (front panel)</td>
+                <td>dots</td>
+                <td>Max hickies 1 dot, not in text area, talent and brand</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">10</td>
+                <td colspan="2">Defect print (non front panel)</td>
+                <td>dots</td>
+                <td>Max hickies 3 dots</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">11</td>
+                <td colspan="2">Varnish</td>
+                <td>-</td>
+                <td>{{ masterOrderHeader.finishing|default }}</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">12</td>
+                <td colspan="2">Glossiness</td>
+                <td>%</td>
+                <td>{{ masterOrderHeader.glossiness|default }}</td>
+                <td></td>
+                <td>Measurement</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">13</td>
+                <td colspan="2">Pond</td>
+                <td>-</td>
+                <td>Easy to be folded</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">14</td>
+                <td colspan="2">Pond Unregistered</td>
+                <td>mm</td>
+                <td>Max 1</td>
+                <td></td>
+                <td>Measurement</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">15</td>
+                <td colspan="2">Perforasi</td>
+                <td>-</td>
+                <td>Tearing of paper surface, free from UV Varnish</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">16</td>
+                <td colspan="2">Emboss</td>
+                <td>-</td>
+                <td>Refers to color range</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">17</td>
+                <td colspan="2">Emboss Unregistered</td>
+                <td>mm</td>
+                <td>Max 0,5</td>
+                <td></td>
+                <td>Measurement</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">18</td>
+                <td colspan="2">Zipper Quality</td>
+                <td>-</td>
+                <td>Easy to be tear</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">19</td>
+                <td colspan="2">Cracking / Tearing</td>
+                <td>mm</td>
+                <td>Max 1</td>
+                <td></td>
+                <td>Measurement</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">20</td>
+                <td colspan="2">Hot Stample</td>
+                <td>-</td>
+                <td>Refers to color range</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">21</td>
+                <td colspan="2">Hot Stamp Unregistered</td>
+                <td>mm</td>
+                <td>Max 0,5</td>
+                <td></td>
+                <td>Measurement</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">22</td>
+                <td colspan="2">Bending (Tekukan)</td>
+                <td>-</td>
+                <td>Negative</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">23</td>
+                <td colspan="2">Over glueing (Bleber/nempel dalam)</td>
+                <td>-</td>
+                <td>Negative</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">24</td>
+                <td colspan="2">Foreign Matters (Benda Asing)</td>
+                <td>-</td>
+                <td>Negative</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+            <tr>
+                <td style="text-align: center">25</td>
+                <td colspan="2">BPOM RI MD</td>
+                <td>-</td>
+                <td>Refers to color range</td>
+                <td></td>
+                <td>Visual</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <br />
+
+    <div class="note">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <table class="detail">
+                        <tfoot>
+                            <tr>
+                                <td style="text-align: center; font-weight: bold">No</td>
+                                <td style="text-align: center; font-weight: bold">Jumlah Kemas (pcs)</td>
+                                <td style="text-align: center; font-weight: bold">Jlh Sample</td>
+                                <td style="text-align: center; font-weight: bold">Acc</td>
+                                <td style="text-align: center; font-weight: bold">Reject</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">1</td>
+                                <td style="text-align: center; font-weight: bold">< 25</td>
+                                <td style="text-align: center">5</td>
+                                <td style="text-align: center">0</td>
+                                <td style="text-align: center">1</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">2</td>
+                                <td style="text-align: center; font-weight: bold">26 - 50</td>
+                                <td style="text-align: center">8</td>
+                                <td style="text-align: center">1</td>
+                                <td style="text-align: center">2</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">3</td>
+                                <td style="text-align: center; font-weight: bold">51 - 90</td>
+                                <td style="text-align: center">13</td>
+                                <td style="text-align: center">1</td>
+                                <td style="text-align: center">2</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">4</td>
+                                <td style="text-align: center; font-weight: bold">91 - 150</td>
+                                <td style="text-align: center">20</td>
+                                <td style="text-align: center">2</td>
+                                <td style="text-align: center">3</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">5</td>
+                                <td style="text-align: center; font-weight: bold">151 - 280</td>
+                                <td style="text-align: center">32</td>
+                                <td style="text-align: center">3</td>
+                                <td style="text-align: center">4</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">6</td>
+                                <td style="text-align: center; font-weight: bold">281 - 500</td>
+                                <td style="text-align: center">50</td>
+                                <td style="text-align: center">5</td>
+                                <td style="text-align: center">6</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">7</td>
+                                <td style="text-align: center; font-weight: bold">501 - 1200</td>
+                                <td style="text-align: center">80</td>
+                                <td style="text-align: center">7</td>
+                                <td style="text-align: center">8</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">8</td>
+                                <td style="text-align: center; font-weight: bold">1201 - 3200</td>
+                                <td style="text-align: center">125</td>
+                                <td style="text-align: center">10</td>
+                                <td style="text-align: center">11</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">9</td>
+                                <td style="text-align: center; font-weight: bold">3201 - 10.000</td>
+                                <td style="text-align: center">200</td>
+                                <td style="text-align: center">14</td>
+                                <td style="text-align: center">15</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">10</td>
+                                <td style="text-align: center; font-weight: bold">10.001 - 35.000</td>
+                                <td style="text-align: center">315</td>
+                                <td style="text-align: center">21</td>
+                                <td style="text-align: center">22</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">11</td>
+                                <td style="text-align: center; font-weight: bold">35.001 - 150.000</td>
+                                <td style="text-align: center">500</td>
+                                <td style="text-align: center">21</td>
+                                <td style="text-align: center">22</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">12</td>
+                                <td style="text-align: center; font-weight: bold">150.001 - 500.000</td>
+                                <td style="text-align: center">800</td>
+                                <td style="text-align: center">21</td>
+                                <td style="text-align: center">22</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center">13</td>
+                                <td style="text-align: center; font-weight: bold">> 500.000</td>
+                                <td style="text-align: center">1.250</td>
+                                <td style="text-align: center">21</td>
+                                <td style="text-align: center">22</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label" style="text-align: right">Tgl Pengecekan</div>
+                        <div class="cell value">: ______________________________</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="cell label" style="text-align: right">Jumlah Sampling</div>
+                        <div class="cell value">: ______________________________</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label" style="text-align: right">Status</div>
+                        <div class="cell value">: ______________________________</div>
+                    </div>
+                    <div class="cell sig" style="text-align: center">
+                        <div>Dicek oleh,</div>
+                        <div class="blank">&nbsp;</div>
+                        <div class="blank">&nbsp;</div>
+                        <div class="blank">&nbsp;</div>
+                        <div class="blank">&nbsp;</div>
+                        <div class="blank">&nbsp;</div>
+                        <div>(.........................)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,199 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Purchase Request' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_purchase_purchase_request_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_PURCHASE_REQUEST_MATERIAL_EDIT') %}
+    <a class="btn btn-warning btn-sm" href="{{ path('app_purchase_purchase_request_header_edit', {'id': purchaseRequestHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_PURCHASE_REQUEST_MATERIAL_ADD') %}
+    <a class="btn btn-success btn-sm" href="{{ path('app_purchase_purchase_request_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-brequested table-striped">
+        <tbody>
+            <tr>
+                <th>Permintaan Pembelian #</th>
+                <td>{{ purchaseRequestHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Permintaan</th>
+                <td>{{ purchaseRequestHeader.transactionDate ? purchaseRequestHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Gudang</th>
+                <td>{{ purchaseRequestHeader.warehouse.name }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ purchaseRequestHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ purchaseRequestHeader.transactionStatus }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ purchaseRequestHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ purchaseRequestHeader.createdTransactionDateTime ? purchaseRequestHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ purchaseRequestHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ purchaseRequestHeader.modifiedTransactionDateTime ? purchaseRequestHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction On Hold?</th>
+                <td>{{ purchaseRequestHeader.isOnHold ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ purchaseRequestHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+            {% if purchaseRequestHeader.transactionStatus == constant('TRANSACTION_STATUS_REJECT', purchaseRequestHeader)  %}
+                <tr>
+                    <th>Reject Note</th>
+                    <td>{{ purchaseRequestHeader.rejectNote|default }}</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <table class="table table-brequested table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Kode</th>
+                <th>Nama Material</th>
+                <th>Quantity</th>
+                <th>Satuan</th>
+                <th>Tanggal Pakai</th>
+                <th>Keterangan</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseRequestDetail in purchaseRequestHeader.purchaseRequestDetails %}
+                {% if purchaseRequestDetail.isCanceled == false and purchaseRequestDetail.quantity > 0 %}
+                    <tr>
+                        <td>{{ purchaseRequestDetail.material.code|default }}</td>
+                        <td>{{ purchaseRequestDetail.material.name|default }}</td>
+                        <td class="text-center">{{ purchaseRequestDetail.quantity|default|number_format(2) }}</td>
+                        <td>{{ purchaseRequestDetail.unit.name|default }}</td>
+                        <td>{{ purchaseRequestDetail.usageDate ? purchaseRequestDetail.usageDate|date('d M Y') : '' }}</td>
+                        <td>{{ purchaseRequestDetail.memo|default }}</td>
+                        <td>{{ purchaseRequestDetail.transactionStatus|default }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" class="text-end"><strong>Total</strong></td>
+                <td class="text-center"><strong>{{ purchaseRequestHeader.totalQuantity|default }}</strong></td>
+                <td colspan="4"></td>
+            </tr>
+        </tfoot>
+    </table>
+                
+    <ul class="nav nav-tabs" id="purchase-order-receive-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="purchase-order-header-tab" data-bs-toggle="tab" data-bs-target="#purchase-order-header-tab-pane" type="button" role="tab" aria-controls="purchase-order-header-tab-pane" aria-selected="true">Purchase Order</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="receive-header-tab" data-bs-toggle="tab" data-bs-target="#receive-header-tab-pane" type="button" role="tab" aria-controls="receive-header-tab-pane" aria-selected="false">Penerimaan</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="purchase-order-receive-tab-content">
+        <div class="tab-pane fade show active" id="purchase-order-header-tab-pane" role="tabpanel" aria-labelledby="purchase-order-header-tab" tabindex="0">
+            <legend class="float-none w-auto text-dark px-1">Data Order Pembelian</legend>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr class="bg-warning">
+                        <th>PO #</th>
+                        <th>Tanggal</th>
+                        <th>Note</th>
+                        <th>Material</th>
+                        <th>Quantity</th>
+                        <th>Satuan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchaseRequestDetail in purchaseRequestHeader.purchaseRequestDetails %}
+                        {% for purchaseOrderDetail in purchaseRequestDetail.purchaseOrderDetails %}
+                            <tr>
+                                <td>{{ purchaseOrderDetail.purchaseOrderHeader.codeNumber|default }}</td>
+                                <td>{{ purchaseOrderDetail.purchaseOrderHeader.transactionDate|default ? purchaseOrderDetail.purchaseOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+                                <td>{{ purchaseOrderDetail.purchaseOrderHeader.note|default }}</td>
+                                <td>{{ purchaseOrderDetail.material.name|default }}</td>
+                                <td class="text-center">{{ purchaseOrderDetail.quantity|default|number_format(0) }}</td>
+                                <td>{{ purchaseOrderDetail.unit.name|default }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+                
+        <div class="tab-pane fade" id="receive-header-tab-pane" role="tabpanel" aria-labelledby="receive-header-tab" tabindex="0">
+            {% set showReceive = purchaseRequestHeader.purchaseRequestDetails|map(purchaseRequestDetail => purchaseRequestDetail.purchaseOrderDetails is not null)|reduce((a, b) => a or b, false) %}
+            {% if showReceive %}
+                <legend class="float-none w-auto text-dark px-1">Data Penerimaan</legend>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="bg-primary">
+                            <th>Penerimaan #</th>
+                            <th>Tanggal</th>
+                            <th>Material</th>
+                            <th>Quantity</th>
+                            <th>Satuan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for purchaseRequestDetail in purchaseRequestHeader.purchaseRequestDetails %}
+                            {% if purchaseRequestDetail.purchaseOrderDetails is not null %}
+                                {% for purchaseOrderDetail in purchaseRequestDetail.purchaseOrderDetails %}
+                                    {% for receiveDetail in purchaseOrderDetail.receiveDetails %}
+                                        <tr>
+                                            <td>{{ receiveDetail.receiveHeader.codeNumber|default }}</td>
+                                            <td>{{ receiveDetail.receiveHeader.transactionDate|default ? receiveDetail.receiveHeader.transactionDate|date('d M Y') : '' }}</td>
+                                            <td>{{ receiveDetail.material.name|default }}</td>
+                                            <td class="text-center">{{ receiveDetail.quantity|default|number_format(0) }}</td>
+                                            <td>{{ receiveDetail.unit.name|default }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+       
+    <div class="d-inline-block">{{ include('purchase/purchase_request_header/_delete_form.html.twig') }}</div>
+    
+    {#{{ include('purchase/purchase_request_header/_delete_form.html.twig') }}#}
+    {% if (purchaseRequestHeader.transactionStatus == constant('TRANSACTION_STATUS_DRAFT', purchaseRequestHeader) or purchaseRequestHeader.transactionStatus == constant('TRANSACTION_STATUS_RELEASE', purchaseRequestHeader)) and is_granted('ROLE_APPROVAL') %}
+        <div class="d-inline-block">{{ include('purchase/purchase_request_header/_reject_form.html.twig') }}</div>
+        <div class="d-inline-block">{{ include('purchase/purchase_request_header/_approve_form.html.twig') }}</div>
+    {% endif %}
+    
+    {% if purchaseRequestHeader.transactionStatus != constant('TRANSACTION_STATUS_REJECT', purchaseRequestHeader) and purchaseRequestHeader.transactionStatus != constant('TRANSACTION_STATUS_APPROVE', purchaseRequestHeader) %}
+        {% if purchaseRequestHeader.isOnHold == false %}
+            <div class="d-inline-block">{{ include('purchase/purchase_request_header/_hold_form.html.twig') }}</div>
+        {% else %}
+            <div class="d-inline-block">{{ include('purchase/purchase_request_header/_release_form.html.twig') }}</div>
+        {% endif %}
+    {% endif %}
+    
+    <div class="d-inline-block"><a target="_blank" class="btn btn-info btn-sm" href="{{ path('app_purchase_purchase_request_header_memo', {'id': purchaseRequestHeader.id}) }}">Print Request</a></div>
+{% endblock %}

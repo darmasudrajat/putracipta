@@ -1,0 +1,59 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, productPrototypeDetails) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="product-prototype-detail-table" 
+           data-controller="data-table"
+               data-data-table-selected-identifiers-target-value="#paper-table-identifiers"
+               data-data-table-selected-class="table-primary"
+               data-data-table-active-class="table-active">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'product:code') }}>
+                    Code {{ grid.sort_char(form.sort['product:code'].vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'product:name') }}>
+                    Name {{ grid.sort_char(form.sort['product:name'].vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'product:measurement') }}>
+                    Ukuran Jadi {{ grid.sort_char(form.sort['product:measurement'].vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'product:code') }} value="{{ form.filter['product:code'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'product:name') }} value="{{ form.filter['product:name'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'product:measurement') }} value="{{ form.filter['product:measurement'].1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for productPrototypeDetail in productPrototypeDetails %}
+                <tr data-data-table-target="selectable" data-selected-identifier="{{ productPrototypeDetail.id }}" class="data-table-check-row" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'productPrototypeDetailId': productPrototypeDetail.id,
+                    'productId': productPrototypeDetail.product.id|default,
+                    'productCode': productPrototypeDetail.product.code|default,
+                    'productName': productPrototypeDetail.product.name|default,
+                    'productMeasurement': productPrototypeDetail.product.productLengthWidthHeightCombination|default,
+                    'inventoryStockQuantity': stockQuantityList[productPrototypeDetail.product.id] is defined ? stockQuantityList[productPrototypeDetail.product.id] : 0}|json_encode }}">
+                    <td>{{ productPrototypeDetail.product.code|default }}</td>
+                    <td>{{ productPrototypeDetail.product.name|default }}</td>
+                    <td>{{ productPrototypeDetail.product.productLengthWidthHeightCombination|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+            
+{{ grid.navigation(form, count, productPrototypeDetails) }}

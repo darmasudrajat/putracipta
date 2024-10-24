@@ -1,0 +1,71 @@
+<div class="table-responsive">
+    <table class="table table-bordered"
+       data-controller="form-collection"
+       data-form-collection-start-index-value="{{ form.saleReturnDetails|length > 0 ? form.saleReturnDetails|last.vars.name + 1 : 0 }}"
+       data-form-collection-prototype-value="{{ _self.collection_item(form.saleReturnDetails.vars.prototype)|e('html_attr') }}"
+       data-action="form-collection:collection-item-removed->json-loader#load:self">
+        <thead class="table-secondary">
+            <tr>
+                <th class="d-none">Product Id</th>
+                <th style="min-width: 150px">PO #</th>
+                <th style="min-width: 150px">Item Code</th>
+                <th style="min-width: 150px">Description</th>
+                <th style="min-width: 70px">Qty PO </th>
+                <th style="min-width: 70px">Qty Dlv</th>
+                <th style="min-width: 70px">Qty Retur</th>
+                <th style="min-width: 110px">Satuan</th>
+                <th style="width: 0"></th>
+            </tr>
+        </thead>
+        <tbody data-form-collection-target="items" data-action="delivery-header-table:data-table:select@document->form-collection#clearCollectionItems delivery-header-table:data-table:select@document->form-collection#addCollectionItems delivery-header-table:data-table:select@document->json-loader#load">
+            {% macro collection_item(detailForm) %}
+                <tr data-form-collection-target="item" data-item-identifier-name="deliveryDetailId" data-item-identifier-value="{{ detailForm.vars.value.deliveryDetail.id|default }}" {% if detailForm.isCanceled.vars.data %}class="d-none"{% endif %}>
+                    <td class="d-none">{{ form_widget(detailForm.deliveryDetail, {'attr': {'data-item-field-name': 'deliveryDetailId'}}) }}</td>
+                    <td data-item-field-name="saleOrderHeaderReferenceNumber">
+                        {{ detailForm.vars.value.deliveryDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}
+                    </td>
+                    <td data-item-field-name="productCode">
+                        {{ detailForm.vars.value.product.code|default }}
+                    </td>
+                    <td data-item-field-name="productName">
+                        {{ detailForm.vars.value.product.name|default }}
+                    </td>
+                    <td class="text-center" data-item-field-name="saleOrderDetailQuantity">{{ detailForm.vars.value.deliveryDetail.saleOrderDetail.quantity|default|number_format(0) }}</td>
+                    <td class="text-center" data-item-field-name="deliveryDetailQuantity">{{ detailForm.vars.value.deliveryDetail.quantity|default|number_format(0) }}</td>
+                    <td>
+                        {{ form_row(detailForm.quantity, {'label': false, 'attr': {
+                            'size': 3,
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 0)'}}
+                            ]|json_encode,
+                        }}) }}
+                    </td>
+                    <td data-item-field-name="unitName">{{ detailForm.vars.value.unit.name|default }}</td>
+                    <td>
+                        {% if (detailForm.vars.value.id == null) %}
+                            <button type="button" class="btn btn-outline-dark" data-action="form-collection#removeCollectionItem"><i class="bi-x-lg"></i></button>
+                        {% else %}
+                            <button type="button" class="btn btn-danger"
+                                    data-controller="dom-element"
+                                    data-action="dom-element#bind json-loader#load"
+                                    data-dom-element-bind-specifications-param="{{ [
+                                        {'destinationsTarget': '#' ~ detailForm.isCanceled.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'checked', 'value': 'true'}},
+                                        {'destinations': '[$element.closest("tr")]', 'action': 'addClass', 'descriptor': {'name': 'd-none'}},
+                                    ]|json_encode }}">
+                                <i class="bi-x-lg"></i>
+                            </button>
+                        {% endif %}
+                        <div class="d-none">
+                            {{ form_row(detailForm.isCanceled) }}
+                        </div>
+                    </td>
+                </tr>
+            {% endmacro %}
+            {% for detailForm in form.saleReturnDetails %}
+                {{ _self.collection_item(detailForm) }}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

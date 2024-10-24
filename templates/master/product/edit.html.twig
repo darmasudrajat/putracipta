@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Product' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_product_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_master_product_show', {'id': product.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/product/_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Literal Config' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_admin_literal_config_index') }}">Manage</a>
+    <a class="btn btn-warning btn-sm" href="{{ path('app_admin_literal_config_edit', {'id': literalConfig.id}) }}">Edit</a>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Ifsc Number</th>
+                <td>{{ literalConfig.ifscCode }}</td>
+            </tr>
+            <tr>
+                <th>VAT %</th>
+                <td>{{ literalConfig.vatPercentage }}</td>
+            </tr>
+            <tr>
+                <th>PPh 23 (%)</th>
+                <td>{{ literalConfig.serviceTaxPercentage }}</td>
+            </tr>
+            <tr>
+                <th>Toleransi Sisa Pembayaran</th>
+                <td>{{ literalConfig.paymentRemainingTolerance|default|number_format(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

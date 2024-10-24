@@ -1,0 +1,146 @@
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward data-choice:select->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id', 'data-choice:select': 'id'}|json_encode }}"
+     data-json-loader-url-value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}"
+     data-json-loader-form-target-value="{{ "form[name=#{form.vars.name}]" }}">
+
+    {{ form_start(form) }}
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Header</legend>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.transactionDate, {'label': 'Tanggal Release', 'attr': {'data-controller': 'flatpickr-element', 'class': 'readonly-form-input', 'data-flatpickr-element-options-value': {'dateFormat': 'j M Y'}|json_encode}}) }}
+                    {{ form_row(form.warehouse, {
+                        'label': 'Gudang',
+                        'attr': {
+                            'data-action': 'json-loader#load',
+                        },
+                    }) }}
+                    {{ form_row(form.releaseMode, {
+                        'label': 'Jenis Pengeluaran',
+                        'attr': {
+                            'readonly': inventoryReleaseHeader.id is not null,
+                            'data-controller': 'dom-element data-choice',
+                            'data-action': 'change->dom-element#bind data-choice#select',
+                            'data-dom-element-bind-specifications-param': [
+                                {'destinationsTarget': "#detail-material-container", 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value !== "material"'},
+                                {'destinationsTarget': "#detail-material-container", 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value === "material"'},
+                                {'destinationsTarget': "#detail-paper-container", 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value !== "paper"'},
+                                {'destinationsTarget': "#detail-paper-container", 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value === "paper"'},
+                            ]|json_encode,
+                        },
+                    }) }}
+                </div>
+                <div class="col">
+                    <div class="mb-3 d-none">
+                        <label for="{{ form.masterOrderHeader.vars.id }}-text" class="form-label">WO #</label>
+                        {{ form_row(form.masterOrderHeader, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'master-order-header-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].masterOrderHeaderId'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        <input type="text" id="{{ form.masterOrderHeader.vars.id }}-text" class="form-control readonly-form-input {% if not form.masterOrderHeader.vars.valid %}is-invalid{% endif %}" value="{{ inventoryReleaseHeader.masterOrderHeader.codeNumber|default }}" readonly="readonly"
+                               data-bs-toggle="modal" data-bs-target="#master-order-header-dialog"
+                               data-controller="dom-element"
+                               data-action="master-order-header-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].masterOrderHeaderCodeNumber'}},
+                               ]|json_encode }}" />
+                        {{ form_errors(form.masterOrderHeader) }}
+                    </div>
+                    {{ form_row(form.division, {'label': 'Divisi'}) }}
+                    {{ form_row(form.partNumber, {'label': 'Part #'}) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.note) }}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3 {% if inventoryReleaseHeader.releaseMode != constant('RELEASE_MODE_MATERIAL', inventoryReleaseHeader) %}d-none{% endif %}" id="detail-material-container">
+            <legend class="float-none w-auto text-dark px-1">Detail Materials</legend>
+            <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#material-dialog">Add Material</button>
+            <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#inventory-request-material-detail-dialog">Add Permintaan Material</button>
+            {{ include('stock/inventory_release_header/_details_material_form.html.twig') }}
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3 {% if inventoryReleaseHeader.releaseMode != constant('RELEASE_MODE_PAPER', inventoryReleaseHeader) %}d-none{% endif %}" id="detail-paper-container">
+            <legend class="float-none w-auto text-dark px-1">Detail Kertas</legend>
+            <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#paper-dialog">Add Kertas</button>
+            <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#inventory-request-paper-detail-dialog">Add Permintaan Kertas</button>
+            {{ include('stock/inventory_release_header/_details_paper_form.html.twig') }}
+        </fieldset>
+
+        <div class="d-grid">
+            <div class="row">
+                <div class="col text-center">
+                    <a class="btn btn-danger" href="{{ path('app_stock_inventory_release_header_index') }}"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                        Cancel
+                    </a>
+                    <button class="btn btn-success"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                        Save
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+        </div>
+    {{ form_end(form) }}
+
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('material-dialog', 'Material List') }}
+        <input type="hidden" id="material-table-identifiers" />
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_material__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+            Done
+        </button>
+    {{ dialog.end() }}
+
+    {{ dialog.start('inventory-request-material-detail-dialog', 'Material Request List') }}
+        <input type="hidden" id="inventory-request-material-detail-table-identifiers" />
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_inventory_request_material_detail__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+            Done
+        </button>
+    {{ dialog.end() }}
+
+    {{ dialog.start('paper-dialog', 'Kertas List') }}
+        <input type="hidden" id="paper-table-identifiers" />
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_paper__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+            Done
+        </button>
+    {{ dialog.end() }}
+
+    {{ dialog.start('inventory-request-paper-detail-dialog', 'Paper Request List') }}
+        <input type="hidden" id="inventory-request-paper-detail-table-identifiers" />
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_inventory_request_paper_detail__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+            Done
+        </button>
+    {{ dialog.end() }}
+</div>

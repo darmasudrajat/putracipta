@@ -1,0 +1,31 @@
+{% import 'app/role_form_input.html.twig' as input %}
+
+{% set indexes = {} %}
+{% for index, childForm in form.roles.children %}
+    {% set indexes = indexes|merge({(childForm.vars.value): index}) %}
+{% endfor %}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th colspan="4"><div class="d-flex justify-content-center"><strong>{{ input.check(indexes, form, 'ROLE_ADMIN', 'Director') }}</strong></div></th>
+            </tr>
+            <tr>
+                <th>{{ input.check(indexes, form, 'ROLE_SETTING', 'Transaction Setting') }}</th>
+                <th>{{ input.check(indexes, form, 'ROLE_USER_MANAGEMENT', 'User Management') }}</th>
+                <th>{{ input.check(indexes, form, 'ROLE_APPROVAL', 'SPV Approval') }}</th>
+                <th>{{ input.check(indexes, form, 'ROLE_MARKETING', 'Marketing') }}</th>
+            </tr>
+        </thead>
+    </table>
+            
+    {{ include('admin/user/_transaction_roles_form.html.twig') }}
+     
+    {{ include('admin/user/_production_roles_form.html.twig') }}
+    
+    {{ include('admin/user/_master_roles_form.html.twig') }}
+    
+    {{ include('admin/user/_report_roles_form.html.twig') }}
+    
+</div>

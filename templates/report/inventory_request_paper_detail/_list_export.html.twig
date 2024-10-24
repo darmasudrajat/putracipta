@@ -1,0 +1,55 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>Laporan Permintaan Produksi</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Permintaan #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Gudang</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Jenis</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>WO #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kode</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Nama Item</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Keluar</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Satuan</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Memo</strong></th>
+        </tr>
+        <tr>
+            <th colspan="8"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for inventoryRequestPaperDetail in inventoryRequestPaperDetails %}
+            <tr>
+                <td style="text-align: left">{{ inventoryRequestPaperDetail.inventoryRequestHeader.codeNumber|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestPaperDetail.inventoryRequestHeader.transactionDate|default ? inventoryRequestPaperDetail.inventoryRequestHeader.transactionDate|date('j M Y') }}</td>
+                <td style="text-align: left">{{ inventoryRequestPaperDetail.inventoryRequestHeader.warehouse.name|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestPaperDetail.inventoryRequestHeader.requestMode|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestPaperDetail.inventoryRequestHeader.note|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestPaperDetail.masterOrderHeader.codeNumber|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestPaperDetail.paper.codeNumber|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestPaperDetail.paper.name|default }}</td>
+                <td style="text-align: center">{{ inventoryRequestPaperDetail.quantity|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestPaperDetail.unit.name|default }}</td>
+                <td style="text-align: left">{{ inventoryRequestPaperDetail.memo|default }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

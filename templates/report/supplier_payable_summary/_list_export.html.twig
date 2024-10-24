@@ -1,0 +1,70 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>Laporan Hutang Supplier</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Invoice #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>TOP (hari)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Jatuh Tempo</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Supplier</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Currency</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Amount</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Payment</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Retur</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Remaining</strong></th>
+        </tr>
+        <tr>
+            <th colspan="10"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% set totalAmount = 0 %}
+        {% set totalPayment = 0 %}
+        {% set totalReturn = 0 %}
+        {% set totalRemaining = 0 %}
+        {% for purchaseInvoiceHeader in purchaseInvoiceHeaders %}
+            <tr>
+                <td style="text-align: left">{{ purchaseInvoiceHeader.codeNumber|default }}</td>
+                <td style="text-align: left">{{ purchaseInvoiceHeader.transactionDate|default ? purchaseInvoiceHeader.transactionDate|date('j M Y') }}</td>
+                <td style="text-align: left">{{ purchaseInvoiceHeader.supplier.paymentTerm|default }}</td>
+                <td style="text-align: left">{{ purchaseInvoiceHeader.dueDate|default ? purchaseInvoiceHeader.dueDate|date('j M Y') }}</td>
+                <td style="text-align: left">{{ purchaseInvoiceHeader.supplier.company|default }}</td>
+                <td style="text-align: left">{{ purchaseInvoiceHeader.supplier.currency.code|default }}</td>
+                <td style="text-align: left">{{ purchaseInvoiceHeader.grandTotal|default }}</td>
+                <td style="text-align: left">{{ purchaseInvoiceHeader.totalPayment|default }}</td>
+                <td style="text-align: left">{{ purchaseInvoiceHeader.totalReturn|default }}</td>
+                <td style="text-align: left">{{ purchaseInvoiceHeader.remainingPayment|default }}</td>
+            </tr>
+            {% set totalAmount = totalAmount + purchaseInvoiceHeader.grandTotal|default %}
+            {% set totalPayment = totalPayment + purchaseInvoiceHeader.totalPayment|default %}
+            {% set totalReturn = totalReturn + purchaseInvoiceHeader.totalReturn|default %}
+            {% set totalRemaining = totalRemaining + purchaseInvoiceHeader.remainingPayment|default %}
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td style="font-weight: bold; text-align: right" colspan="6">Total</td>
+            <td style="font-weight: bold; text-align: right">{{ totalAmount|default }}</td>
+            <td style="font-weight: bold; text-align: right">{{ totalPayment|default }}</td>
+            <td style="font-weight: bold; text-align: right">{{ totalReturn|default }}</td>
+            <td style="font-weight: bold; text-align: right">{{ totalRemaining|default }}</td>
+        </tr>
+    </tfoot>
+</table>

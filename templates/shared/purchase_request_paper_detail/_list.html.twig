@@ -1,0 +1,112 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, purchaseRequestPaperDetails) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="purchase-request-paper-detail-table" 
+           data-controller="data-table"
+           data-data-table-selected-identifiers-target-value="#purchase-request-paper-detail-table-identifiers"
+           data-data-table-selected-class="table-primary"
+           data-data-table-active-class="table-active">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'paper:name') }}>
+                    Kertas {{ grid.sort_char(form.sort['paper:name'].vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'paper:length') }}>
+                    P {{ grid.sort_char(form.sort['paper:length'].vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'paper:width') }}>
+                    L {{ grid.sort_char(form.sort['paper:width'].vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'paper:weight') }}>
+                    GSM {{ grid.sort_char(form.sort['paper:weight'].vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'quantity') }}>
+                    Quantity {{ grid.sort_char(form.sort.quantity.vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'unit:name') }}>
+                    Satuan {{ grid.sort_char(form.sort['unit:name'].vars.value) }}
+                </th>
+                <th style="min-width: 250px">
+                    Request #
+                </th>
+                <th style="min-width: 150px">
+                    Tanggal
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'usageDate') }}>
+                    Tanggal Pakai {{ grid.sort_char(form.sort.usageDate.vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'memo') }}>
+                    Keterangan {{ grid.sort_char(form.sort.memo.vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'paper:name') }} value="{{ form.filter['paper:name'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'paper:length') }} value="{{ form.filter['paper:length'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'paper:width') }} value="{{ form.filter['paper:width'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'paper:weight') }} value="{{ form.filter['paper:weight'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'quantity') }} value="{{ form.filter.quantity.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'unit:name') }} value="{{ form.filter['unit:name'].1.vars.value }}" />
+                </th>
+                <th></th>
+                <th></th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'usageDate') }} value="{{ form.filter.usageDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'memo') }} value="{{ form.filter.memo.1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseRequestPaperDetail in purchaseRequestPaperDetails %}
+                <tr data-data-table-target="selectable" data-selected-identifier="{{ purchaseRequestPaperDetail.id }}" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'purchaseRequestPaperDetailId': purchaseRequestPaperDetail.id,
+                    'purchaseRequestHeaderCodeNumber': purchaseRequestPaperDetail.purchaseRequestPaperHeader.codeNumber,
+                    'purchaseRequestHeaderTransactionDate': purchaseRequestPaperDetail.purchaseRequestPaperHeader.transactionDate ? purchaseRequestPaperDetail.purchaseRequestPaperHeader.transactionDate|date('d M Y') : '',
+                    'paperName': purchaseRequestPaperDetail.paper.paperNameSizeCombination,
+                    'paperCode': purchaseRequestPaperDetail.paper.codeNumber,
+                    'paperId': purchaseRequestPaperDetail.paper.id,
+                    'paperLength': purchaseRequestPaperDetail.paper.length,
+                    'paperWidth': purchaseRequestPaperDetail.paper.width,
+                    'paperWeight': purchaseRequestPaperDetail.paper.weight,
+                    'pricingMode': purchaseRequestPaperDetail.paper.pricingMode,
+                    'usageDate': purchaseRequestPaperDetail.usageDate ? purchaseRequestPaperDetail.usageDate|date('Y-m-d') : '',
+                    'memo': purchaseRequestPaperDetail.memo,
+                    'unitId': purchaseRequestPaperDetail.unit.id,
+                    'purchaseRequestPaperDetailQuantity': purchaseRequestPaperDetail.quantity|number_format(0)}|json_encode }}">
+                    <td>{{ purchaseRequestPaperDetail.paper.name|default }}</td>
+                    <td>{{ purchaseRequestPaperDetail.paper.length|default }}</td>
+                    <td>{{ purchaseRequestPaperDetail.paper.width|default }}</td>
+                    <td>{{ purchaseRequestPaperDetail.paper.weight|default }}</td>
+                    <td class="text-center">{{ purchaseRequestPaperDetail.quantity|number_format(0) }}</td>
+                    <td>{{ purchaseRequestPaperDetail.unit.name|default }}</td>
+                    <td>{{ purchaseRequestPaperDetail.purchaseRequestPaperHeader.codeNumber|default }}</td>
+                    <td>{{ purchaseRequestPaperDetail.purchaseRequestPaperHeader.transactionDate ? purchaseRequestPaperDetail.purchaseRequestPaperHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ purchaseRequestPaperDetail.usageDate ? purchaseRequestPaperDetail.usageDate|date('d M Y') : ''  }}</td>
+                    <td>{{ purchaseRequestPaperDetail.memo }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="11">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, purchaseRequestPaperDetails) }}

@@ -1,0 +1,92 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, masterOrderProductDetails) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped" id="master-order-product-detail-table" data-controller="data-table">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 0">
+                    <input type="checkbox" data-controller="dom-element" data-action="dom-element#bind" data-dom-element-bind-specifications-param="{{ [
+                        {'destinationsTarget': '#master-order-product-detail-table .data-table-check', 'action': 'setPropertyValue', 'descriptor': {'property': 'checked', 'value': '$element.checked'}},
+                    ]|json_encode }}" />
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'saleOrderHeader:referenceNumber') }}>
+                    Customer PO # {{ grid.sort_char(form.sort['saleOrderHeader:referenceNumber'].vars.value) }}
+                </th>
+                <th style="min-width: 150px">Tanggal Kirim</th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'product:code') }}>
+                    Code {{ grid.sort_char(form.sort['product:code'].vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'product:name') }}>
+                    Name {{ grid.sort_char(form.sort['product:name'].vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button">
+                    Quantity
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'unit:name') }}>
+                    Satuan {{ grid.sort_char(form.sort['unit:name'].vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th></th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'saleOrderHeader:referenceNumber') }} value="{{ form.filter['saleOrderHeader:referenceNumber'].1.vars.value }}" />
+                </th>
+                <th></th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'product:code') }} value="{{ form.filter['product:code'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'product:name') }} value="{{ form.filter['product:name'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'unit:name') }} value="{{ form.filter['unit:name'].1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderProductDetail in masterOrderProductDetails %}
+                <tr class="data-table-check-row" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'customerCompany': masterOrderProductDetail.masterOrderHeader.customer.company|default,
+                    'masterOrderHeaderDate': masterOrderProductDetail.masterOrderHeader.transactionDate|default ? masterOrderProductDetail.masterOrderHeader.transactionDate|date('d M Y') : '',
+                    'masterOrderHeaderWorkOrderNumber': masterOrderProductDetail.masterOrderHeader.codeNumberOrdinal|default,
+                    'masterOrderHeaderLotNumber': masterOrderProductDetail.masterOrderHeader.lotNumber|default,
+                    'masterOrderProductDetailId': masterOrderProductDetail.id,
+                    'saleOrderHeaderIsUsingFscPaper': masterOrderProductDetail.saleOrderDetail.saleOrderHeader.isUsingFscPaper|default ? 'Yes' : 'No',
+                    'saleOrderHeaderReferenceNumber': masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default,
+                    'productCode': masterOrderProductDetail.product.code|default,
+                    'productName': masterOrderProductDetail.product.name|default,
+                    'productId': masterOrderProductDetail.product.id|default,
+                    'unitName': masterOrderProductDetail.saleOrderDetail.unit.name|default,
+                    'saleOrderDetailId': masterOrderProductDetail.saleOrderDetail.id|default,
+                    'saleOrderDetailLinePo': masterOrderProductDetail.saleOrderDetail.linePo|default,
+                    'saleOrderDetailQuantityRemaining': masterOrderProductDetail.saleOrderDetail.remainingDelivery|default|number_format(0),
+                    'saleOrderDetailQuantity': masterOrderProductDetail.saleOrderDetail.quantity|default|number_format(0)}|json_encode }}">
+                    <td><input type="checkbox" class="data-table-check" data-controller="dom-element" data-action="click->dom-element#doNothing:stop" /></td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.deliveryDate|default ? masterOrderProductDetail.saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                    <td>{{ masterOrderProductDetail.product.code|default }}</td>
+                    <td>{{ masterOrderProductDetail.product.name|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.remainingDelivery|default|number_format(0) }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.unit.name|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<button type="button" class="btn btn-primary btn-sm"
+        data-action="event-emitter#trigger"
+        data-event-emitter-trigger-elements-target-param="#master-order-product-detail-table .data-table-check-row"
+        data-event-emitter-trigger-event-type-param="click"
+        data-event-emitter-trigger-condition-param="$element.querySelector('.data-table-check').checked">
+    Select
+</button>
+
+{{ grid.navigation(form, count, masterOrderProductDetails) }}

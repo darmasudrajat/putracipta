@@ -1,0 +1,53 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Journal Voucher Header' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_accounting_journal_voucher_header_index') }}">Manage</a>
+    <a class="btn btn-warning btn-sm" href="{{ path('app_accounting_journal_voucher_header_edit', {'id': journalVoucherHeader.id}) }}">Edit</a>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Is Canceled</th>
+                <td>{{ journalVoucherHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Ordinal</th>
+                <td>{{ journalVoucherHeader.codeNumberOrdinal }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Month</th>
+                <td>{{ journalVoucherHeader.codeNumberMonth }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Year</th>
+                <td>{{ journalVoucherHeader.codeNumberYear }}</td>
+            </tr>
+            <tr>
+                <th>Created Transaction Date Time</th>
+                <td>{{ journalVoucherHeader.createdTransactionDateTime ? journalVoucherHeader.createdTransactionDateTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Modified Transaction Date Time</th>
+                <td>{{ journalVoucherHeader.modifiedTransactionDateTime ? journalVoucherHeader.modifiedTransactionDateTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Approved Transaction Date Time</th>
+                <td>{{ journalVoucherHeader.approvedTransactionDateTime ? journalVoucherHeader.approvedTransactionDateTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Date</th>
+                <td>{{ journalVoucherHeader.transactionDate ? journalVoucherHeader.transactionDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ journalVoucherHeader.note }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{ include('accounting/journal_voucher_header/_delete_form.html.twig') }}
+{% endblock %}

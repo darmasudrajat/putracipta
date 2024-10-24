@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col border border-secondary rounded">
+        <table class="table table-bordered"
+               data-controller="form-collection"
+               data-form-collection-start-index-value="{{ form.masterOrderDistributionDetails|length > 0 ? form.masterOrderDistributionDetails|last.vars.name + 1 : 0 }}"
+               data-form-collection-prototype-value="{{ _self.distribution_collection_item(form.masterOrderDistributionDetails.vars.prototype)|e('html_attr') }}"
+               data-action="form-collection:collection-item-removed->json-loader#load:self">
+            <thead class="table-secondary">
+                <tr>
+                    <th class="d-none">Design Code Distribution Detail Id</th>
+                    <th class="d-none">Work Order Distribution Id</th>
+                    <th style="min-width: 250px">Nama</th>
+                    <th style="min-width: 10px">Sub Con</th>
+                </tr>
+            </thead>
+            <tbody data-form-collection-target="items" data-action="design-code-table:data-table:select@document->form-collection#clearCollectionItems design-code-table:data-table:select@document->form-collection#addCollectionItems"
+                   data-form-collection-add-items-source-field-path-param="designCodeDistributionDetailsData">
+                {% macro distribution_collection_item(detailForm) %}
+                    <tr data-form-collection-target="item" data-item-identifier-name="workOrderDistributionId" data-item-identifier-value="{{ detailForm.vars.value.workOrderDistribution.id|default }}" {% if (detailForm.vars.value.isCanceled) %}class="bg-secondary"{% endif %}>
+                        <td class="d-none">{{ form_widget(detailForm.designCodeDistributionDetail, {'attr': {'data-item-field-name': 'designCodeDistributionDetailId'}}) }}</td>
+                        <td class="d-none">{{ form_widget(detailForm.workOrderDistribution, {'attr': {'data-item-field-name': 'workOrderDistributionId'}}) }}</td>
+                        <td data-item-field-name="workOrderDistributionName">{{ detailForm.vars.value.workOrderDistribution.name|default }}</td>
+                        <td class="d-flex justify-content-center">
+                            {{ form_row(detailForm.isSubcon, {'label': false}) }}
+                        </td>
+                        {#<td>
+                            {% if (detailForm.vars.value.id == null) %}
+                                <button type="button" class="btn btn-outline-dark btn-sm" data-action="form-collection#removeCollectionItem"><i class="bi-x-lg"></i></button>
+                            {% endif %}
+                            <div {% if (detailForm.vars.value.id == null) %}class="d-none"{% endif %}>
+                                {{ form_row(detailForm.isCanceled, {
+                                    'label': 'X',
+                                    'attr': {
+                                        'data-controller': 'dom-element',
+                                        'data-action': 'dom-element#bind change->json-loader#load',
+                                        'data-dom-element-bind-specifications-param': [
+                                            {'destinationsTarget': "table tr[data-item-identifier-value=\"#{detailForm.vars.value.workOrderDistribution.id|default}\"]", 'action': 'removeClass', 'descriptor': {'name': 'bg-secondary'}, 'condition': '!$element.checked'},
+                                            {'destinationsTarget': "table tr[data-item-identifier-value=\"#{detailForm.vars.value.workOrderDistribution.id|default}\"]", 'action': 'addClass', 'descriptor': {'name': 'bg-secondary'}, 'condition': '$element.checked'},
+                                        ]|json_encode,
+                                    },
+                                }) }}
+                            </div>
+                        </td>#}
+                    </tr>
+                {% endmacro %}
+                {% for detailForm in form.masterOrderDistributionDetails %}
+                    {{ _self.distribution_collection_item(detailForm) }}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

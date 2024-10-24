@@ -1,0 +1,320 @@
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward action-button:click->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id', 'action-button:click': 'id'}|json_encode }}"
+     data-json-loader-url-value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}"
+     data-json-loader-method-value="POST"
+     data-json-loader-form-target-value="{{ "form[name=#{form.vars.name}]" }}">
+
+    {{ form_start(form) }}
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Header</legend>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.transactionDate, {'label': 'Tanggal Produksi', 'attr': {'data-controller': 'flatpickr-element', 'class': 'readonly-form-input'}}) }}
+                    <div class="mb-3">
+                        <label class="form-label">Mesin Cetak</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.printingMachine|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderPrintingMachine'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Customer</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.customer.company|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.customerCompany'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kode Design</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.designCode|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderDesignCode'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kode Produk</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.product.code|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.productCode'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nama Produk</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.product.name|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.productName'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantity Order</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.quantityOrder|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderQuantityOrder'}},
+                               ]|json_encode }}" />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Stock / Kekurangan (pcs)</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.quantityStock|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderQuantityStock'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">/</span>
+                                    <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.quantityProduction|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderQuantityProduction'}},
+                                       ]|json_encode }}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <div class="mb-3">
+                        <label class="form-label">Ukuran Jadi (mm)</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <span class="input-group-text">P</span>
+                                    <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.dimensionLength|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderDimensionLength'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">L</span>
+                                    <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.dimensionWidth|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderDimensionWidth'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">T</span>
+                                    <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.dimensionHeight|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderDimensionHeight'}},
+                                       ]|json_encode }}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                            
+                    <div class="mb-3">
+                        <label class="form-label">Warna / Pantone</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.color|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderColor'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">/</span>
+                                    <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.pantone|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderPantone'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">+</span>
+                                    <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.colorPantoneAdditional|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderColorPantoneAdditional'}},
+                                       ]|json_encode }}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="{{ form.masterOrderHeader.vars.id }}-text" class="form-label">Master Order #</label>
+                        {{ form_row(form.masterOrderHeader, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'master-order-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderId'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        <input type="text" id="{{ form.masterOrderHeader.vars.id }}-text" class="form-control readonly-form-input {% if not form.masterOrderHeader.vars.valid %}is-invalid{% endif %}" value="{{ workOrderCuttingHeader.masterOrderHeader.codeNumber|default }}" readonly="readonly"
+                               data-bs-toggle="modal" data-bs-target="#master-order-dialog"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCodeNumber'}},
+                               ]|json_encode }}" />
+                        {{ form_errors(form.masterOrderHeader) }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">No. PO</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.saleOrderDetail.saleOrderHeader.referenceNumber|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.saleOrderHeaderReferenceNumber'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal MO</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.transactionDate|default ? workOrderCuttingHeader.masterOrderHeader.transactionDate|date('d M Y') : '' }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderDate'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal PO</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.saleOrderDetail.saleOrderHeader.transactionDate|default ? workOrderCuttingHeader.masterOrderHeader.saleOrderDetail.saleOrderHeader.transactionDate|date('d M Y') : '' }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.saleOrderHeaderTransactionDate'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal Kirim</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.deliveryDate|default ? workOrderCuttingHeader.masterOrderHeader.deliveryDate|date('d M Y') : '' }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderDeliveryDate'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Status Cetakan</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.printingStatus|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderPrintingStatus'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Finishing</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.finishing|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderFinishing'}},
+                               ]|json_encode }}" />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Material Kertas</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.paperFep|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderPaper'}},
+                               ]|json_encode }}" />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Jumlah Up Cetak</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.quantityPrinting|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderQuantityPrinting'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">&</span>
+                                    <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.quantityPrinting2|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderQuantityPrinting2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">Up/S</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                
+                    <div class="mb-3">
+                        <label class="form-label">Ukuran Mountage/Kris</label>
+                        <input type="text" class="form-control" value="{{ workOrderCuttingHeader.masterOrderHeader.mountageSizeLength|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderMountageSizeLength'}},
+                               ]|json_encode }}" />
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.employeeIdWorkOrderReturn, {'label': 'WO dikembalikan oleh'}) }}
+                    {{ form_row(form.workOrderReturnDate, {'label': 'Tanggal Pengembalian WO', 'attr': {'data-controller': 'flatpickr-element', 'class': 'readonly-form-input'}}) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form.isSizeFit, {'label': 'Sesuai Ukuran'}) }}
+                    {{ form_row(form.note, {'label': 'Catatan'}) }}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Details</legend>
+            <button type="button" class="btn btn-sm btn-outline-dark"
+                    id="new-work-order-cutting-detail-button"
+                    data-controller="action-button"
+                    data-action="action-button#click">
+                Add Details
+            </button>
+            {{ include('production/work_order_cutting_header/_material_details_form.html.twig') }}
+        </fieldset>
+
+        <div class="d-grid">
+            <button class="btn btn-success"
+                    data-controller="dom-element"
+                    data-action="dom-element#confirm"
+                    data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                Save
+            </button>
+            <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+        </div>
+    {{ form_end(form) }}
+
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('master-order-header-dialog', 'Master Order List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_master_order_header__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+</div>

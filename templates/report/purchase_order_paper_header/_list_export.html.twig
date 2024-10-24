@@ -1,0 +1,65 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>Laporan PO Kertas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>PO #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Supplier</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal Kirim</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+            <th style="text-align: center;"><strong>Kode</strong></th>
+            <th style="text-align: center;"><strong>Nama Kertas</strong></th>
+            <th style="text-align: center;"><strong>Qty</strong></th>
+            <th style="text-align: center;"><strong>Satuan</strong></th>
+            <th style="text-align: center;"><strong>Harga</strong></th>
+            <th style="text-align: center;"><strong>Total</strong></th>
+            <th style="text-align: center"><strong>Sub Total</strong></th>
+            <th style="text-align: center"><strong>Diskon {{ purchaseOrderPaperHeader.discountValue|default }}%</strong></th>
+            <th style="text-align: center"><strong>PPn {{ purchaseOrderPaperHeader.taxPercentage|default }}%</strong></th>
+            <th style="text-align: center"><strong>Grand Total</strong></th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for purchaseOrderPaperHeader in purchaseOrderPaperHeaders %}
+            {% for purchaseOrderPaperDetail in purchaseOrderPaperHeader.purchaseOrderPaperDetails %}
+                <tr>
+                    <td style="text-align: left;">{{ purchaseOrderPaperHeader.codeNumber|default }}</td>
+                    <td style="text-align: left;">{{ purchaseOrderPaperHeader.transactionDate|default ? purchaseOrderPaperHeader.transactionDate|date('j F Y') }}</td>
+                    <td style="text-align: left;">{{ purchaseOrderPaperHeader.supplier.company|default }}</td>
+                    <td style="text-align: left;">{{ purchaseOrderPaperHeader.deliveryDate|default ? purchaseOrderPaperHeader.deliveryDate|date('j F Y') }}</td>
+                    <td style="text-align: left;">{{ purchaseOrderPaperHeader.note|default }}</td>
+                    <td style="text-align: left;">{{ purchaseOrderPaperDetail.paper.codeNumber|default }}</td>
+                    <td style="text-align: left;">{{ purchaseOrderPaperDetail.paper.name|default }}</td>
+                    <td style="text-align: center;">{{ purchaseOrderPaperDetail.quantity|default }}</td>
+                    <td style="text-align: left;">{{ purchaseOrderPaperDetail.unit.name|default }}</td>
+                    <td style="text-align: right">{{ purchaseOrderPaperDetail.unitPrice|default }}</td>
+                    <td style="text-align: right">{{ purchaseOrderPaperDetail.total|default }}</td>
+                    <td style="text-align: right">{{ purchaseOrderPaperHeader.subTotal|default }}</td>
+                    <td style="text-align: right">{{ purchaseOrderPaperHeader.discountNominal|default }}</td>
+                    <td style="text-align: right">{{ purchaseOrderPaperHeader.taxNominal|default }}</td>
+                    <td style="text-align: right">{{ purchaseOrderPaperHeader.grandTotal|default }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>

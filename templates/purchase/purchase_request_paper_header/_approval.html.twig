@@ -1,0 +1,50 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, purchaseRequestPaperHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 280px">
+                    Request Kertas # 
+                </th>
+                <th style="min-width: 150px">
+                    Tanggal
+                </th>
+                <th style="min-width: 250px">
+                    Gudang
+                </th>
+                <th style="min-width: 200px">
+                    Note
+                </th>
+                <th style="min-width: 150px">
+                    Status
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseRequestPaperHeader in purchaseRequestPaperHeaders %}
+                <tr>
+                    <td>{{ purchaseRequestPaperHeader.codeNumber }}</td>
+                    <td>{{ purchaseRequestPaperHeader.transactionDate ? purchaseRequestPaperHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ purchaseRequestPaperHeader.warehouse.company|default }}</td>
+                    <td>{{ purchaseRequestPaperHeader.note }}</td>
+                    <td>{{ purchaseRequestPaperHeader.transactionStatus }}</td>
+                    <td>
+                        {{ include('purchase/purchase_request_paper_header/_view_form.html.twig') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, purchaseRequestPaperHeaders) }}

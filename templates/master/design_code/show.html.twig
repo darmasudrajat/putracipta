@@ -1,0 +1,353 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Design Code' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_design_code_index') }}">Manage</a>
+    {% if is_granted('ROLE_DESIGN_CODE_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_master_design_code_edit', {'id': designCode.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_DESIGN_CODE_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_master_design_code_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan='4' class='text-center bg-info'>HEADER</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Kode Design</th>
+                <td>{{ designCode.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Customer</th>
+                <td>{{ designCode.customer.company|default }}</td>
+            </tr>
+            <tr>
+                <th>Nama Produk</th>
+                <td>{{ designCode.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Jlh Warna</th>
+                <td>{{ designCode.color|default }}</td>
+            </tr>
+            <tr>
+                <th>Separasi Warna</th>
+                <td>{{ designCode.pantone|default }}</td>
+            </tr>
+            <tr>
+                <th>Warna Khusus 1</th>
+                <td>{{ designCode.colorSpecial1|default }}</td>
+            </tr>
+            <tr>
+                <th>Warna Khusus 2</th>
+                <td>{{ designCode.colorSpecial2|default }}</td>
+            </tr>
+            <tr>
+                <th>Warna Khusus 3</th>
+                <td>{{ designCode.colorSpecial3|default }}</td>
+            </tr>
+            <tr>
+                <th>Warna Khusus 4</th>
+                <td>{{ designCode.colorSpecial4|default }}</td>
+            </tr>
+            <tr>
+                <th>Coating</th>
+                <td>{{ designCode.coating|default }}</td>
+            </tr>
+            <tr>
+                <th>Glossiness</th>
+                <td>{{ designCode.glossiness|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Emboss</th>
+                <td>{{ designCode.emboss|default }}</td>
+            </tr>
+            <tr>
+                <th>Hot Stamping</th>
+                <td>{{ designCode.hotstamping|default }}</td>
+            </tr>
+            <tr>
+                <th>Jumlah Mata (Up/s)</th>
+                <td>{{ designCode.printingUpQuantity|default }}</td>
+            </tr>
+            <tr>
+                <th>Uk. Kris Cetak (cm)</th>
+                <td>{{ designCode.printingKrisSize|default }}</td>
+            </tr>
+            <tr>
+                <th>Pisau Diecut</th>
+                <td>{{ designCode.diecutKnife.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Millar</th>
+                <td>{{ designCode.dielineMillar.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>FA/NA</th>
+                <td>{{ designCode.status|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ designCode.note|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Input</th>
+                <td>{{ designCode.createdTransactionDateTime ? designCode.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ designCode.isInactive ? 'Inactive' : 'Active' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan="3" class="text-center bg-info">Product</th>
+            </tr>
+            <tr>
+                <th>Item Code</th>
+                <th>Item Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for designCodeProductDetail in designCode.designCodeProductDetails %}
+                {% if not designCodeProductDetail.isIsInactive %}
+                    <tr>
+                        <td>{{ designCodeProductDetail.product.code|default }}</td>
+                        <td>{{ designCodeProductDetail.product.name|default }}</td>
+                        <td>{{ designCodeProductDetail.product.productLengthWidthHeightCombination|default }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+          
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan='4' class='text-center bg-info'>Kebutuhan Material Kertas</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Material Kertas</th>
+                <td>{{ designCode.paper.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Kode Kertas</th>
+                <td>{{ designCode.paper.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Uk. Plano Kertas (cm)</th>
+                <td>{{ designCode.paperPlanoLength|number_format(2) }} x {{ designCode.paperPlanoWidth|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Uk. Ptg Kertas (cm)</th>
+                <td>{{ designCode.paperCuttingLength|number_format(2) }} x {{ designCode.paperCuttingWidth|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Mountage Kertas (lbr/plano)</th>
+                <td>{{ designCode.paperMountage|default }}</td>
+            </tr>
+        </tbody>
+    </table>
+          
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan='4' class='text-center bg-info'>Estimasi Tinta / Chemical</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Cyan (%)</th>
+                <td>{{ designCode.inkCyanPercentage|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Magenta (%)</th>
+                <td>{{ designCode.inkMagentaPercentage|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Yellow (%)</th>
+                <td>{{ designCode.inkYellowPercentage|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Black (%)</th>
+                <td>{{ designCode.inkBlackPercentage|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Khusus 1 (%)</th>
+                <td>{{ designCode.inkK1Percentage|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Khusus 2 (%)</th>
+                <td>{{ designCode.inkK2Percentage|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Khusus 3 (%)</th>
+                <td>{{ designCode.inkK3Percentage|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Khusus 4 (%)</th>
+                <td>{{ designCode.inkK4Percentage|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>OPV / WB / UV (%)</th>
+                <td>{{ designCode.inkOpvPercentage|number_format(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
+          
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan='4' class='text-center bg-info'>Estimasi Packaging</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Lem (cm/pcs)</th>
+                <td>{{ designCode.packagingGlueQuantity|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Karet (pcs/ikat)</th>
+                <td>{{ designCode.packagingRubberQuantity|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Kertas Packing (pcs/pack)</th>
+                <td>{{ designCode.packagingPaperQuantity|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Dus (pcs/dus)</th>
+                <td>{{ designCode.packagingBoxQuantity|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Lakban Besar (cm/pack)</th>
+                <td>{{ designCode.packagingTapeLargeQuantity|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Lakban Kecil (cm/pack)</th>
+                <td>{{ designCode.packagingTapeSmallQuantity|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Plastik (cm2/pack)</th>
+                <td>{{ designCode.packagingPlasticQuantity|number_format(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
+            
+    <hr />
+    
+    <div class="row">
+        <div class="col">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="3" class="text-center bg-info">Urutan Proses</th>
+                    </tr>
+                    <tr>
+                        <th>No</th>
+                        <th>Proses</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set counter = 0 %}
+                    {% for designCodeProcessDetail in designCode.designCodeProcessDetails %}
+                        {% if not designCodeProcessDetail.isIsInactive %}
+                            {% set counter = counter + 1 %}
+                            <tr>
+                                <td style="text-align: center; width: 5%">{{ counter }}</td>
+                                <td>{{ designCodeProcessDetail.workOrderProcess.name|default }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="3" class="text-center bg-info">Distribusi WO</th>
+                    </tr>
+                    <tr>
+                        <th>No</th>
+                        <th>Work Order</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set counter = 0 %}
+                    {% for designCodeDistributionDetail in designCode.designCodeDistributionDetails %}
+                        {% if not designCodeDistributionDetail.isIsInactive %}
+                            {% set counter = counter + 1 %}
+                            <tr>
+                                <td style="text-align: center; width: 5%">{{ counter }}</td>
+                                <td>{{ designCodeDistributionDetail.workOrderDistribution.name|default }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="3" class="text-center bg-info">Check Sheet</th>
+                    </tr>
+                    <tr>
+                        <th>No</th>
+                        <th>Check Sheet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set counter = 0 %}
+                    {% for designCodeCheckSheetDetail in designCode.designCodeCheckSheetDetails %}
+                        {% if not designCodeCheckSheetDetail.isIsInactive %}
+                            {% set counter = counter + 1 %}
+                            <tr>
+                                <td style="text-align: center; width: 5%">{{ counter }}</td>
+                                <td>{{ designCodeCheckSheetDetail.workOrderCheckSheet.name|default }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+                
+    <hr />
+    
+    <legend class="float-none w-auto text-dark px-1">Product List</legend>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class=" bg-info">
+                <th>Code</th>
+                <th>Name</th>
+                <th>MO #</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderHeader in designCode.masterOrderHeaders %}
+                {% for masterOrderProductDetail in masterOrderHeader.masterOrderProductDetails %}
+                    <tr>
+                        <td>{{ masterOrderProductDetail.product.code|default }}</td>
+                        <td>{{ masterOrderProductDetail.product.name|default }}</td>
+                        <td>{{ masterOrderHeader.codeNumber|default }}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {#{{ include('master/design_code/_delete_form.html.twig') }}#}
+{% endblock %}

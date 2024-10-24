@@ -1,0 +1,227 @@
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward data-choice:select->event-emitter#forward form-collection:collection-item-removed->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id', 'data-choice:select': 'id', 'form-collection:collection-item-removed': 'id'}|json_encode }}"
+     data-json-loader-url-value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}"
+     data-json-loader-form-target-value="{{ "form[name=#{form.vars.name}]" }}">
+
+    {{ form_start(form) }}
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Header</legend>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.transactionDate, {'label': 'Tanggal MO', 'attr': {'data-controller': 'flatpickr-element', 'class': 'readonly-form-input', 'data-flatpickr-element-options-value': {'dateFormat': 'j M Y'}|json_encode}}) }}
+                    {{ form_row(form.customer, {
+                        'label': 'Customer',
+                        'attr': {
+                            'readonly': masterOrderHeader.id is not null,
+                            'data-controller': 'data-choice',
+                            'data-action': 'data-choice#select',
+                        },
+                    }) }}
+                    {#<div class="mb-3">
+                        <label for="{{ form.customer.vars.id }}-text" class="form-label">Customer</label>
+                        {{ form_row(form.customer, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'customer-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.customerId'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        <input type="text" id="{{ form.customer.vars.id }}-text" class="form-control readonly-form-input {% if not form.customer.vars.valid %}is-invalid{% endif %}" value="{{ masterOrderHeader.customer.company|default }}" readonly="readonly"
+                               data-bs-toggle="modal" data-bs-target="#customer-dialog"
+                               data-controller="dom-element"
+                               data-action="customer-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.customerCompany'}},
+                               ]|json_encode }}" />
+                        {{ form_errors(form.customer) }}
+                    </div>#}
+                    <div class="mb-3">
+                        <label class="form-label">Design Code</label>
+                        <div class="row">
+                            <div class="col">
+                                {{ form_row(form.designCode, {
+                                    'attr': {
+                                        'data-controller': 'dom-element',
+                                        'data-action': 'design-code-table:data-table:select@document->dom-element#bind design-code-table:data-table:select@document->json-loader#load',
+                                        'data-dom-element-bind-specifications-param': [
+                                            {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeId'}},
+                                        ]|json_encode,
+                                    },
+                                }) }}
+                                <input type="text" id="{{ form.designCode.vars.id }}-text" class="form-control readonly-form-input {% if not form.designCode.vars.valid %}is-invalid{% endif %}" value="{{ masterOrderHeader.designCode.codeNumber|default }}" readonly="readonly"
+                                       data-bs-toggle="modal" data-bs-target="#design-code-dialog"
+                                       data-controller="dom-element"
+                                       data-action="design-code-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeNumber'}},
+                                       ]|json_encode }}" />
+                            </div>
+                            {{ form_errors(form.designCode) }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col">
+                    {{ form_row(form.orderType, {'label': 'Jenis MO'}) }}
+                    {{ form_row(form.transactionMode, {
+                        'label': 'Customer Order / Produk Baru',
+                        'attr': {
+                            'readonly': masterOrderHeader.id is not null,
+                            'data-controller': 'dom-element data-choice',
+                            'data-action': 'change->dom-element#bind change->data-choice#select',
+                            'data-dom-element-bind-specifications-param': [
+                                {'destinationsTarget': "#detail-sale-order-container", 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value !== "sale_order"'},
+                                {'destinationsTarget': "#detail-sale-order-container", 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value === "sale_order"'},
+                                {'destinationsTarget': "#detail-product-prototype-container", 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value !== "product_prototype"'},
+                                {'destinationsTarget': "#detail-product-prototype-container", 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value === "product_prototype"'},
+                            ]|json_encode,
+                        },
+                    }) }}
+                    {{ form_row(form.printingStatus, {'label': 'Status Cetakan'}) }}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3 {% if masterOrderHeader.transactionMode != constant('TRANSACTION_MODE_SALE_ORDER', masterOrderHeader) %}d-none{% endif %}" id="detail-sale-order-container">
+            <legend class="float-none w-auto text-dark px-1">Status Products</legend>
+            <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#sale-order-detail-dialog">+ Order Customer</button>
+            {{ include('production/master_order_header/_details_form.html.twig') }}
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3 {% if masterOrderHeader.transactionMode != constant('TRANSACTION_MODE_PRODUCT_PROTOTYPE', masterOrderHeader) %}d-none{% endif %}" id="detail-product-prototype-container">
+            <legend class="float-none w-auto text-dark px-1">Produk Baru</legend>
+            <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#product-prototype-detail-dialog">+ Produk Baru</button>
+            {{ include('production/master_order_header/_prototype_details_form.html.twig') }}
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Data</legend>
+            {{ include('production/master_order_header/_data_form.html.twig') }}
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Kebutuhan Material Kertas</legend>
+            {{ include('production/master_order_header/_paper_form.html.twig') }}
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Estimasi Tinta / Chemical</legend>
+            {{ include('production/master_order_header/_ink_form.html.twig') }}
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Estimasi Packaging</legend>
+            {{ include('production/master_order_header/_packaging_form.html.twig') }}
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <div class="row">
+                <div class="col">
+                    <legend class="float-none w-auto text-dark px-1">Urutan Proses</legend>
+                    {{ include('production/master_order_header/_processing_order_form.html.twig') }}
+                </div>
+                <div class="col">
+                    <legend class="float-none w-auto text-dark px-1">Distribusi WO</legend>
+                    {{ include('production/master_order_header/_distribution_form.html.twig') }}
+                </div>
+                <div class="col">
+                    <legend class="float-none w-auto text-dark px-1">Check Sheet</legend>
+                    {{ include('production/master_order_header/_check_sheet_form.html.twig') }}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.transactionFile, {
+                        'label': transactionFileExists ? 'A Model Layout File has been uploaded' : 'Upload Model Layout (Max 5MB)', 
+                        'label_attr': {
+                            'class': transactionFileExists ? 'text-success fw-bold' : ''
+                        }
+                    }) }}
+                    {{ form_row(form.note, {'label': 'Keterangan'}) }}
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="d-grid">
+            <div class="row">
+                <div class="col text-center">
+                    <a class="btn btn-danger" href="{{ path('app_production_master_order_header_index') }}"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                        Cancel
+                    </a>
+                    <button class="btn btn-success"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                        Save
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+        </div>
+    {{ form_end(form) }}
+
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('paper-dialog', 'Paper List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_paper__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+
+    {{ dialog.start('sale-order-detail-dialog', 'Customer Order List') }}
+        <input type="hidden" id="sale-order-detail-table-identifiers" />
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_sale_order_detail__list') }}"
+             data-html-loader-auto-load-value="true"
+             data-action="{{ form.customer.vars.id }}:data-choice:select@document->html-loader#load">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+            Done
+        </button>
+    {{ dialog.end() }}
+    
+    {{ dialog.start('purchase-order-paper-header-dialog', 'PO Paper List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_purchase_order_paper_header__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+
+    {{ dialog.start('design-code-dialog', 'Design Code List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_design_code__list') }}"
+             data-html-loader-auto-load-value="true"
+             data-action="{{ form.customer.vars.id }}:data-choice:select@document->html-loader#load sale-order-detail-table:data-table:select@document->html-loader#load sale-order-detail-form-collection:form-collection:collection-item-removed@document->html-loader#load">
+        </div>
+    {{ dialog.end() }}
+
+    {{ dialog.start('product-development-dialog', 'Pengembangan Produk Baru List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_product_development__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+    
+    {{ dialog.start('product-prototype-detail-dialog', 'Produk Baru List') }}
+        <input type="hidden" id="product-prototype-detail-table-identifiers" />
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_product_prototype_detail__list') }}"
+             data-html-loader-auto-load-value="true"
+             data-action="{{ form.customer.vars.id }}:data-choice:select@document->html-loader#load">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+            Done
+        </button>
+    {{ dialog.end() }}
+    
+</div>

@@ -1,0 +1,9 @@
+<form method="post" action="{{ path('app_sale_sale_invoice_header_read', {'id': saleInvoiceHeader.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('read' ~ saleInvoiceHeader.id) }}">
+    <button class="btn btn-info btn-sm"
+            data-controller="dom-element"
+            data-action="dom-element#confirm"
+            data-dom-element-confirm-message-param="Are you sure you want to read this transaction?">
+        <i class="bi-search"></i>
+    </button>
+</form>

@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Paper' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_paper_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_master_paper_show', {'id': paper.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/paper/_form.html.twig') }}
+{% endblock %}

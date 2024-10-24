@@ -1,0 +1,89 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Expense' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_accounting_expense_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_EXPENSE_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_accounting_expense_header_edit', {'id': expenseHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_EXPENSE_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_accounting_expense_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Penerimaan #</th>
+                <td>{{ expenseHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ expenseHeader.transactionDate ? expenseHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Account</th>
+                <td>{{ expenseHeader.account.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ expenseHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ expenseHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ expenseHeader.createdTransactionDateTime ? expenseHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ expenseHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ expenseHeader.modifiedTransactionDateTime ? expenseHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Is Canceled</th>
+                <td>{{ expenseHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Kode</th>
+                <th>Nama</th>
+                <th>Category</th>
+                <th>Deskripsi</th>
+                <th>Keterangan</th>
+                <th>Jumlah</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expenseDetail in expenseHeader.expenseDetails %}
+                <tr>
+                    <td>{{ expenseDetail.account.code|default }}</td>
+                    <td>{{ expenseDetail.account.name|default }}</td>
+                    <td>{{ expenseDetail.account.accountCategory.name|default }}</td>
+                    <td>{{ expenseDetail.description|default }}</td>
+                    <td>{{ expenseDetail.memo|default }}</td>
+                    <td class="text-end">{{ expenseDetail.amount|default|number_format(2) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5" class="text-end"><strong>Total</strong></td>
+                <td class="text-end"><strong>{{ expenseHeader.totalAmount|default|number_format(2) }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    {#{{ include('accounting/expense_header/_delete_form.html.twig') }}#}
+{% endblock %}

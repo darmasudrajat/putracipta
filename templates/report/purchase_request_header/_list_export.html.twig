@@ -1,0 +1,72 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>Laporan Purchase Request Material</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Request #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Gudang</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Status</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+        </tr>
+        <tr>
+            <th></th>
+            <th style="text-align: center;"><strong>Kode</strong></th>
+            <th style="text-align: center;"><strong>Nama Produk</strong></th>
+            <th style="text-align: center;"><strong>Qty</strong></th>
+            <th style="text-align: center;"><strong>Satuan</strong></th>
+            <th style="text-align: center;"><strong>Tanggal Pakai</strong></th>
+            <th style="text-align: center;"><strong>Memo</strong></th>
+            <th style="text-align: center;"><strong>Status</strong></th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for purchaseRequestHeader in purchaseRequestHeaders %}
+            <tr>
+                <td style="text-align: left;">{{ purchaseRequestHeader.codeNumber|default }}</td>
+                <td style="text-align: left;">{{ purchaseRequestHeader.transactionDate|default ? purchaseRequestHeader.transactionDate|date('j M Y') }}</td>
+                <td style="text-align: left;">{{ purchaseRequestHeader.warehouse.name|default }}</td>
+                <td style="text-align: left;">{{ purchaseRequestHeader.transactionStatus|default }}</td>
+                <td style="text-align: left;">{{ purchaseRequestHeader.note|default }}</td>
+            </tr>
+            {% for purchaseRequestDetail in purchaseRequestHeader.purchaseRequestDetails %}
+                <tr>
+                    <td style="text-align: left"></td>
+                    <td style="text-align: left;">{{ purchaseRequestDetail.material.code|default }}</td>
+                    <td style="text-align: left;">{{ purchaseRequestDetail.material.name|default }}</td>
+                    <td style="text-align: center;">{{ purchaseRequestDetail.quantity|default }}</td>
+                    <td style="text-align: left;">{{ purchaseRequestDetail.unit.name|default }}</td>
+                    <td style="text-align: left;">{{ purchaseRequestDetail.usageDate|default ? purchaseRequestDetail.usageDate|date('j M Y') }}</td>
+                    <td style="text-align: left;">{{ purchaseRequestDetail.memo|default }}</td>
+                    <td style="text-align: left;">{{ purchaseRequestDetail.transactionStatus|default }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td style="text-align: right" colspan="3"><strong>Total</strong></td>
+                <td style="text-align: center"><strong>{{ purchaseRequestHeader.totalQuantity|default }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="7"></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

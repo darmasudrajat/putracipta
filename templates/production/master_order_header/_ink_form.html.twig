@@ -1,0 +1,318 @@
+<div class="row">
+    <div class="col">
+        <div class="mb-3">
+            <label class="form-label">Cyan</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.inkCyanPercentage, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind change->json-loader#load',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeInkCyanPercentage'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.inkCyanPercentage) }}
+                        <span class="input-group-text">%</span>
+                        <span class="input-group-text">=</span>
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.inkCyanWeight|default|number_format(2) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="inkCyanWeight" />
+                        <span class="input-group-text">kg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Magenta</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.inkMagentaPercentage, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind change->json-loader#load',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeInkMagentaPercentage'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.inkMagentaPercentage) }}
+                        <span class="input-group-text">%</span>
+                        <span class="input-group-text">=</span>
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.inkMagentaWeight|default|number_format(2) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="inkMagentaWeight" />
+                        <span class="input-group-text">kg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Yellow</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.inkYellowPercentage, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind change->json-loader#load',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeInkYellowPercentage'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.inkYellowPercentage) }}
+                        <span class="input-group-text">%</span>
+                        <span class="input-group-text">=</span>
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.inkYellowWeight|default|number_format(2) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="inkYellowWeight" />
+                        <span class="input-group-text">kg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Black</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.inkBlackPercentage, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind change->json-loader#load',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeInkBlackPercentage'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.inkBlackPercentage) }}
+                        <span class="input-group-text">%</span>
+                        <span class="input-group-text">=</span>
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.inkBlackWeight|default|number_format(2) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="inkBlackWeight" />
+                        <span class="input-group-text">kg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">OPV / WB / UV</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.inkOpvPercentage, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind change->json-loader#load',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeInkOpvPercentage'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.inkOpvPercentage) }}
+                        <span class="input-group-text">%</span>
+                        <span class="input-group-text">=</span>
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.inkOpvWeight|default|number_format(2) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="inkOpvWeight" />
+                        <span class="input-group-text">kg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Hot Stamping</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.inkHotStampingSize, {
+                            'attr': {
+                                'data-action': 'change->json-loader#load',
+                            },
+                        }) }}
+                        {{ form_errors(form.inkHotStampingSize) }}
+                        <span class="input-group-text">cm</span>
+                        <span class="input-group-text">=</span>
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.inkHotStampingQuantity|default|number_format(2) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="inkHotStampingQuantity" />
+                        <span class="input-group-text">Roll</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="mb-3">
+            <label class="form-label">Khusus-1</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.inkK1Color, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeColorSpecial1'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.inkK1Color) }}
+                        <span class="input-group-text">:</span>
+                        {{ form_widget(form.inkK1Percentage, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind change->json-loader#load',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeInkK1Percentage'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.inkK1Percentage) }}
+                        <span class="input-group-text">%</span>
+                        <span class="input-group-text">=</span>
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.inkK1Weight|default|number_format(2) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="inkK1Weight" />
+                        <span class="input-group-text">kg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Khusus-2</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.inkK2Color, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeColorSpecial2'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.inkK2Color) }}
+                        <span class="input-group-text">:</span>
+                        {{ form_widget(form.inkK2Percentage, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind change->json-loader#load',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeInkK2Percentage'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.inkK2Percentage) }}
+                        <span class="input-group-text">%</span>
+                        <span class="input-group-text">=</span>
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.inkK2Weight|default|number_format(2) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="inkK2Weight" />
+                        <span class="input-group-text">kg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Khusus-3</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.inkK3Color, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeColorSpecial3'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.inkK3Color) }}
+                        <span class="input-group-text">:</span>
+                        {{ form_widget(form.inkK3Percentage, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind change->json-loader#load',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeInkK3Percentage'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.inkK3Percentage) }}
+                        <span class="input-group-text">%</span>
+                        <span class="input-group-text">=</span>
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.inkK3Weight|default|number_format(2) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="inkK3Weight" />
+                        <span class="input-group-text">kg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Khusus-4</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.inkK4Color, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeColorSpecial4'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.inkK4Color) }}
+                        <span class="input-group-text">:</span>
+                        {{ form_widget(form.inkK4Percentage, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind change->json-loader#load',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeInkK4Percentage'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.inkK4Percentage) }}
+                        <span class="input-group-text">%</span>
+                        <span class="input-group-text">=</span>
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.inkK4Weight|default|number_format(2) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="inkK4Weight" />
+                        <span class="input-group-text">kg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Laminating</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.inkLaminatingSize, {
+                            'attr': {
+                                'data-action': 'change->json-loader#load',
+                            },
+                        }) }}
+                        {{ form_errors(form.inkLaminatingSize) }}
+                        <span class="input-group-text">cm</span>
+                        <span class="input-group-text">=</span>
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.inkLaminatingQuantity|default|number_format(2) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="inkLaminatingQuantity" />
+                        <span class="input-group-text">roll</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

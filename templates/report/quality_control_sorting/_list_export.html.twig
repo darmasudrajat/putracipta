@@ -1,0 +1,81 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="20"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="20"><strong>Laporan QC Sortir</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="20">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="20"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 150pt"><strong>QC #</strong></th>
+            <th style="text-align: center; width: 150pt"><strong>Tanggal QC</strong></th>
+            <th style="text-align: center; width: 250pt"><strong>Customer</strong></th>
+            <th style="text-align: center; width: 150pt"><strong>WO #</strong></th>
+            <th style="text-align: center; width: 150pt"><strong>Tanggal WO</strong></th>
+            <th style="text-align: center; width: 250pt"><strong>PIC</strong></th>
+            <th style="text-align: center; width: 250pt"><strong>Note</strong></th>
+            <th style="text-align: center; width: 150pt"><strong>Item Code</strong></th>
+            <th style="text-align: center; width: 250pt"><strong>Item Name</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Order</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Bagus</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Reject Cetak</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Reject Coating</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Reject Potong</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Reject Diecut</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Reject Lem</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Reject Finishing</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Reject Lain2</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Total Sortir</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Total Reject</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Reject %</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Sisa</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Memo</strong></th>
+        </tr>
+        <tr>
+            <th colspan="20"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for qualityControlSorting in qualityControlSortings %}
+            {% for qualityControlSortingDetail in qualityControlSorting.qualityControlSortingDetails %}
+                <tr>
+                    <td style="text-align: left">{{ qualityControlSorting.codeNumber|default }}</td>
+                    <td style="text-align: left">{{ qualityControlSorting.transactionDate|default ? qualityControlSorting.transactionDate|date('j M Y') }}</td>
+                    <td style="text-align: left">{{ qualityControlSorting.customer.company|default }}</td>
+                    <td style="text-align: left">{{ qualityControlSorting.masterOrderHeader.codeNumber|default }}</td>
+                    <td style="text-align: left">{{ qualityControlSorting.masterOrderHeader.transactionDate|default ? qualityControlSorting.masterOrderHeader.transactionDate|date('j M Y') }}</td>
+                    <td style="text-align: left">{{ qualityControlSorting.employeeInCharge|default }}</td>
+                    <td style="text-align: left">{{ qualityControlSorting.note|default }}</td>
+                    <td style="text-align: left">{{ qualityControlSortingDetail.product.code|default }}</td>
+                    <td style="text-align: left">{{ qualityControlSortingDetail.product.name|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.quantityOrder|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.quantityGood|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.quantityRejectPrinting|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.quantityRejectCoating|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.quantityRejectCutting|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.quantityRejectDiecutting|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.quantityRejectGlueing|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.quantityRejectFinishing|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.quantityRejectOthers|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.totalQuantitySorting|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.totalQuantityReject|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.rejectPercentage|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.quantityRemaining|default }}</td>
+                    <td style="text-align: center">{{ qualityControlSortingDetail.memo|default }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>

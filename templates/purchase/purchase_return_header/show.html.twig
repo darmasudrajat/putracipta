@@ -1,0 +1,125 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Purchase Return' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_purchase_purchase_return_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_PURCHASE_RETURN_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_purchase_purchase_return_header_edit', {'id': purchaseReturnHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_PURCHASE_RETURN_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_purchase_purchase_return_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Return #</th>
+                <td>{{ purchaseReturnHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Return</th>
+                <td>{{ purchaseReturnHeader.transactionDate ? purchaseReturnHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Penerimaan #</th>
+                <td>{{ purchaseReturnHeader.receiveHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Terima</th>
+                <td>{{ purchaseReturnHeader.receiveHeader.transactionDate ? purchaseReturnHeader.receiveHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Supplier</th>
+                <td>{{ purchaseReturnHeader.supplier.company }}</td>
+            </tr>
+            <tr>
+                <th>Gudang</th>
+                <td>{{ purchaseReturnHeader.warehouse.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Tukar Guling ?</th>
+                <td>{{ purchaseReturnHeader.isProductExchange ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ purchaseReturnHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ purchaseReturnHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ purchaseReturnHeader.createdTransactionDateTime ? purchaseReturnHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ purchaseReturnHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ purchaseReturnHeader.modifiedTransactionDateTime ? purchaseReturnHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled ?</th>
+                <td>{{ purchaseReturnHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Item Code</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Satuan</th>
+                <th>Harga</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseReturnDetail in purchaseReturnHeader.purchaseReturnDetails %}
+                {% if purchaseReturnDetail.isCanceled == false and purchaseReturnDetail.quantity > 0 %}
+                    <tr>
+                        <td>{{ purchaseReturnDetail.material is null ? purchaseReturnDetail.paper.codeNumber|default : purchaseReturnDetail.material.code|default }}</td>
+                        <td>{{ purchaseReturnDetail.material is null ? purchaseReturnDetail.paper.name|default : purchaseReturnDetail.material.name|default }}</td>
+                        <td style="text-align: right">{{ purchaseReturnDetail.quantity|default|number_format(2) }}</td>
+                        <td>{{ purchaseReturnDetail.unit.name|default }}</td>
+                        <td style="text-align: right">{{ purchaseReturnDetail.unitPrice|default|number_format(2) }}</td>
+                        <td style="text-align: right">{{ purchaseReturnDetail.total|default|number_format(2) }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5" style="text-align: right"><strong>Sub Total</strong></td>
+                <td style="text-align: right"><strong>{{ purchaseReturnHeader.subTotal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="5" style="text-align: right">
+                    <strong>
+                        {% if purchaseReturnHeader.taxMode == constant('TAX_MODE_NON_TAX', purchaseReturnHeader) %}
+                            Non PPn 0%
+                        {% elseif purchaseReturnHeader.taxMode == constant('TAX_MODE_TAX_EXCLUSION', purchaseReturnHeader) %}
+                            Exclude PPn {{ purchaseReturnHeader.taxPercentage }}%
+                        {% elseif purchaseReturnHeader.taxMode == constant('TAX_MODE_TAX_INCLUSION', purchaseReturnHeader) %}
+                            Include PPn {{ purchaseReturnHeader.taxPercentage }}%
+                        {% endif %}
+                    </strong>
+                </td>
+                <td style="text-align: right"><strong>{{ purchaseReturnHeader.taxNominal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="5" style="text-align: right"><strong>Grand Total</strong></td>
+                <td style="text-align: right"><strong>{{ purchaseReturnHeader.grandTotal|default|number_format(2) }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+                
+    {#{{ include('purchase/purchase_return_header/_delete_form.html.twig') }}#}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Employee' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_employee_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_master_employee_show', {'id': employee.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/employee/_form.html.twig') }}
+{% endblock %}

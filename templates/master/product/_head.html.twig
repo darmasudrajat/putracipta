@@ -1,0 +1,50 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, products) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 280px">
+                    Code 
+                </th>
+                <th style="min-width: 150px">
+                    Name
+                </th>
+                <th style="min-width: 250px">
+                    Customer
+                </th>
+                <th style="min-width: 200px">
+                    Tanggal Buat
+                </th>
+                <th style="min-width: 150px">
+                    Status
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.code }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.customer.company|default }}</td>
+                    <td>{{ product.createdTransactionDateTime ? product.createdTransactionDateTime|date('d M Y') : '' }}</td>
+                    <td>{{ product.isInactive ? 'InActive' : 'Active' }}</td>
+                    <td>
+                        {{ include('master/product/_read_form.html.twig') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, products) }}

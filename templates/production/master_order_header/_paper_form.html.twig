@@ -1,0 +1,235 @@
+<div class="row">
+    <div class="col">
+        <div class="mb-3">
+            <label class="form-label">% Insit Cetak</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.insitPrintingPercentage, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'change->json-loader#load',
+                            },
+                        }) }}
+                        {{ form_errors(form.insitPrintingPercentage) }}
+                        <span class="input-group-text">%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">% Insit Sortir</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.insitSortingPercentage, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'change->json-loader#load',
+                            },
+                        }) }}
+                        {{ form_errors(form.insitSortingPercentage) }}
+                        <span class="input-group-text">%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Mountage Kertas</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.paperMountage, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind change->json-loader#load',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodePaperMountage'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.paperMountage) }}
+                        <span class="input-group-text">Up</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Quantity Kertas</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.quantityPaper|default|number_format(2) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="quantityPaper" />
+                        <span class="input-group-text">Rim</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Uk. Kertas</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.paperPlanoLength|default|number_format(2) }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="paper-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.paperLength'}},
+                               ]|json_encode }}" />
+                        <span class="input-group-text">x</span>
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.paperPlanoWidth|default|number_format(2) }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="paper-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.paperWidth'}},
+                               ]|json_encode }}" />
+                        <span class="input-group-text">cm</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Uk Potong 1</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.cuttingLengthSize1, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodePaperCuttingLength'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.cuttingLengthSize1) }}
+                        <span class="input-group-text">x</span>
+                        {{ form_widget(form.cuttingWidthSize1, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodePaperCuttingWidth'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.cuttingWidthSize1) }}
+                        <span class="input-group-text">cm</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Uk Potong 2</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.cuttingLengthSize2) }}
+                        {{ form_errors(form.cuttingLengthSize2) }}
+                        <span class="input-group-text">x</span>
+                        {{ form_widget(form.cuttingWidthSize2) }}
+                        {{ form_errors(form.cuttingWidthSize2) }}
+                        <span class="input-group-text">cm</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="mb-3">
+            <label class="form-label">Insit Cetak</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.insitPrintingQuantity|default|number_format(0) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="insitPrintingQuantity" />
+                        <span class="input-group-text">dreek</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Insit sortir</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.insitSortingQuantity|default|number_format(0) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="insitSortingQuantity" />
+                        <span class="input-group-text">dreek</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Kebutuhan</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.paperRequirement|default|number_format(0) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="paperRequirement" />
+                        <span class="input-group-text">dreek</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Total Kertas</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.paperTotal|default|number_format(0) }}" readonly="readonly"
+                               data-json-loader-target="placeholder"
+                               data-property-path="paperTotal" />
+                        <span class="input-group-text">dreek</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.purchaseOrderPaperHeader.vars.id }}-text" class="form-label">PO Kertas #</label>
+            {{ form_row(form.purchaseOrderPaperHeader, {
+                'attr': {
+                    'data-controller': 'dom-element',
+                    'data-action': 'purchase-order-paper-header-table:data-table:select@document->dom-element#bind purchase-order-header-mode:data-choice:select@document->dom-element#bind',
+                    'data-dom-element-bind-specifications-param': [
+                        {'eventTypes': ['purchase-order-paper-header-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].purchaseOrderPaperHeaderId'}},
+                        {'eventTypes': ['purchase-order-header-mode:data-choice:select'], 'action': 'removeAttribute', 'descriptor': {'name': 'value'}},
+                    ]|json_encode,
+                },
+            }) }}
+            <input type="text" id="{{ form.purchaseOrderPaperHeader.vars.id }}-text" class="form-control readonly-form-input" value="{{ receiveHeader.purchaseOrderPaperHeader.codeNumber|default }}" readonly="readonly"
+                   data-bs-toggle="modal" data-bs-target="#purchase-order-paper-header-dialog"
+                   data-controller="dom-element"
+                   data-action="purchase-order-paper-header-table:data-table:select@document->dom-element#bind purchase-order-header-mode:data-choice:select@document->dom-element#bind"
+                   data-dom-element-bind-specifications-param="{{ [
+                       {'eventTypes': ['purchase-order-paper-header-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].purchaseOrderPaperHeaderCodeNumber'}},
+                       {'eventTypes': ['purchase-order-header-mode:data-choice:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}},
+                   ]|json_encode }}" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Supplier Kertas</label>
+            <input type="text" class="form-control" value="{{ receiveHeader.supplier.company|default }}" readonly="readonly"
+                   data-controller="dom-element"
+                   data-action="purchase-order-paper-header-table:data-table:select@document->dom-element#bind purchase-order-header-mode:data-choice:select@document->dom-element#bind"
+                   data-dom-element-bind-specifications-param="{{ [
+                       {'eventTypes': ['purchase-order-paper-header-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].supplierCompany'}},
+                       {'eventTypes': ['purchase-order-header-mode:data-choice:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}},
+                   ]|json_encode }}" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Tanggal PO Kertas</label>
+            <input type="text" class="form-control" value="{{ receiveHeader.purchaseOrderPaperHeader.transactionDate|default ? receiveHeader.purchaseOrderPaperHeader.transactionDate|date('d M Y') : '' }}" readonly="readonly"
+                   data-controller="dom-element"
+                   data-action="purchase-order-paper-header-table:data-table:select@document->dom-element#bind purchase-order-header-mode:data-choice:select@document->dom-element#bind"
+                   data-dom-element-bind-specifications-param="{{ [
+                       {'eventTypes': ['purchase-order-paper-header-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].purchaseOrderPaperHeaderTransactionDate'}},
+                       {'eventTypes': ['purchase-order-header-mode:data-choice:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}},
+                   ]|json_encode }}" />
+        </div>
+    </div>
+</div>

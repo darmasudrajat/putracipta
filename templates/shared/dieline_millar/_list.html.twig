@@ -1,0 +1,60 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, dielineMillars) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="dieline-millar-table" data-controller="data-table">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 270px" role="button" {{ grid.sort_link_item(form, 'code') }}>
+                    Code {{ grid.sort_char(form.sort.code.vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    Milar {{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'printingLayout') }}>
+                    Kris Cetak {{ grid.sort_char(form.sort.printingLayout.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'note') }}>
+                    Note {{ grid.sort_char(form.sort.note.vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    M<input style="width: 100px" type="text" {{ grid.filter_link_item(form, 'code') }} value="{{ form.filter.code.1.vars.value }}" />-
+                    R<input style="width: 100px" type="text" {{ grid.filter_link_item(form, 'version') }} value="{{ form.filter.version.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" size="10" {{ grid.filter_link_item(form, 'printingLayout') }} value="{{ form.filter.printingLayout.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'note') }} value="{{ form.filter.note.1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dielineMillar in dielineMillars %}
+                <tr data-bs-dismiss="modal" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'dielineMillarId': dielineMillar.id, 
+                    'dielineMillarCodeNumber': dielineMillar.codeNumber, 
+                    'dielineMillarNote': dielineMillar.note}|json_encode }}">
+                    <td>{{ dielineMillar.codeNumber }}</td>
+                    <td>{{ dielineMillar.name }}</td>
+                    <td>{{ dielineMillar.printingLayout }}</td>
+                    <td>{{ dielineMillar.note }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, dielineMillars) }}

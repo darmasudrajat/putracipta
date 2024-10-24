@@ -1,0 +1,83 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, purchaseOrderHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="purchase-order-header-table" data-controller="data-table">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button">
+                    PO #
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'supplier:company') }}>
+                    Supplier {{ grid.sort_char(form.sort['supplier:company'].vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'purchaseOrderMaterialList') }}>
+                    Material {{ grid.sort_char(form.sort['purchaseOrderMaterialList'].vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'note') }}>
+                    Note {{ grid.sort_char(form.sort.note.vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberOrdinal') }} value="{{ form.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Purchase\\PurchaseOrderHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\PurchaseHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>/</small></span>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberYear') }} value="{{ form.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'supplier:company') }} value="{{ form.filter['supplier:company'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'purchaseOrderMaterialList') }} value="{{ form.filter.purchaseOrderMaterialList.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'note') }} value="{{ form.filter.note.1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseOrderHeader in purchaseOrderHeaders %}
+                <tr data-bs-dismiss="modal" data-action="click->data-table#select" data-data-table-values-param="{{ purchaseOrderHeader.purchaseOrderDetails|filter(purchaseOrderDetail => not purchaseOrderDetail.isCanceled)|slice(0)|map(purchaseOrderDetail => {
+                    'purchaseOrderHeaderId': purchaseOrderHeader.id,
+                    'purchaseOrderHeaderCodeNumber': purchaseOrderHeader.codeNumber,
+                    'purchaseOrderHeaderTransactionDate': purchaseOrderHeader.transactionDate ? purchaseOrderHeader.transactionDate|date('d M Y') : '',
+                    'supplierCompany': purchaseOrderHeader.supplier.company,
+                    'purchaseOrderDetailId': purchaseOrderDetail.id,
+                    'materialId': purchaseOrderDetail.material.id,
+                    'materialOrPaperCode': purchaseOrderDetail.material.code,
+                    'materialOrPaperName': purchaseOrderDetail.material.name,
+                    'unitName': purchaseOrderDetail.unit.name,
+                    'purchaseOrderDetailQuantity': purchaseOrderDetail.quantity|number_format(2),
+                    'purchaseOrderDetailRemainingReceive': purchaseOrderDetail.remainingReceive|number_format(2)})|json_encode }}">
+                    <td>{{ purchaseOrderHeader.codeNumber }}</td>
+                    <td>{{ purchaseOrderHeader.transactionDate ? purchaseOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ purchaseOrderHeader.supplier.company|default }}</td>
+                    <td>{{ purchaseOrderHeader.purchaseOrderMaterialList }}</td>
+                    <td>{{ purchaseOrderHeader.note }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, purchaseOrderHeaders) }}

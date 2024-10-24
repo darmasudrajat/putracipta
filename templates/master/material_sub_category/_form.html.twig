@@ -1,0 +1,53 @@
+{{ form_start(form) }}
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.materialCategory) }}
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.code, {
+                'attr': {
+                    'data-controller': 'dom-element',
+                    'data-action': 'dom-element#bind',
+                    'data-dom-element-bind-specifications-param': [
+                        {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$element.value.toUpperCase()'}},
+                    ]|json_encode,
+                },
+            }) }}
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.name) }}
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.isInactive) }}
+        </div>
+    </div>
+        
+    <div class="d-grid">
+        <div class="row">
+            <div class="col text-center">
+                <a class="btn btn-danger" href="{{ path('app_master_material_sub_category_index') }}"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                    Cancel
+                </a>
+                <button class="btn btn-success"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                    Save
+                </button>
+            </div>
+        </div>
+        <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+    </div>
+{{ form_end(form) }}

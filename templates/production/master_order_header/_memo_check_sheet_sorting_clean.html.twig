@@ -1,0 +1,238 @@
+<div class="memo">
+    <div class="header" style="font-size: 10px; text-align: left">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label"><img id="logo" alt="logo" max-height="300px" src="{{ asset('images/Logo.jpg') }}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label" style="font-size: 14px; text-align: center">FORMULIR</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label" style="font-size: 18px; text-align: center">CHECKLIST LINE CLEARANCE SORTIR</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">No Dokumen</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">F/PCK/PROD/8.5-11</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Revisi</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">0</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Tanggal</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label"></div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Halaman</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">1 dari 1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="note">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">Bagian</div>
+                        <div class="cell value">: ______________________________________</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">No WO</div>
+                        <div class="cell value">: {{ masterOrderHeader.getCodeNumber|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Customer</div>
+                        <div class="cell value">: {{ masterOrderHeader.customer.company|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Jumlah</div>
+                        <div class="cell value">: {{ masterOrderHeader.paperRequirement|number_format(2) }} dreek  -  {{ masterOrderHeader.totalQuantityShortage|number_format(0) }} pcs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <table  class="detail">
+        <thead class="table-secondary">
+            <tr>
+                <th>PO#</th>
+                <th>Kode</th>
+                <th>Nama Produk</th>
+                <th>Tanggal Kirim</th>
+                <th>Qty Order</th>
+                <th>Qty Produksi</th>
+                <th>Stock</th>
+                <th>Kekurangan</th>
+                <th>Up Cetak</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderProductDetail in masterOrderHeader.masterOrderProductDetails %}
+                <tr>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.product.code|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.product.name|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.deliveryDate ? masterOrderProductDetail.saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityOrder|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityProduction|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityStock|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityShortage|default|number_format(0) }}</td>
+                    <td>{{ masterOrderProductDetail.quantityPrinting|default }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br />
+
+    <table class="detail">
+        <tfoot>
+            <tr>
+                <td style="width: 5%; font-weight: bold; text-align: center" rowspan="2">No</td>
+                <td style="width: 50%; font-weight: bold; text-align: center" rowspan="2">ITEM CLEAN</td>
+                <td style="font-weight: bold; text-align: center" colspan="2">CHECKLIST</td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold; text-align: center">OK</td>
+                <td style="font-weight: bold; text-align: center">NG</td>
+            </tr>
+            <tr>
+                <td class="center">1</td>
+                <td>Cek kesesuaian Working Order (WO)</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">2</td>
+                <td>Cek kesesuaian barang</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">3</td>
+                <td>Cek kesesuaian jumlah</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">4</td>
+                <td>Cek kecukupan bahan</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">5</td>
+                <td>Cek sekitar area/mesin sudah tidak ada bahan lain</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">6</td>
+                <td>Cek sekitar area/mesin sudah tidak ada produk lain</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">7</td>
+                <td>Cek ketersediaan label dan sudah tidak ada label produk lain</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">8</td>
+                <td>Cek kesiapan dan kesesuaian Palet/Box/Kontainer</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">9</td>
+                <td>Cek kesiapan dan kesesuaian Peralatan/Timbangan</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">10</td>
+                <td>Cek kesiapan dan kesesuaian standar yang digunakan</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">11</td>
+                <td>Bersihkan meja sortir dari sisa-sisa kotoran dan debu kertas</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">12</td>
+                <td>Pastikan tidak ada botol/gelas minuman yang ditempatkan di meja sortir</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">13</td>
+                <td>Pastikan tidak ada karet atau cutter yang berada di meja sortir</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <br />
+
+    <div class="note">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label" style="width: 10%">Note </div>
+                        <div class="cell value">: Line Clearance Checklist ini dilakukan setiap pergantian jenis produk yang akan dikerjakan.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="signature">
+        <div class="table full">
+            <div class="cell sig">
+                <div>OPR Pelaksana,</div>
+                <div class="blank">&nbsp;</div>
+                <div>(.........................)</div>
+            </div>
+            <div class="cell sig">
+                <div>Verifikasi-1 QC,</div>
+                <div class="blank">(Awal Pergantian)</div>
+                <div>(.........................)</div>
+            </div>
+            <div class="cell sig">
+                <div>Verifikasi-2 QC,</div>
+                <div class="blank">(Setelah Setel)</div>
+                <div>(.........................)</div>
+            </div>
+        </div>
+    </div>
+</div>

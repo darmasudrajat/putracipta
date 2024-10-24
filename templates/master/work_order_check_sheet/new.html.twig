@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add Work Order Check Sheet' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_work_order_check_sheet_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/work_order_check_sheet/_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,101 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, customers) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="customer-table" data-controller="data-table">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'company') }}>
+                    Company {{ grid.sort_char(form.sort.company.vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    PIC {{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'email') }}>
+                    Email {{ grid.sort_char(form.sort.email.vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'note') }}>
+                    Note {{ grid.sort_char(form.sort.note.vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'company') }} value="{{ form.filter.company.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'email') }} value="{{ form.filter.email.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'note') }} value="{{ form.filter.note.1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+                <tr data-bs-dismiss="modal" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'customerId': customer.id, 
+                    'customerCompany': customer.company, 
+                    'customerPhone': customer.phone, 
+                    'customerEmail': customer.email, 
+                    'customerTaxNumber': customer.taxNumber, 
+                    'addressTax1': customer.addressTax1,
+                    'addressTax2': customer.addressTax2,
+                    'addressTax3': customer.addressTax3,
+                    'addressTax4': customer.addressTax4,
+                    'addressTax5': customer.addressTax5,
+                    'addressDelivery1': customer.addressDelivery1,
+                    'addressDelivery2': customer.addressDelivery2,
+                    'addressDelivery3': customer.addressDelivery3,
+                    'addressDelivery4': customer.addressDelivery4,
+                    'addressDelivery5': customer.addressDelivery5,
+                    'addressDelivery6': customer.addressDelivery6,
+                    'addressDelivery7': customer.addressDelivery7,
+                    'addressDelivery8': customer.addressDelivery8,
+                    'addressDelivery9': customer.addressDelivery9,
+                    'addressDelivery10': customer.addressDelivery10,
+                    'addressDelivery11': customer.addressDelivery11,
+                    'addressDelivery12': customer.addressDelivery12,
+                    'addressDelivery13': customer.addressDelivery13,
+                    'addressDelivery14': customer.addressDelivery14,
+                    'addressDelivery15': customer.addressDelivery15,
+                    'minimumTolerancePercentage': customer.minimumTolerancePercentage,
+                    'maximumTolerancePercentage': customer.maximumTolerancePercentage,
+                    'name': customer.name,
+                    'name2': customer.name2,
+                    'name3': customer.name3,
+                    'name4': customer.name4,
+                    'name5': customer.name5,
+                    'name6': customer.name6,
+                    'name7': customer.name7,
+                    'name8': customer.name8,
+                    'name9': customer.name9,
+                    'name10': customer.name10,
+                    'name11': customer.name11,
+                    'name12': customer.name12,
+                    'name13': customer.name13,
+                    'name14': customer.name14,
+                    'name15': customer.name15,
+                    'bondedZoneLiteral': customer.bondedZoneLiteral,
+                    'hasFscCode': customer.hasFscCode ? 'Yes' : 'No',
+                    'paymentTerm': customer.paymentTerm}|json_encode }}">
+                    <td>{{ customer.company }}</td>
+                    <td>{{ customer.name }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.note }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, customers) }}

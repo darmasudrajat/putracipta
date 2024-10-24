@@ -1,0 +1,80 @@
+<div class="table-responsive">
+    <table class="table table-bordered"
+       data-controller="form-collection"
+       data-form-collection-start-index-value="{{ form.purchasePaymentDetails|length > 0 ? form.purchasePaymentDetails|last.vars.name + 1 : 0 }}"
+       data-form-collection-prototype-value="{{ _self.collection_item(form.purchasePaymentDetails.vars.prototype)|e('html_attr') }}"
+       data-action="form-collection:collection-item-removed->json-loader#load:self">
+        <thead class="table-secondary">
+            <tr>
+                <th class="d-none">Purchase Invoice Header Id</th>
+                <th style="min-width: 250px">Invoice #</th>
+                <th style="min-width: 250px">Memo</th>
+                <th style="min-width: 150px">Account</th>
+                <th style="min-width: 150px">Total Invoice</th>
+                <th style="min-width: 150px">Retur</th>
+                <th style="min-width: 150px">Outstanding</th>
+                <th style="min-width: 150px">Amount to Pay</th>
+                <th style="min-width: 0"></th>
+            </tr>
+        </thead>
+        <tbody data-form-collection-target="items" data-action="purchase-invoice-header-table:data-table:select@document->form-collection#addCollectionItem">
+            {% macro collection_item(detailForm) %}
+                <tr data-form-collection-target="item" data-item-identifier-name="purchaseInvoiceHeaderId" data-item-identifier-value="{{ detailForm.vars.value.purchaseInvoiceHeader.id|default }}" {% if detailForm.isCanceled.vars.data %}class="d-none"{% endif %}>
+                    <td class="d-none">{{ form_widget(detailForm.purchaseInvoiceHeader, {'attr': {'data-item-field-name': 'purchaseInvoiceHeaderId'}}) }}</td>
+                    <td data-item-field-name="purchaseInvoiceHeaderSupplierInvoiceNumber">{{ detailForm.vars.value.purchaseInvoiceHeader.supplierInvoiceCodeNumber|default }}</td>
+                    <td>{{ form_row(detailForm.memo, {'label': false}) }}</td>
+                    <td>{{ form_row(detailForm.account, {'label': false}) }}</td>
+                    <td class="text-end" data-item-field-name="purchaseInvoiceHeaderGrandTotal">
+                        {{ detailForm.vars.value.purchaseInvoiceHeader.grandTotal|default|number_format(0) }}
+                    </td>
+                    <td class="text-end" data-item-field-name="purchaseInvoiceHeaderTotalReturn">
+                        {{ detailForm.vars.value.purchaseInvoiceHeader.totalReturn|default|number_format(0) }}
+                    </td>
+                    <td class="text-end" data-item-field-name="purchaseInvoiceHeaderRemainingPayment">
+                        {{ detailForm.vars.value.purchaseInvoiceHeader.remainingPayment|default|number_format(0) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.amount, {'label': false, 'attr': {
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load', 
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 2)'}}
+                            ]|json_encode,
+                        }}) }}
+                    </td>
+                    <td>
+                        {% if (detailForm.vars.value.id == null) %}
+                            <button type="button" class="btn btn-outline-dark" data-action="form-collection#removeCollectionItem"><i class="bi-x-lg"></i></button>
+                        {% else %}
+                            <button type="button" class="btn btn-danger"
+                                    data-controller="dom-element"
+                                    data-action="dom-element#bind json-loader#load"
+                                    data-dom-element-bind-specifications-param="{{ [
+                                        {'destinationsTarget': '#' ~ detailForm.isCanceled.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'checked', 'value': 'true'}},
+                                        {'destinations': '[$element.closest("tr")]', 'action': 'addClass', 'descriptor': {'name': 'd-none'}},
+                                    ]|json_encode }}">
+                                <i class="bi-x-lg"></i>
+                            </button>
+                        {% endif %}
+                        <div class="d-none">
+                            {{ form_row(detailForm.isCanceled) }}
+                        </div>
+                    </td>
+                </tr>
+            {% endmacro %}
+            {% for detailForm in form.purchasePaymentDetails %}
+                {{ _self.collection_item(detailForm) }}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-end" colspan="6">Total</td>
+                <td class="text-end" data-json-loader-target="placeholder"
+                    data-property-path="totalAmount">
+                    {{ purchasePaymentHeader.totalAmount|default|number_format(2) }}
+                </td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

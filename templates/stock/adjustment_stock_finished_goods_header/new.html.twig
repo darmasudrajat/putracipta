@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add Penyesuaian Stok Finished Goods' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_stock_adjustment_stock_finished_goods_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('stock/adjustment_stock_finished_goods_header/_form.html.twig') }}
+{% endblock %}

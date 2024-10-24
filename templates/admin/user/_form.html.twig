@@ -1,0 +1,43 @@
+{{ form_start(form) }}
+    <div class="pb-3">
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Username</legend>
+            {% if (form.vars.value.id == null) %}
+                {{ form_row(form.username) }}
+            {%  else %}
+                {{ user.username|default }}
+            {% endif %}
+        </fieldset>
+        
+        {% if (form.vars.value.id == null) %}
+            <fieldset class="border border-secondary rounded mb-3 p-3">
+                <legend class="float-none w-auto text-dark px-1">Password</legend>
+                {{ form_row(form.plainPassword) }}
+            </fieldset>
+        {% endif %}
+        
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Roles</legend>
+            {{ include('admin/user/_roles_form.html.twig') }}
+            {% do form.roles.setRendered %}
+        </fieldset>
+    </div>
+    <div class="d-grid">
+        <div class="row">
+            <div class="col text-center">
+                <a class="btn btn-danger" href="{{ path('app_admin_user_index') }}"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                    Cancel
+                </a>
+                <button class="btn btn-secondary"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to save this item?">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+{{ form_end(form) }}

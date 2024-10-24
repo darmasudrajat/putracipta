@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background-color: #CFD8DC;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="position-absolute top-50 start-50 translate-middle">
+            <div class="card border-secondary text-bg-light">
+                <div class="card-body">
+                    <div class="text-center"><img src="{{ asset('images/Logo.jpg') }}" alt="logo" max-height="300px"></div>
+                    <br />
+                    <h5 class="card-title text-center text-primary mb-4">USER LOGIN</h5>
+                    {% if error %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                    <form action="{{ path('app_login') }}" method="post">
+                        <div class="input-group mb-3">
+                            <div class="input-group-text bg-white">
+                                <i class="bi-person-fill"></i>
+                            </div>
+                            <input type="text" class="form-control border-start-0" id="username" name="_username" placeholder="Username" value="{{ lastUsername }}" {% if lastUsername == '' %}autofocus="autofocus"{% endif %} />
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-text bg-white">
+                                <i class="bi-lock-fill"></i>
+                            </div>
+                            <input type="password" class="form-control border-start-0" id="password" name="_password" placeholder="Password" {% if lastUsername != '' %}autofocus="autofocus"{% endif %} />
+                        </div>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-sm">Log In</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

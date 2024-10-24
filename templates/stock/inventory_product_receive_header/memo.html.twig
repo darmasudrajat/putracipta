@@ -1,0 +1,154 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Memo' %}
+
+{% block body %}
+    <div class="memo">
+        <div class="header">
+            <h1 class="title">PT. Putracipta Karindomas</h1>
+            <h3 class="title">Kawasan Industri Millenium</h3>
+            <h3 class="title">Jl. Millenium 15A Blok I2 no. 5, Tangerang</h3>
+            <br />
+            <h2 class="title">FORM SERAH TERIMA PACKING</h2>
+            <h5>26/PPIC/WOPTGJD/REV.1/19</h5>
+        </div>
+        
+        <hr />
+        
+        <div class="note">
+            <div class="table full">
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label">Penerimaan #</div>
+                            <div class="cell value">{{ inventoryProductReceiveHeader.getCodeNumber }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Tanggal Terima</div>
+                            <div class="cell value">{{ inventoryProductReceiveHeader.transactionDate ? inventoryProductReceiveHeader.transactionDate|date('Y-m-d') : '' }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Gudang</div>
+                            <div class="cell value">{{ inventoryProductReceiveHeader.warehouse.name }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label">WO #</div>
+                            <div class="cell value">{{ inventoryProductReceiveHeader.masterOrderHeader.getCodeNumber|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Customer</div>
+                            <div class="cell value">{{ inventoryProductReceiveHeader.masterOrderHeader.customer.company }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <br />
+        
+        <table class="detail">
+            <thead>
+                <tr class="bg-info">
+                    <th>PO #</th>
+                    <th>Kode</th>
+                    <th>Nama Produk</th>
+                    <th>Tanggal Kirim</th>
+                    <th>Qty PO</th>
+                    <th>Qty Hasil Produksi</th>
+                    <th>Qty Box</th>
+                    <th>Qty Pcs</th>
+                    <th>Satuan</th>
+                    <th>Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set rowspan = 20 %}
+                {% for row in inventoryProductReceiveHeader.inventoryProductReceiveDetails|batch(rowspan, '') %}
+                    {% for inventoryProductReceiveDetail in row %}
+                        <tr>
+                            {% if inventoryProductReceiveDetail and not inventoryProductReceiveDetail.isCanceled %}
+                                <td>{{ inventoryProductReceiveDetail.masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                                <td>{{ inventoryProductReceiveDetail.product.code|default }}</td>
+                                <td>{{ inventoryProductReceiveDetail.product.name|default }}</td>
+                                <td>{{ inventoryProductReceiveDetail.masterOrderProductDetail.saleOrderDetail.deliveryDate|default ? inventoryProductReceiveDetail.masterOrderProductDetail.saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                                <td style="text-align:center">{{ inventoryProductReceiveDetail.masterOrderProductDetail.saleOrderDetail.quantity|default|number_format(0) }}</td>
+                                <td style="text-align:center">{{ inventoryProductReceiveDetail.masterOrderProductDetail.quantityProduction|default|number_format(0) }}</td>
+                                <td style="text-align:center">{{ inventoryProductReceiveDetail.quantityBox|default|number_format(0) }}</td>
+                                <td style="text-align:center">{{ inventoryProductReceiveDetail.quantityBoxExtraPieces|default|number_format(0) }}</td>
+                                <td>{{ inventoryProductReceiveDetail.product.unit.name|default }}</td>
+                                <td>{{ inventoryProductReceiveDetail.memo|default }}</td>
+                            {% elseif not inventoryProductReceiveDetail %}
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+            {#<tfoot>
+                <tr>
+                    <td colspan="7" class="label right">Total</td>
+                    <td class="right">{{ inventoryProductReceiveHeader.totalQuantity|default|number_format(0) }}</td>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+            </tfoot>#}
+        </table>
+        
+        <br />
+        
+        <div class="note">
+            <div class="table">
+                <div class="cell label">Catatan:</div>
+                <div class="cell">&nbsp;&nbsp;</div>
+                <div class="cell">{{ inventoryProductReceiveHeader.note|default }}</div>
+            </div>
+        </div>
+        
+        <br />
+        
+        <div class="signature">
+            <div class="table full">
+                <div class="cell sig">
+                    <div>Menyerahkan,</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">Produksi</div>
+                </div>
+                <div class="cell sig">
+                    <div>Menerima,</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">Gudang</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('memo') }}
+    <style>
+        .col:nth-child(1) { width: 50% }
+        .col:nth-child(2) { width: 50% }
+        
+        .col:nth-child(1) .label { width: 35% }
+        .col:nth-child(1) .value { width: 65% }
+        .col:nth-child(2) .label { width: 35% }
+        .col:nth-child(2) .value { width: 65% }
+        
+        .sig:nth-child(1) { width: 50% }
+        .sig:nth-child(2) { width: 50% }
+    </style>
+{% endblock %}

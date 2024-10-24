@@ -1,0 +1,44 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, deliveryDetails) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 150px">Pengiriman #</th>
+                <th style="min-width: 120px">Tanggal</th>
+                <th style="min-width: 250px">Customer</th>
+                <th style="min-width: 150px">PO #</th>
+                <th style="min-width: 150px">Note</th>
+                <th style="min-width: 150px">Item Code</th>
+                <th style="min-width: 350px">Description</th>
+                <th style="min-width: 100px">Qty Kirim</th>
+                <th style="min-width: 80px">Satuan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deliveryDetail in deliveryDetails %}
+                <tr>
+                    <td>{{ deliveryDetail.deliveryHeader.codeNumber|default }}</td>
+                    <td>{{ deliveryDetail.deliveryHeader.transactionDate ? deliveryDetail.deliveryHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ deliveryDetail.deliveryHeader.customer.company|default }}</td>
+                    <td>{{ deliveryDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                    <td>{{ deliveryDetail.deliveryHeader.note|default }}</td>
+                    <td>{{ deliveryDetail.product.code|default }}</td>
+                    <td>{{ deliveryDetail.product.name|default }}</td>
+                    <td style="text-align: center">{{ deliveryDetail.quantity|default|number_format(0) }}</td>
+                    <td>{{ deliveryDetail.unit.name|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="9">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, deliveryDetails) }}

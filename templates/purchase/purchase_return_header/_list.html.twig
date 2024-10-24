@@ -1,0 +1,96 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, purchaseReturnHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button"{{ grid.sort_link_item(form, ['codeNumberOrdinal', 'codeNumberMonth', 'codeNumberYear']) }}>
+                    Retur # {{ grid.sort_char(form.sort.codeNumberOrdinal.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'supplier:company') }}>
+                    Supplier {{ grid.sort_char(form.sort['supplier:company'].vars.value) }}
+                </th>
+                <th style="min-width: 280px" role="button"{{ grid.sort_link_item(form, ['receiveHeaderCodeNumberOrdinal', 'receiveHeaderCodeNumberMonth', 'receiveHeaderCodeNumberYear']) }}>
+                    Penerimaan # {{ grid.sort_char(form.sort.receiveHeaderCodeNumberOrdinal.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'warehouse') }}>
+                    Gudang {{ grid.sort_char(form.sort['warehouse'].vars.value) }}
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberOrdinal') }} value="{{ form.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Purchase\\PurchaseReturnHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\PurchaseHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>/</small></span>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberYear') }} value="{{ form.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'supplier:company') }} value="{{ form.filter['supplier:company'].1.vars.value }}" />
+                </th>
+                <th>
+                    {#<input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'receiveHeaderCodeNumberOrdinal') }} value="{{ form.filter.receiveHeaderCodeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Purchase\\ReceiveHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'receiveHeaderCodeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\PurchaseHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter.receiveHeaderCodeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>/</small></span>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'receiveHeaderCodeNumberYear') }} value="{{ form.filter.receiveHeaderCodeNumberYear.1.vars.value }}" />#}
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'warehouse') }}>
+                        <option value="" {% if form.filter.warehouse.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.warehouse.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.warehouse.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseReturnHeader in purchaseReturnHeaders %}
+                <tr>
+                    <td>{{ purchaseReturnHeader.codeNumber }}</td>
+                    <td>{{ purchaseReturnHeader.transactionDate ? purchaseReturnHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ purchaseReturnHeader.supplier.company|default }}</td>
+                    <td>{{ purchaseReturnHeader.receiveHeader.codeNumber|default }}</td>
+                    <td>{{ purchaseReturnHeader.warehouse.name|default }}</td>
+                    <td>
+                        {% if is_granted('ROLE_PURCHASE_RETURN_VIEW') or is_granted('ROLE_PURCHASE_RETURN_EDIT') or is_granted('ROLE_PURCHASE_RETURN_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_purchase_purchase_return_header_show', {'id': purchaseReturnHeader.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_PURCHASE_RETURN_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_purchase_purchase_return_header_edit', {'id': purchaseReturnHeader.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, purchaseReturnHeaders) }}

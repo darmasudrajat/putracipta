@@ -1,0 +1,65 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>Laporan Penerimaan Kas/Bank</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Penerimaan #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kode Account</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Nama Account</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+        </tr>
+        <tr>
+            <th></th>
+            <th style="text-align: center"><strong>Kode Account</strong></th>
+            <th style="text-align: center"><strong>Nama Account</strong></th>
+            <th style="text-align: center"><strong>Description</strong></th>
+            <th style="text-align: center"><strong>Amount</strong></th>
+            <th style="text-align: center"><strong>Memo</strong></th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for depositHeader in depositHeaders %}
+            <tr>
+                <td style="text-align: left">{{ depositHeader.codeNumber|default }}</td>
+                <td style="text-align: left">{{ depositHeader.transactionDate|default ? depositHeader.transactionDate|date('j M Y') }}</td>
+                <td style="text-align: left">{{ depositHeader.account.code|default }}</td>
+                <td style="text-align: left">{{ depositHeader.account.name|default }}</td>
+                <td style="text-align: left">{{ depositHeader.note|default }}</td>
+            </tr>
+            {% for depositDetail in depositHeader.depositDetails %}
+                <tr>
+                    <td style="text-align: left"></td>
+                    <td style="text-align: left">{{ depositDetail.account.code|default }}</td>
+                    <td style="text-align: left">{{ depositDetail.account.name|default }}</td>
+                    <td style="text-align: left">{{ depositDetail.description|default }}</td>
+                    <td style="text-align: right">{{ depositDetail.amount|default }}</td>
+                    <td style="text-align: left">{{ depositDetail.memo|default }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td style="text-align: right" colspan="4"><strong>Total Amount</strong></td>
+                <td style="text-align: right"><strong>{{ depositHeader.totalAmount|default }}</strong></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

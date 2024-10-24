@@ -1,0 +1,92 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, productPrototypes) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="product-prototype-table" data-controller="data-table">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button"{{ grid.sort_link_item(form, 'id') }}>
+                    Produk Baru # {{ grid.sort_char(form.sort.id.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'customer:company') }}>
+                    Customer {{ grid.sort_char(form.sort['customer:company'].vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button"{{ grid.sort_link_item(form, 'prototypeProductCodeList') }}>
+                    Product Code {{ grid.sort_char(form.sort.prototypeProductCodeList.vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button"{{ grid.sort_link_item(form, 'prototypeProductList') }}>
+                    Product Name {{ grid.sort_char(form.sort.prototypeProductList.vars.value) }}
+                </th>
+                <th style="min-width: 150px">
+                    Proses
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'note') }}>
+                    Note {{ grid.sort_char(form.sort.note.vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberOrdinal') }} value="{{ form.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Production\\ProductPrototype::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\ProductionHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>/</small></span>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberYear') }} value="{{ form.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'customer:company') }} value="{{ form.filter['customer:company'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'prototypeProductCodeList') }} value="{{ form.filter.prototypeProductCodeList.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'prototypeProductList') }} value="{{ form.filter.prototypeProductList.1.vars.value }}" />
+                </th>
+                <th></th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'note') }} value="{{ form.filter.note.1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for productPrototype in productPrototypes %}
+                <tr data-bs-dismiss="modal" data-action="click->data-table#select" data-data-table-values-param="{{ productPrototype.productPrototypeDetails|filter(productPrototypeDetail => not productPrototypeDetail.isCanceled)|slice(0)|map(productPrototypeDetail => {
+                    'productPrototypeId': productPrototype.id, 
+                    'productPrototypeCodeNumber': productPrototype.codeNumber,  
+                    'productPrototypeDevelopmentTypeList': productPrototype.developmentTypeList ? productPrototype.developmentTypeList|join(', ') : '',
+                    'productPrototypeDetailId': productPrototypeDetail.id,
+                    'productId': productPrototypeDetail.product.id|default, 
+                    'productName': productPrototypeDetail.product.name|default, 
+                    'productCode': productPrototypeDetail.product.code|default, 
+                    'productMeasurement': productPrototypeDetail.product.productLengthWidthHeightCombination|default, 
+                    'customerName': productPrototype.customer.company})|json_encode }}">
+                    <td>{{ productPrototype.codeNumber }}</td>
+                    <td>{{ productPrototype.transactionDate ? productPrototype.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ productPrototype.customer.company|default }}</td>
+                    <td>{{ productPrototype.prototypeProductCodeList|default }}</td>
+                    <td>{{ productPrototype.prototypeProductList|default }}</td>
+                    <td>{{ productPrototype.developmentTypeList ? productPrototype.developmentTypeList|join(', ') : '' }}</td>
+                    <td>{{ productPrototype.note }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{{ grid.navigation(form, count, productPrototypes) }}

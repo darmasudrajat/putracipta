@@ -1,0 +1,201 @@
+<div class="memo">
+    <div class="header" style="font-size: 10px; text-align: left">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label"><img id="logo" alt="logo" max-height="300px" src="{{ asset('images/Logo.jpg') }}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label" style="font-size: 14px; text-align: center">FORMULIR</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label" style="font-size: 18px; text-align: center">WORK ORDER STITCHING (JAHIT KAWAT)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                            <div class="cell label">No Dokumen</div>
+                            <div class="cell label">:</div>
+                            <div class="cell label">F/PCK/PPIC/8.1-12</div>
+                    </div>
+                    <div class="row">
+                            <div class="cell label">Revisi</div>
+                            <div class="cell label">:</div>
+                            <div class="cell label">0</div>
+                    </div>
+                    <div class="row">
+                            <div class="cell label">Tanggal</div>
+                            <div class="cell label">:</div>
+                            <div class="cell label"></div>
+                    </div>
+                    <div class="row">
+                            <div class="cell label">Halaman</div>
+                            <div class="cell label">:</div>
+                            <div class="cell label">1 dari 1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="note">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">No MO</div>
+                        <div class="cell value">: {{ masterOrderHeader.getCodeNumber|default }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">Tanggal WO</div>
+                        <div class="cell value">: {{ masterOrderHeader.transactionDate|default ? masterOrderHeader.transactionDate|date('d M Y') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <table  class="detail">
+        <thead class="table-secondary">
+            <tr>
+                <th>PO#</th>
+                <th>Kode</th>
+                <th>Nama Produk</th>
+                <th>Tanggal Kirim</th>
+                <th>Qty Order</th>
+                <th>Qty Produksi</th>
+                <th>Stock</th>
+                <th>Kekurangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderProductDetail in masterOrderHeader.masterOrderProductDetails %}
+                <tr>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.product.code|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.product.name|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.deliveryDate ? masterOrderProductDetail.saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityOrder|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityProduction|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityStock|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityShortage|default|number_format(0) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td style="text-align:right; font-weight: bold" colspan="4">TOTAL</td>
+                <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityOrder|default|number_format(0) }}</td>
+                <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityProduction|default|number_format(0) }}</td>
+                <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityStock|default|number_format(0) }}</td>
+                <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityShortage|default|number_format(0) }}</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <br /><hr /><br />
+
+    <table class="detail">
+        <thead class="table-secondary">
+            <tr>
+                <th class="text-center" rowspan="2">No</th>
+                <th class="text-center" rowspan="2">Tanggal</th>
+                <th class="text-center" rowspan="2">Shift</th>
+                <th class="text-center" colspan="2">Waktu </th>
+                <th class="text-center" colspan="3">Jumlah</th>
+                <th class="text-center" rowspan="2">Pelaksana</th>
+                <th class="text-center" rowspan="2">Keterangan</th>
+            </tr>
+            <tr>
+                <th>Mulai</th>
+                <th>Selesai</th>
+                <th>Bagus</th>
+                <th>Rusak</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tfoot>
+            {% for row in 0..25 %}
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            {% endfor %}
+        </tfoot>
+    </table>
+
+    <br />
+
+    <div class="note">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">Catatan</div>
+                        <div class="cell value">: _______________________________________________</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="note">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">Tanggal Pengembalian WO#</div>
+                        <div class="cell value">: ________________________________________________</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="signature">
+        <div class="table full">
+            <div class="cell sig">
+                <div>Dilaporkan oleh,</div>
+                <div class="blank">&nbsp;</div>
+                <div>Checker</div>
+            </div>
+            <div class="cell sig">
+                <div>Diperiksa oleh,</div>
+                <div class="blank">&nbsp;</div>
+                <div>Spv Finishing</div>
+            </div>
+            <div class="cell sig">
+                <div>WO# dikeluarkan oleh,</div>
+                <div class="blank">&nbsp;</div>
+                <div>PPIC</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add Machine Printing' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_machine_printing_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/machine_printing/_form.html.twig') }}
+{% endblock %}

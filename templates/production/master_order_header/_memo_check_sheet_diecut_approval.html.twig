@@ -1,0 +1,227 @@
+<div class="memo">
+    <div class="header" style="font-size: 10px; text-align: left">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label"><img id="logo" alt="logo" max-height="300px" src="{{ asset('images/Logo.jpg') }}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label" style="font-size: 14px; text-align: center">FORMULIR</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label" style="font-size: 18px; text-align: center">DIECUT & EMBOSS APPROVAL</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">No Dokumen</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">F/PCK/PPIC/8.5-12</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Revisi</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">0</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Tanggal</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label"></div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Halaman</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">1 dari 1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="note">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">No MO</div>
+                        <div class="cell value">: {{ masterOrderHeader.getCodeNumber|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Tanggal WO</div>
+                        <div class="cell value">: {{ masterOrderHeader.transactionDate|default ? masterOrderHeader.transactionDate|date('d M Y') }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Tanggal Pengerjaan</div>
+                        <div class="cell value">: ________________________</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">Kode Design</div>
+                        <div class="cell value">: {{ masterOrderHeader.designCode.codeNumber|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Quantity</div>
+                        <div class="cell value">: {{ masterOrderHeader.paperRequirement|default|number_format(2) }} dreek</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <table  class="detail">
+        <thead class="table-secondary">
+            <tr>
+                <th>PO#</th>
+                <th>Kode</th>
+                <th>Nama Produk</th>
+                <th>Tanggal Kirim</th>
+                <th>Qty Order</th>
+                <th>Qty Produksi</th>
+                <th>Stock</th>
+                <th>Kekurangan</th>
+                <th>Up Cetak</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderProductDetail in masterOrderHeader.masterOrderProductDetails %}
+                <tr>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.product.code|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.product.name|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.deliveryDate ? masterOrderProductDetail.saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityOrder|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityProduction|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityStock|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityShortage|default|number_format(0) }}</td>
+                    <td>{{ masterOrderProductDetail.quantityPrinting|default|number_format(0) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br />
+
+    <table class="detail">
+        <tfoot>
+            <tr>
+                <td style="width: 30%">Bentuk sesuai std</td>
+                <td style="width: 10%">&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Register Pond</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Rell pecah / tidak</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Rell tidak timbul</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Pond tidak putus</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Pond berbulu</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Dimensi tidak rata</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Robek</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Emboss tidak register</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Emboss pecah</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Hot stamp grepes</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Hot stamp botak</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Hot stamp tidak register</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <br />
+
+    <div class="note" style="border: 1px solid; height: 60px">
+        <div class="table full">
+            <div class="row">
+                <div class="cell label">Catatan</div>
+                <div class="cell value">: __________________________________________________________________________</div>
+            </div>
+
+            <br />
+
+            <div class="row">
+                <div class="cell label">Rekomendasi</div>
+                <div class="cell value">: __________________________________________________________________________</div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="signature">
+        <div class="table full">
+            <div class="cell sig">
+                <div>Operator mesin,</div>
+                <div class="blank">&nbsp;</div>
+                <div>(.........................)</div>
+            </div>
+            <div class="cell sig">
+                <div>QC inspector,</div>
+                <div class="blank">&nbsp;</div>
+                <div>(.........................)</div>
+            </div>
+            <div class="cell sig">
+                <div>Spv QC,</div>
+                <div class="blank">&nbsp;</div>
+                <div>(.........................)</div>
+            </div>
+        </div>
+    </div>
+</div>

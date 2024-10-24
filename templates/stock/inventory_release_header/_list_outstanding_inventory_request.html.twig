@@ -1,0 +1,100 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, inventoryRequestHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button" {{ grid.sort_link_item(form, 'codeNumberOrdinal') }}>
+                    Permintaan # {{ grid.sort_char(form.sort.codeNumberOrdinal.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 350px" {{ grid.sort_link_item(form, 'inventoryRequestProductList') }}>
+                    Item {{ grid.sort_char(form.sort.inventoryRequestProductList.vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'requestMode') }}>
+                    Jenis {{ grid.sort_char(form.sort.requestMode.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'warehouse') }}>
+                    Gudang {{ grid.sort_char(form.sort['warehouse'].vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'note') }}>
+                    Keterangan {{ grid.sort_char(form.sort.note.vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'requestStatus') }}>
+                    Status {{ grid.sort_char(form.sort.requestStatus.vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberOrdinal') }} value="{{ form.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Stock\\InventoryReleaseHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\StockHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberYear') }} value="{{ form.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'inventoryRequestProductList') }} value="{{ form.filter.inventoryRequestProductList.1.vars.value }}" />
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'requestMode') }}>
+                        <option value="" {% if form.filter.requestMode.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.requestMode.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.requestMode.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'warehouse') }}>
+                        <option value="" {% if form.filter.warehouse.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.warehouse.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.warehouse.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'note') }} value="{{ form.filter.note.1.vars.value }}" />
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'requestStatus') }}>
+                        <option value="" {% if form.filter.requestStatus.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.requestStatus.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.requestStatus.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inventoryRequestHeader in inventoryRequestHeaders %}
+                <tr>
+                    <td>{{ inventoryRequestHeader.codeNumber|default }}</td>
+                    <td>{{ inventoryRequestHeader.transactionDate ? inventoryRequestHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ inventoryRequestHeader.inventoryRequestProductList|default }}</td>
+                    <td>{{ inventoryRequestHeader.requestMode|default }}</td>
+                    <td>{{ inventoryRequestHeader.warehouse.name|default }}</td>
+                    <td>{{ inventoryRequestHeader.note|default }}</td>
+                    <td>{{ inventoryRequestHeader.requestStatus|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, inventoryRequestHeaders) }}

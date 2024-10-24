@@ -1,0 +1,354 @@
+<div class="memo">
+    <div class="header" style="font-size: 10px; text-align: left">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label"><img id="logo" alt="logo" max-height="300px" src="{{ asset('images/Logo.jpg') }}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label" style="font-size: 14px; text-align: center">FORMULIR</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label" style="font-size: 18px; text-align: center">PREPRESS CHECK LIST</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">No Dokumen</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">F/PCK/PPIC/8.5-5</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Revisi</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">0</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Tanggal</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label"></div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Halaman</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">1 dari 1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="note">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">Customer</div>
+                        <div class="cell value">: {{ masterOrderHeader.customer.company|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Kode Design</div>
+                        <div class="cell value">: {{ masterOrderHeader.designCode.codeNumber|default }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">No MO</div>
+                        <div class="cell value">: {{ masterOrderHeader.getCodeNumber|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Tanggal WO</div>
+                        <div class="cell value">: {{ masterOrderHeader.transactionDate|default ? masterOrderHeader.transactionDate|date('d M Y') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <table  class="detail">
+        <thead class="table-secondary">
+            <tr>
+                <th>PO#</th>
+                <th>Kode</th>
+                <th>Nama Produk</th>
+                <th>Tanggal Kirim</th>
+                <th>Qty Order</th>
+                <th>Qty Produksi</th>
+                <th>Stock</th>
+                <th>Kekurangan</th>
+                <th>Up Cetak</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderProductDetail in masterOrderHeader.masterOrderProductDetails %}
+                <tr>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.product.code|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.product.name|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.deliveryDate ? masterOrderProductDetail.saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityOrder|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityProduction|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityStock|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityShortage|default|number_format(0) }}</td>
+                    <td style="text-align:center">{{ masterOrderProductDetail.quantityPrinting|default|number_format(0) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br />
+
+    <table class="detail">
+        <thead>
+            <tr>
+                <th style="width: 30%">&nbsp;</th>
+                <th style="width: 10%">Film</th>
+                <th style="width: 10%">File</th>
+                <th style="width: 10%">Plate</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td>Jumlah Up</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Teks</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Raster</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Made in Ind</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Part Numb</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Lion Head</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Logo</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Copy right </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Trademark / TM</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Recycled</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Warning</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Registrasi</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Posisi Die Line</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Register</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Overlapping</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Gripper</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Tebengan</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Posisi Lem</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Nama Perusahaan</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Tanda/No. Ups</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Color Coding</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Pas Kris</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Tanda Tarikan</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Tgl. Kadaluarsa</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Ukuran</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Kebersihan</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Barcode</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Check Keselurahan</td>
+                <td style="text-align:center">OK / Tidak</td>
+                <td style="text-align:center">OK / Tidak</td>
+                <td style="text-align:center">OK / Tidak</td>
+                <td>&nbsp;</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <br />
+
+    <div class="signature">
+        <div class="table full">
+            <div class="cell sig">
+                <div>Film Checklist,</div>
+                <div class="blank">Tgl:</div>
+                <div class="blank">&nbsp;</div>
+                <div>(.........................)</div>
+            </div>
+            <div class="cell sig">
+                <div>File Checklist,</div>
+                <div class="blank">Tgl:</div>
+                <div class="blank">&nbsp;</div>
+                <div>(.........................)</div>
+            </div>
+            <div class="cell sig">
+                <div>Plate Checklist,</div>
+                <div class="blank">Tgl:</div>
+                <div class="blank">&nbsp;</div>
+                <div>(.........................)</div>
+            </div>
+            <div class="cell sig">
+                <div>Diperiksa,</div>
+                <div class="blank">Tgl:</div>
+                <div class="blank">&nbsp;</div>
+                <div>(.........................)</div>
+            </div>
+        </div>
+    </div>
+</div>

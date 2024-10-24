@@ -1,0 +1,430 @@
+<div data-controller="event-emitter"
+     data-action="data-table:select->event-emitter#forward data-choice:select->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id', 'data-choice:select': 'id'}|json_encode }}">
+    {{ form_start(form) }}
+    
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.customer, {
+                'attr': {
+                    'data-controller': 'dom-element data-choice',
+                    'data-action': 'DOMContentLoaded@document->dom-element#bind change->dom-element#bind change->data-choice#select',
+                    'data-dom-element-bind-action-param': '
+                        const customerId = $element.value;
+                        const diecutKnifeChoiceElements = document.querySelectorAll("select#' ~ form.diecutKnife.vars.id ~ ' > option[data-customer]");
+                        for (const diecutKnifeChoiceElement of diecutKnifeChoiceElements) {
+                            if (customerId === diecutKnifeChoiceElement.getAttribute("data-customer")) {
+                                diecutKnifeChoiceElement.classList.remove("d-none");
+                            } else {
+                                diecutKnifeChoiceElement.classList.add("d-none");
+                            }
+                        }
+                        const dielineMillarChoiceElements = document.querySelectorAll("select#' ~ form.dielineMillar.vars.id ~ ' > option[data-customer]");
+                        for (const dielineMillarChoiceElement of dielineMillarChoiceElements) {
+                            if (customerId === dielineMillarChoiceElement.getAttribute("data-customer")) {
+                                dielineMillarChoiceElement.classList.remove("d-none");
+                            } else {
+                                dielineMillarChoiceElement.classList.add("d-none");
+                            }
+                        }
+                    ',
+                },
+            }) }}
+        </div>
+    </div>
+        
+    <fieldset class="border border-secondary rounded mb-3 p-3">
+        <legend class="float-none w-auto text-dark px-1">Products</legend>
+        <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#product-dialog">Add</button>
+        {{ include('master/design_code/_products_form.html.twig') }}
+    </fieldset>
+
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label class="form-label">Kode Produk</label>
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group">
+                            <span class="input-group-text">P</span>
+                            {{ form_widget(form.code, {
+                                'attr': {
+                                    'readonly': true,
+                                    'data-controller': 'dom-element',
+                                    'data-action': 'product-table:data-table:select@document->dom-element#bind',
+                                    'data-dom-element-bind-specifications-param': [
+                                        {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.productCode'}},
+                                    ]|json_encode,
+                                },
+                            }) }}
+                            {{ form_errors(form.code) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label class="form-label">Varian</label>
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group">
+                            <span class="input-group-text">V</span>
+                            {{ form_widget(form.variant) }}
+                            {{ form_errors(form.variant) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label class="form-label">Versi</label>
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group">
+                            <span class="input-group-text">R</span>
+                            {{ form_widget(form.version) }}
+                            {{ form_errors(form.version) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.color) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.pantone) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.colorSpecial1) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.colorSpecial2) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.colorSpecial3) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.colorSpecial4) }}
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.coating) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.hotStamping) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.printingKrisSize) }}
+        </div>
+    </div>
+         
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.glossiness) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.printingUpQuantity) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.emboss) }}
+        </div>
+    </div>
+         
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label for="{{ form.diecutKnife.vars.id }}-text" class="form-label">Pisau Diecut</label>
+                {{ form_row(form.diecutKnife, {
+                    'attr': {
+                        'data-controller': 'dom-element',
+                        'data-action': 'diecut-knife-table:data-table:select@document->dom-element#bind diecut-knife-table:data-table:select@document->json-loader#load',
+                        'data-dom-element-bind-specifications-param': [
+                            {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.diecutKnifeId'}},
+                        ]|json_encode,
+                    },
+                }) }}
+                <input type="text" id="{{ form.diecutKnife.vars.id }}-text" class="form-control readonly-form-input {% if not form.diecutKnife.vars.valid %}is-invalid{% endif %}" value="{{ designCode.diecutKnife.codeNumber|default }}" readonly="readonly"
+                       data-bs-toggle="modal" data-bs-target="#diecut-knife-dialog"
+                       data-controller="dom-element"
+                       data-action="diecut-knife-table:data-table:select@document->dom-element#bind"
+                       data-dom-element-bind-specifications-param="{{ [
+                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.diecutKnifeCodeNumber'}},
+                       ]|json_encode }}" />
+                {{ form_errors(form.diecutKnife) }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label for="{{ form.dielineMillar.vars.id }}-text" class="form-label">Millar</label>
+                {{ form_row(form.dielineMillar, {
+                    'attr': {
+                        'data-controller': 'dom-element',
+                        'data-action': 'dieline-millar-table:data-table:select@document->dom-element#bind dieline-millar-table:data-table:select@document->json-loader#load',
+                        'data-dom-element-bind-specifications-param': [
+                            {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.dielineMillarId'}},
+                        ]|json_encode,
+                    },
+                }) }}
+                <input type="text" id="{{ form.dielineMillar.vars.id }}-text" class="form-control readonly-form-input {% if not form.dielineMillar.vars.valid %}is-invalid{% endif %}" value="{{ designCode.dielineMillar.codeNumber|default }}" readonly="readonly"
+                       data-bs-toggle="modal" data-bs-target="#dieline-millar-dialog"
+                       data-controller="dom-element"
+                       data-action="dieline-millar-table:data-table:select@document->dom-element#bind"
+                       data-dom-element-bind-specifications-param="{{ [
+                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.dielineMillarCodeNumber'}},
+                       ]|json_encode }}" />
+                {{ form_errors(form.dielineMillar) }}
+            </div>
+        </div>
+        <div class="col">
+            {{ form_row(form.status) }}
+        </div>
+    </div>
+         
+    <fieldset class="border border-secondary rounded mb-3 p-3">
+        <legend class="float-none w-auto text-dark px-1">Kebutuhan Material Kertas</legend>            
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label for="{{ form.paper.vars.id }}-text" class="form-label">Material Kertas</label>
+                    {{ form_row(form.paper, {
+                        'attr': {
+                            'data-controller': 'dom-element',
+                            'data-action': 'paper-table:data-table:select@document->dom-element#bind paper-table:data-table:select@document->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.paperId'}},
+                            ]|json_encode,
+                        },
+                    }) }}
+                    <input type="text" id="{{ form.paper.vars.id }}-text" class="form-control readonly-form-input {% if not form.paper.vars.valid %}is-invalid{% endif %}" value="{{ designCode.paper.name|default }}" readonly="readonly"
+                           data-bs-toggle="modal" data-bs-target="#paper-dialog"
+                           data-controller="dom-element"
+                           data-action="paper-table:data-table:select@document->dom-element#bind"
+                           data-dom-element-bind-specifications-param="{{ [
+                               {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.paperName'}},
+                           ]|json_encode }}" />
+                    {{ form_errors(form.paper) }}
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label class="form-label">Kode Kertas</label>
+                    <input type="text" class="form-control" value="{{ designCode.paper.codeNumber|default }}" readonly="readonly"
+                           data-controller="dom-element"
+                           data-action="paper-table:data-table:select@document->dom-element#bind"
+                           data-dom-element-bind-specifications-param="{{ [
+                               {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.paperCode'}},
+                           ]|json_encode }}" />
+                </div>
+            </div>    
+        </div>       
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label class="form-label">Uk Plano Kertas</label>
+                    <div class="row">
+                        <div class="col">
+                            <div class="input-group">
+                                {{ form_widget(form.paperPlanoLength) }}
+                                {{ form_errors(form.paperPlanoLength) }}
+                                <span class="input-group-text">x</span>
+                                {{ form_widget(form.paperPlanoWidth) }}
+                                {{ form_errors(form.paperPlanoWidth) }}
+                                <span class="input-group-text">cm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                {{ form_row(form.paperMountage) }}
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label class="form-label">Uk Potong Kertas</label>
+                    <div class="row">
+                        <div class="col">
+                            <div class="input-group">
+                                {{ form_widget(form.paperCuttingLength) }}
+                                {{ form_errors(form.paperCuttingLength) }}
+                                <span class="input-group-text">x</span>
+                                {{ form_widget(form.paperCuttingWidth) }}
+                                {{ form_errors(form.paperCuttingWidth) }}
+                                <span class="input-group-text">cm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+            
+    <fieldset class="border border-secondary rounded mb-3 p-3">
+        <legend class="float-none w-auto text-dark px-1">Estimasi Tinta / Chemical</legend>
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.inkCyanPercentage) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.inkMagentaPercentage) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.inkYellowPercentage) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.inkBlackPercentage) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.inkK1Percentage) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.inkK2Percentage) }}
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.inkK3Percentage) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.inkK4Percentage) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.inkOpvPercentage) }}
+            </div>
+        </div>
+    </fieldset>
+        
+    <fieldset class="border border-secondary rounded mb-3 p-3">
+        <legend class="float-none w-auto text-dark px-1">Estimasi Packaging</legend>
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.packagingGlueQuantity) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.packagingRubberQuantity) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.packagingPaperQuantity) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.packagingBoxQuantity) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.packagingTapeLargeQuantity) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.packagingTapeSmallQuantity) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.packagingPlasticQuantity) }}
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="border border-secondary rounded mb-3 p-3">
+        <legend class="float-none w-auto text-dark px-1">Urutan Proses</legend>
+        {{ include('master/design_code/_processing_order_form.html.twig') }}
+    </fieldset>
+
+    <fieldset class="border border-secondary rounded mb-3 p-3">
+        <legend class="float-none w-auto text-dark px-1">Distribusi WO</legend>
+        {{ include('master/design_code/_distribution_form.html.twig') }}
+    </fieldset>
+
+    <fieldset class="border border-secondary rounded mb-3 p-3">
+        <legend class="float-none w-auto text-dark px-1">Check Sheet</legend>
+        {{ include('master/design_code/_check_sheet_form.html.twig') }}
+    </fieldset>
+
+    <div class="row">
+        {{ form_row(form.note) }}
+        {{ form_row(form.isInactive) }}
+    </div>
+
+    <hr />
+
+    <legend class="float-none w-auto text-dark px-1">Design Code List</legend>
+    <div data-controller="html-loader"
+         data-html-loader-url-value="{{ path('app_master_design_code__design_code_list') }}"
+         data-html-loader-auto-load-value="true"
+         data-action="{{ form.customer.vars.id }}:data-choice:select@document->html-loader#load">
+    </div>
+
+    <hr />
+        
+    <div class="d-grid">
+        <div class="row">
+            <div class="col text-center">
+                <a class="btn btn-danger" href="{{ path('app_master_design_code_index') }}"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                    Cancel
+                </a>
+                <button class="btn btn-success"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                    Save
+                </button>
+            </div>
+        </div>
+        <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+    </div>
+    {{ form_end(form) }}
+    
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('product-dialog', 'Product List') }}
+        <input type="hidden" id="product-table-identifiers" />
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_product__list') }}"
+             data-html-loader-auto-load-value="true"
+             data-action="{{ form.customer.vars.id }}:data-choice:select@document->html-loader#load">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+            Done
+        </button>
+    {{ dialog.end() }}
+    
+    {{ dialog.start('paper-dialog', 'Paper List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_paper__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+
+    {{ dialog.start('diecut-knife-dialog', 'Pisau Diecut List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_diecut_knife__list') }}"
+             data-html-loader-auto-load-value="true"
+             data-action="{{ form.customer.vars.id }}:data-choice:select@document->html-loader#load">
+        </div>
+    {{ dialog.end() }}
+
+    {{ dialog.start('dieline-millar-dialog', 'Millar List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_dieline_millar__list') }}"
+             data-html-loader-auto-load-value="true"
+             data-action="{{ form.customer.vars.id }}:data-choice:select@document->html-loader#load">
+        </div>
+    {{ dialog.end() }}
+
+</div>

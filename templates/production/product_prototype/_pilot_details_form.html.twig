@@ -1,0 +1,54 @@
+<div class="table-responsive">
+    <table class="table table-bordered"
+       data-controller="form-collection"
+       data-form-collection-start-index-value="{{ form.productPrototypePilotDetails|length > 0 ? form.productPrototypePilotDetails|last.vars.name + 1 : 0 }}"
+       data-form-collection-prototype-value="{{ _self.collection_item(form.productPrototypePilotDetails.vars.prototype)|e('html_attr') }}">
+        <thead class="table-secondary">
+            <tr>
+                <th style="min-width: 200px">Item</th>
+                <th style="min-width: 200px">Ukuran Jadi</th>
+                <th style="min-width: 100px">Quantity</th>
+                <th style="min-width: 100px">Keterangan</th>
+                <th style="min-width: 0"></th>
+            </tr>
+        </thead>
+        <tbody data-form-collection-target="items" data-action="new-product_prototype-pilot-detail-button:action-button:click@document->form-collection#addCollectionItem">
+            {% macro collection_item(detailForm) %}
+                <tr data-form-collection-target="item" {% if (detailForm.vars.value.isCanceled) %}class="d-none"{% endif %}>
+                    <td>{{ form_row(detailForm.productName, {'label': false}) }}</td>
+                    <td>{{ form_row(detailForm.size, {'label': false}) }}</td>
+                    <td>{{ form_row(detailForm.quantity, {'label': false, 'attr': {
+                            'size': 3,
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 0)'}}
+                            ]|json_encode,
+                        }}) }}</td>
+                    <td>{{ form_row(detailForm.memo, {'label': false}) }}</td>
+                    <td>
+                        {% if (detailForm.vars.value.id == null) %}
+                            <button type="button" class="btn btn-outline-dark" data-action="form-collection#removeCollectionItem"><i class="bi-x-lg"></i></button>
+                        {% endif %}
+                        <div {% if (detailForm.vars.value.id == null) %}class="d-none"{% endif %}>
+                            {{ form_row(detailForm.isCanceled, {
+                                'label': 'X',
+                                'attr': {
+                                    'data-controller': 'dom-element',
+                                    'data-action': 'dom-element#bind change->json-loader#load',
+                                    'data-dom-element-bind-specifications-param': [
+                                        {'destinationsTarget': "table tr[data-item-identifier-value=\"#{detailForm.vars.value.productPrototypePilotDetail.id|default}\"]", 'action': 'removeClass', 'descriptor': {'name': 'bg-secondary'}, 'condition': '!$element.checked'},
+                                        {'destinationsTarget': "table tr[data-item-identifier-value=\"#{detailForm.vars.value.productPrototypePilotDetail.id|default}\"]", 'action': 'addClass', 'descriptor': {'name': 'bg-secondary'}, 'condition': '$element.checked'},
+                                    ]|json_encode,
+                                },
+                            }) }}
+                        </div>
+                    </td>
+                </tr>
+            {% endmacro %}
+            {% for detailForm in form.productPrototypePilotDetails %}
+                {{ _self.collection_item(detailForm) }}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

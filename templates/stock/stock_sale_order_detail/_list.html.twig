@@ -1,0 +1,78 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, saleOrderDetails) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'customer:company') }}>
+                    Customer {{ grid.sort_char(form.sort['customer:company'].vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'saleOrderHeader:referenceNumber') }}>
+                    PO # {{ grid.sort_char(form.sort['saleOrderHeader:referenceNumber'].vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'saleOrderHeader:transactionDate') }}>
+                    Tanggal PO {{ grid.sort_char(form.sort['saleOrderHeader:transactionDate'].vars.value) }}
+                </th>
+                <th style="min-width: 130px" role="button" {{ grid.sort_link_item(form, 'deliveryDate') }}>
+                    Tanggal Kirim {{ grid.sort_char(form.sort.deliveryDate.vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'product:name') }}>
+                    Product {{ grid.sort_char(form.sort['product:name'].vars.value) }}
+                </th>
+                <th style="min-width: 100px">
+                    Quantity
+                </th>
+                <th style="min-width: 100px">
+                    Satuan
+                </th>
+                <th style="min-width: 50px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'customer:company') }} value="{{ form.filter['customer:company'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'saleOrderHeader:referenceNumber') }} value="{{ form.filter['saleOrderHeader:referenceNumber'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'saleOrderHeader:transactionDate') }} value="{{ form.filter['saleOrderHeader:transactionDate'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'deliveryDate') }} value="{{ form.filter.deliveryDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'product:name') }} value="{{ form.filter['product:name'].1.vars.value }}" />
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for saleOrderDetail in saleOrderDetails %}
+                <tr>
+                    <td>{{ saleOrderDetail.saleOrderHeader.customer.company|default }}</td>
+                    <td>{{ saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                    <td>{{ saleOrderDetail.saleOrderHeader.transactionDate ? saleOrderDetail.saleOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ saleOrderDetail.deliveryDate ? saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                    <td>{{ saleOrderDetail.product.name|default }}</td>
+                    <td class="text-end">{{ saleOrderDetail.quantity|default|number_format(2) }}</td>
+                    <td>{{ saleOrderDetail.unit.name|default }}</td>
+                    <td>
+                        <a class="btn btn-warning btn-sm" href="{{ path('app_stock_stock_sale_order_detail_edit', {'id': saleOrderDetail.id}) }}"><i class="bi-pencil"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, saleOrderDetails) }}

@@ -1,0 +1,22 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="d-grid">
+        <div class="row">
+            <div class="col text-center">
+                <a class="btn btn-danger" href="{{ path('app_master_machine_printing_index') }}"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                    Cancel
+                </a>
+                <button class="btn btn-success"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                    Save
+                </button>
+            </div>
+        </div>
+        <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+    </div>
+{{ form_end(form) }}

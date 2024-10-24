@@ -1,0 +1,55 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="11"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="11"><strong>Laporan Pengeluaran Kertas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="11">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="11"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Pengeluaran #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Gudang</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Jenis</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>WO #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kode</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Nama Item</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Keluar</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Satuan</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Memo</strong></th>
+        </tr>
+        <tr>
+            <th colspan="11"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for inventoryReleasePaperDetail in inventoryReleasePaperDetails %}
+            <tr>
+                <td style="text-align: left">{{ inventoryReleasePaperDetail.inventoryReleaseHeader.codeNumber|default }}</td>
+                <td style="text-align: left">{{ inventoryReleasePaperDetail.inventoryReleaseHeader.transactionDate|default ? inventoryReleasePaperDetail.inventoryReleaseHeader.transactionDate|date('j M Y') }}</td>
+                <td style="text-align: left">{{ inventoryReleasePaperDetail.inventoryReleaseHeader.warehouse.name|default }}</td>
+                <td style="text-align: left">{{ inventoryReleasePaperDetail.inventoryReleaseHeader.releaseMode|default }}</td>
+                <td style="text-align: left">{{ inventoryReleasePaperDetail.inventoryReleaseHeader.note|default }}</td>
+                <td style="text-align: left">{{ inventoryReleasePaperDetail.inventoryRequestPaperDetail.masterOrderHeader.codeNumber|default }}</td>
+                <td style="text-align: left">{{ inventoryReleasePaperDetail.paper.codeNumber|default }}</td>
+                <td style="text-align: left">{{ inventoryReleasePaperDetail.paper.name|default }}</td>
+                <td style="text-align: center">{{ inventoryReleasePaperDetail.quantity|default }}</td>
+                <td style="text-align: left">{{ inventoryReleasePaperDetail.unit.name|default }}</td>
+                <td style="text-align: left">{{ inventoryReleasePaperDetail.memo|default }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

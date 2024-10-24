@@ -1,0 +1,30 @@
+{
+    "totalQuantity": "{{ stockTransferHeader.totalQuantity|default|number_format(2) }}",
+    "stockTransferMaterialDetails": {
+        {%- for stockTransferMaterialDetailForm in form.stockTransferMaterialDetails -%}
+            {%- set stockTransferMaterialDetail = stockTransferMaterialDetailForm.vars.data -%}
+            "{{ stockTransferMaterialDetailForm.vars.name }}": {
+                "quantityCurrent": "{{ stockTransferMaterialDetail.quantityCurrent|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    },
+    "stockTransferPaperDetails": {
+        {%- for stockTransferPaperDetailForm in form.stockTransferPaperDetails -%}
+            {%- set stockTransferPaperDetail = stockTransferPaperDetailForm.vars.data -%}
+            "{{ stockTransferPaperDetailForm.vars.name }}": {
+                "quantityCurrent": "{{ stockTransferPaperDetail.quantityCurrent|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    },
+    "stockTransferProductDetails": {
+        {%- for stockTransferProductDetailForm in form.stockTransferProductDetails -%}
+            {%- set stockTransferProductDetail = stockTransferProductDetailForm.vars.data -%}
+            "{{ stockTransferProductDetailForm.vars.name }}": {
+                "quantityCurrent": "{{ stockTransferProductDetail.quantityCurrent|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

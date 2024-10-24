@@ -1,0 +1,11 @@
+{
+    "productPrototypeDetails": {
+        {%- for productPrototypeDetailForm in form.productPrototypeDetails -%}
+            {%- set productPrototypeDetail = productPrototypeDetailForm.vars.data -%}
+            "{{ productPrototypeDetailForm.vars.name }}": {
+            
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

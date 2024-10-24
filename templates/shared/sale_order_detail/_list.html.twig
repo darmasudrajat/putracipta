@@ -1,0 +1,93 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, saleOrderDetails) }}
+
+{% if app.request.request.has('delivery_header') %}
+    {% set selectMultiple = false %}
+{% else %}
+    {% set selectMultiple = true %}
+{% endif %}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="sale-order-detail-table" 
+           data-controller="data-table"
+           {% if selectMultiple == true %}
+               data-data-table-selected-identifiers-target-value="#sale-order-detail-table-identifiers"
+               data-data-table-selected-class="table-primary"
+               data-data-table-active-class="table-active"
+           {% endif %}>
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'saleOrderHeader:referenceNumber') }}>
+                    Customer PO # {{ grid.sort_char(form.sort['saleOrderHeader:referenceNumber'].vars.value) }}
+                </th>
+                <th style="min-width: 150px">Tanggal Kirim</th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'product:code') }}>
+                    Code {{ grid.sort_char(form.sort['product:code'].vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'product:name') }}>
+                    Name {{ grid.sort_char(form.sort['product:name'].vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button">
+                    Quantity
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'unit:name') }}>
+                    Satuan {{ grid.sort_char(form.sort['unit:name'].vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'saleOrderHeader:referenceNumber') }} value="{{ form.filter['saleOrderHeader:referenceNumber'].1.vars.value }}" />
+                </th>
+                <th></th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'product:code') }} value="{{ form.filter['product:code'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'product:name') }} value="{{ form.filter['product:name'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'unit:name') }} value="{{ form.filter['unit:name'].1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for saleOrderDetail in saleOrderDetails %}
+                <tr {% if selectMultiple == true %}data-data-table-target="selectable" data-selected-identifier="{{ saleOrderDetail.id }}"{% else %}data-bs-dismiss="modal"{% endif %} class="data-table-check-row" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'saleOrderHeaderCodeNumber': saleOrderDetail.saleOrderHeader.codeNumber|default,
+                    'saleOrderHeaderReferenceNumber': saleOrderDetail.saleOrderHeader.referenceNumber|default,
+                    'customerCompany': saleOrderDetail.saleOrderHeader.customer.company|default,
+                    'saleOrderHeaderIsUsingFscPaper': saleOrderDetail.saleOrderHeader.isUsingFscPaper|default ? 'Yes' : 'No',
+                    'saleOrderHeaderDate': saleOrderDetail.saleOrderHeader.transactionDate|default ? saleOrderDetail.saleOrderHeader.transactionDate|date('d M Y') : '',
+                    'saleOrderDetailDeliveryDate': saleOrderDetail.deliveryDate ? saleOrderDetail.deliveryDate|date('d M Y') : '',
+                    'saleOrderDetailId': saleOrderDetail.id,
+                    'saleOrderDetailLinePo': saleOrderDetail.linePo|default,
+                    'productName': saleOrderDetail.product.name|default,
+                    'productId': saleOrderDetail.product.id|default,
+                    'productCode': saleOrderDetail.product.code|default,
+                    'productLength': saleOrderDetail.product.length|default,
+                    'productWidth': saleOrderDetail.product.width|default,
+                    'productHeight': saleOrderDetail.product.height|default,
+                    'unitName': saleOrderDetail.unit.name|default,
+                    'saleOrderDetailQuantityRemaining': saleOrderDetail.remainingDelivery|default|number_format(0),
+                    'saleOrderDetailQuantity': saleOrderDetail.quantity|default|number_format(0),
+                    'inventoryStockQuantity': stockQuantityList[saleOrderDetail.product.id] is defined ? stockQuantityList[saleOrderDetail.product.id]|number_format(0) : 0}|json_encode }}">
+                    <td>{{ saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                    <td>{{ saleOrderDetail.deliveryDate ? saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                    <td>{{ saleOrderDetail.product.code|default }}</td>
+                    <td>{{ saleOrderDetail.product.name|default }}</td>
+                    <td class="text-end">{{ saleOrderDetail.quantity|default|number_format(0) }}</td>
+                    <td>{{ saleOrderDetail.unit.name|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+            
+{{ grid.navigation(form, count, saleOrderDetails) }}

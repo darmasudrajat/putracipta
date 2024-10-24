@@ -1,0 +1,60 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, productPrototypes) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 280px">
+                    Produk Baru #
+                </th>
+                <th style="min-width: 150px">
+                    Tanggal
+                </th>
+                <th style="min-width: 150px">
+                    Customer
+                </th>
+                <th style="min-width: 150px">
+                    Material
+                </th>
+                <th style="min-width: 150px">
+                    PIC Design
+                </th>
+                <th style="min-width: 150px">
+                    Note
+                </th>
+                <th style="min-width: 50px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for productPrototype in productPrototypes %}
+                <tr>
+                    <td>{{ productPrototype.codeNumber }}</td>
+                    <td>{{ productPrototype.transactionDate ? productPrototype.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ productPrototype.customer.company|default }}</td>
+                    <td>
+                        {% if productPrototype.paper == null %}
+                            {{ productPrototype.paperName|default }}
+                        {%  else %}
+                            {{ productPrototype.paper.codeNumber|default }}
+                        {% endif %}
+                    </td>
+                    <td>{{ productPrototype.employee.name|default }}</td>
+                    <td>{{ productPrototype.note }}</td>
+                    <td>
+                        {{ include('production/product_prototype/_read_form.html.twig') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, productPrototypes) }}

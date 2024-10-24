@@ -1,0 +1,39 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th>
+                    FSC Code
+                </th>
+                <th>
+                    VAT (%)
+                </th>
+                <th>
+                    PPh 23 (%)
+                </th>
+                <th>
+                    Toleransi Sisa Pembayaran
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for literalConfig in literalConfigs %}
+                <tr>
+                    <td>{{ literalConfig.ifscCode }}</td>
+                    <td>{{ literalConfig.vatPercentage }}</td>
+                    <td>{{ literalConfig.serviceTaxPercentage }}</td>
+                    <td>{{ literalConfig.paymentRemainingTolerance|default|number_format(2) }}</td>
+                    <td>
+                        {# <a class="btn btn-info btn-sm" href="{{ path('app_admin_literal_config_show', {'id': literalConfig.id}) }}">Show</a>*#}
+                        <a class="btn btn-warning btn-sm" href="{{ path('app_admin_literal_config_edit', {'id': literalConfig.id}) }}">Edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

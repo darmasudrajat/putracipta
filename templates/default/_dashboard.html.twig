@@ -1,0 +1,428 @@
+<div>
+    <h6>New Transactions</h6>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td>Draft Request Material</td>
+                <td class="text-center font-weight-bold">
+                    {% if is_granted('ROLE_PURCHASE_REQUEST_MATERIAL_VIEW') or is_granted('ROLE_PURCHASE_REQUEST_MATERIAL_EDIT') or is_granted('ROLE_PURCHASE_REQUEST_MATERIAL_ADD') %}
+                        <a href="{{ path('app_purchase_purchase_request_header_head') }}">{{ purchaseRequestHeaderCount }}</a>
+                    {% else %}
+                        {{ purchaseRequestHeaderCount }}
+                    {% endif %}
+                </td>
+                <td>Draft Request Kertas</td>
+                <td class="text-center font-weight-bold">
+                    {% if is_granted('ROLE_PURCHASE_REQUEST_PAPER_VIEW') or is_granted('ROLE_PURCHASE_REQUEST_PAPER_EDIT') or is_granted('ROLE_PURCHASE_REQUEST_PAPER_ADD') %}
+                        <a href="{{ path('app_purchase_purchase_request_paper_header_head') }}">{{ purchaseRequestPaperHeaderCount }}</a>
+                    {% else %}
+                        {{ purchaseRequestPaperHeaderCount }}
+                    {% endif %}
+                </td>
+                <td>Approved Request Material</td>
+                <td class="text-center font-weight-bold">
+                    {% if is_granted('ROLE_PURCHASE_REQUEST_MATERIAL_VIEW') or is_granted('ROLE_PURCHASE_REQUEST_MATERIAL_EDIT') or is_granted('ROLE_PURCHASE_REQUEST_MATERIAL_ADD') %}
+                        <a href="{{ path('app_purchase_purchase_request_header_approval') }}">{{ purchaseRequestHeaderCountApproval }}</a>
+                    {% else %}
+                        {{ purchaseRequestHeaderCountApproval }}
+                    {% endif %}
+                </td>
+                <td>Approved Request Kertas</td>
+                <td class="text-center font-weight-bold">
+                    {% if is_granted('ROLE_PURCHASE_REQUEST_PAPER_VIEW') or is_granted('ROLE_PURCHASE_REQUEST_PAPER_EDIT') or is_granted('ROLE_PURCHASE_REQUEST_PAPER_ADD') %}
+                        <a href="{{ path('app_purchase_purchase_request_paper_header_approval') }}">{{ purchaseRequestPaperHeaderCountApproval }}</a>
+                    {% else %}
+                        {{ purchaseRequestPaperHeaderCountApproval }}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>PO Material</td>
+                <td class="text-center font-weight-bold">
+                    {% if is_granted('ROLE_PURCHASE_ORDER_MATERIAL_VIEW') or is_granted('ROLE_PURCHASE_ORDER_MATERIAL_EDIT') or is_granted('ROLE_PURCHASE_ORDER_MATERIAL_ADD') %}
+                        <a href="{{ path('app_purchase_purchase_order_header_head') }}">{{ purchaseOrderHeaderCount }}</a>
+                    {% else %}
+                        {{ purchaseOrderHeaderCount }}
+                    {% endif %}
+                </td>
+                <td>PO Kertas</td>
+                <td class="text-center font-weight-bold">
+                    {% if is_granted('ROLE_PURCHASE_ORDER_PAPER_VIEW') or is_granted('ROLE_PURCHASE_ORDER_PAPER_EDIT') or is_granted('ROLE_PURCHASE_ORDER_PAPER_ADD') %}
+                        <a href="{{ path('app_purchase_purchase_order_paper_header_head') }}">{{ purchaseOrderPaperHeaderCount }}</a>
+                    {% else %}
+                        {{ purchaseOrderPaperHeaderCount }}
+                    {% endif %}
+                </td>
+                <td>Invoice Pembelian</td>
+                <td class="text-center font-weight-bold">
+                    {% if is_granted('ROLE_PURCHASE_INVOICE_VIEW') or is_granted('ROLE_PURCHASE_INVOICE_EDIT') or is_granted('ROLE_PURCHASE_INVOICE_ADD') %}
+                        <a href="{{ path('app_purchase_purchase_invoice_header_head') }}">{{ purchaseInvoiceHeaderCount }}</a>
+                    {% else %}
+                        {{ purchaseInvoiceHeaderCount }}
+                    {% endif %}
+                </td>
+                <td>Permintaan Produksi</td>
+                <td class="text-center font-weight-bold">
+                    {% if is_granted('ROLE_MATERIAL_REQUEST_VIEW') or is_granted('ROLE_MATERIAL_REQUEST_EDIT') or is_granted('ROLE_MATERIAL_REQUEST_ADD') %}
+                        <a href="{{ path('app_stock_inventory_request_header_head') }}">{{ inventoryRequestHeaderCount }}</a>
+                    {% else %}
+                        {{ inventoryRequestHeaderCount }}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Order Penjualan</td>
+                <td class="text-center font-weight-bold">
+                    {% if is_granted('ROLE_SALE_ORDER_VIEW') or is_granted('ROLE_SALE_ORDER_EDIT') or is_granted('ROLE_SALE_ORDER_ADD') %}
+                        <a href="{{ path('app_sale_sale_order_header_head') }}">{{ saleOrderHeaderCount }}</a>
+                    {% else %}
+                        {{ saleOrderHeaderCount }}
+                    {% endif %}
+                </td>
+                <td>Invoice Penjualan</td>
+                <td class="text-center font-weight-bold">
+                    {% if is_granted('ROLE_SALE_INVOICE_VIEW') or is_granted('ROLE_SALE_INVOICE_EDIT') or is_granted('ROLE_SALE_INVOICE_ADD') %}
+                        <a href="{{ path('app_sale_sale_invoice_header_head') }}">{{ saleInvoiceHeaderCount }}</a>
+                    {% else %}
+                        {{ saleInvoiceHeaderCount }}
+                    {% endif %}
+                </td>
+                <td>Formulir Produk Baru</td>
+                <td class="text-center font-weight-bold">
+                        {% if is_granted('ROLE_NEW_PRODUCT_VIEW') or is_granted('ROLE_NEW_PRODUCT_EDIT') or is_granted('ROLE_NEW_PRODUCT_ADD') %}
+                        <a href="{{ path('app_production_product_prototype_head') }}">{{ productPrototypeCount }}</a>
+                    {% else %}
+                        {{ productPrototypeCount }}
+                    {% endif %}
+                </td>
+                <td>Master Produk</td>
+                <td class="text-center font-weight-bold">
+                        {% if is_granted('ROLE_PRODUCT_VIEW') or is_granted('ROLE_PRODUCT_EDIT') or is_granted('ROLE_PRODUCT_ADD') %}
+                        <a href="{{ path('app_master_product_head') }}">{{ productCount }}</a>
+                    {% else %}
+                        {{ productCount }}
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+           
+<hr />
+
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(saleForm) }}
+
+{{ grid.info(saleForm, saleCount, saleOrderHeaders) }}
+
+<div class="table-responsive">
+    <h6>Sales Transactions</h6>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(saleForm) }}>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(saleForm, 'referenceNumber') }}>
+                    PO # {{ grid.sort_char(saleForm.sort.referenceNumber.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(saleForm, 'transactionDate') }}>
+                    Tanggal PO {{ grid.sort_char(saleForm.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(saleForm, 'customer:company') }}>
+                    Customer {{ grid.sort_char(saleForm.sort['customer:company'].vars.value) }}
+                </th>
+                <th style="min-width: 450px">
+                    Product
+                </th>
+                <th style="min-width: 250px">
+                    MO #
+                </th>
+                <th style="min-width: 250px">
+                    Penerimaan Produksi #
+                </th>
+                <th style="min-width: 250px">
+                    Pengiriman #
+                </th>
+                <th style="min-width: 200px">
+                    Invoice #
+                </th>
+                <th style="min-width: 200px">
+                    Pelunasan #
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(saleForm) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(saleForm, 'referenceNumber') }} value="{{ saleForm.filter.referenceNumber.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(saleForm, 'transactionDate') }} value="{{ saleForm.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(saleForm, 'customer:company') }} value="{{ saleForm.filter['customer:company'].1.vars.value }}" />
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for saleOrderHeader in saleOrderHeaders %}
+                {% set currentSaleOrderHeader = saleOrderHeaderData[saleOrderHeader.id]|default(saleOrderHeader) %}
+                {% set saleOrderDetails = currentSaleOrderHeader.saleOrderDetails %}
+                {% set masterOrderProductDetails = saleOrderDetails|map(saleOrderDetail => saleOrderDetail.masterOrderProductDetails)|reduce((a, b) => a|merge(b), []) %}
+                {% set inventoryProductReceiveDetails = masterOrderProductDetails|map(masterOrderProductDetail => masterOrderProductDetail.inventoryProductReceiveDetails)|reduce((a, b) => a|merge(b), []) %}
+                {% set deliveryDetails = masterOrderProductDetails|map(masterOrderProductDetail => masterOrderProductDetail.deliveryDetails)|reduce((a, b) => a|merge(b), []) %}
+                {% set saleInvoiceDetails = deliveryDetails|map(deliveryDetail => deliveryDetail.saleInvoiceDetails)|reduce((a, b) => a|merge(b), []) %}
+                {% set salePaymentDetails = saleInvoiceDetails|map(saleInvoiceDetail => saleInvoiceDetail.saleInvoiceHeader.salePaymentDetails)|reduce((a, b) => a|merge(b), []) %}
+                <tr>
+                    <td>
+                        <a target="_blank" href="{{ path('app_sale_sale_order_header_show', {'id': currentSaleOrderHeader.id}) }}">{{ currentSaleOrderHeader.referenceNumber|default }}</a>
+                    </td>
+                    <td>{{ currentSaleOrderHeader.transactionDate ? currentSaleOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ currentSaleOrderHeader.customer.company }}</td>
+                    <td>{{ saleOrderDetails|map(saleOrderDetail => saleOrderDetail.product.code)|reduce((a, b) => b in a ? a : a|merge([b]), [])|join(', ') }}</td>
+                    <td>
+                        {% set masterOrderHeaders = masterOrderProductDetails|map(masterOrderProductDetail => masterOrderProductDetail.masterOrderHeader)|reduce((a, b) => b in a ? a : a|merge([b]), []) %}
+                        {% for masterOrderHeader in masterOrderHeaders %}
+                            <a target="_blank" href="{{ path('app_production_master_order_header_show', {'id': masterOrderHeader.id}) }}">{{ masterOrderHeader.codeNumber|default }}</a>{% if loop.index < masterOrderHeaders|length %}, {% endif %} 
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% set inventoryProductReceiveHeaders = inventoryProductReceiveDetails|map(inventoryProductReceiveDetail => inventoryProductReceiveDetail.inventoryProductReceiveHeader)|reduce((a, b) => b in a ? a : a|merge([b]), []) %}
+                        {% for inventoryProductReceiveHeader in inventoryProductReceiveHeaders %}
+                            <a target="_blank" href="{{ path('app_stock_inventory_product_receive_header_show', {'id': inventoryProductReceiveHeader.id}) }}">{{ inventoryProductReceiveHeader.codeNumber|default }}</a>{% if loop.index < inventoryProductReceiveHeaders|length %}, {% endif %} 
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% set deliveryHeaders = deliveryDetails|map(deliveryDetail => deliveryDetail.deliveryHeader)|reduce((a, b) => b in a ? a : a|merge([b]), []) %}
+                        {% for deliveryHeader in deliveryHeaders %}
+                            <a target="_blank" href="{{ path('app_sale_delivery_header_show', {'id': deliveryHeader.id}) }}">{{ deliveryHeader.codeNumber|default }}</a>{% if loop.index < deliveryHeaders|length %}, {% endif %} 
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% set saleInvoiceHeaders = saleInvoiceDetails|map(saleInvoiceDetail => saleInvoiceDetail.saleInvoiceHeader)|reduce((a, b) => b in a ? a : a|merge([b]), []) %}
+                        {% for saleInvoiceHeader in saleInvoiceHeaders %}
+                            <a target="_blank" href="{{ path('app_sale_sale_invoice_header_show', {'id': saleInvoiceHeader.id}) }}">{{ saleInvoiceHeader.codeNumber|default }}</a>{% if loop.index < saleInvoiceHeaders|length %}, {% endif %} 
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% set salePaymentHeaders = salePaymentDetails|map(salePaymentDetail => salePaymentDetail.salePaymentHeader)|reduce((a, b) => b in a ? a : a|merge([b]), []) %}
+                        {% for salePaymentHeader in salePaymentHeaders %}
+                            <a target="_blank" href="{{ path('app_sale_sale_payment_header_show', {'id': salePaymentHeader.id}) }}">{{ salePaymentHeader.codeNumber|default }}</a>{% if loop.index < salePaymentHeaders|length %}, {% endif %} 
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(saleForm, saleCount, saleOrderHeaders) }}
+         
+<hr />
+
+{{ grid.form(purchaseForm) }}
+
+{{ grid.info(purchaseForm, purchaseCount, purchaseOrderHeaders) }}
+
+<div class="table-responsive">
+    <h6>Purchase Material Transactions</h6>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 280px" role="button"{{ grid.sort_link_item(purchaseForm, ['codeNumberOrdinal', 'codeNumberMonth', 'codeNumberYear']) }}>
+                    PO # {{ grid.sort_char(purchaseForm.sort.codeNumberOrdinal.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(purchaseForm, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(purchaseForm.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(purchaseForm, 'supplier:company') }}>
+                    Supplier {{ grid.sort_char(purchaseForm.sort['supplier:company'].vars.value) }}
+                </th>
+                <th style="min-width: 280px">
+                    Material
+                </th>
+                <th style="min-width: 350px">
+                    Penerimaan #
+                </th>
+                <th style="min-width: 200px">
+                    Invoice #
+                </th>
+                <th style="min-width: 200px">
+                    Pelunasan #
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(purchaseForm) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(purchaseForm, 'codeNumberOrdinal') }} value="{{ purchaseForm.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Purchase\\PurchaseOrderHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(purchaseForm, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\PurchaseHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if purchaseForm.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>/</small></span>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(purchaseForm, 'codeNumberYear') }} value="{{ purchaseForm.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(purchaseForm, 'transactionDate') }} value="{{ purchaseForm.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(purchaseForm, 'supplier:company') }} value="{{ purchaseForm.filter['supplier:company'].1.vars.value }}" />
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseOrderHeader in purchaseOrderHeaders %}
+                {% set currentPurchaseOrderHeader = purchaseOrderHeaderData[purchaseOrderHeader.id]|default(purchaseOrderHeader) %}
+                {% set purchaseOrderDetails = currentPurchaseOrderHeader.purchaseOrderDetails %}
+                {% set receiveDetails = purchaseOrderDetails|map(purchaseOrderDetail => purchaseOrderDetail.receiveDetails)|reduce((a, b) => a|merge(b), []) %}
+                {% set purchaseInvoiceDetails = receiveDetails|map(receiveDetail => receiveDetail.purchaseInvoiceDetails)|reduce((a, b) => a|merge(b), []) %}
+                {% set purchasePaymentDetails = purchaseInvoiceDetails|map(purchaseInvoiceDetail => purchaseInvoiceDetail.purchaseInvoiceHeader.purchasePaymentDetails)|reduce((a, b) => a|merge(b), []) %}
+                <tr>
+                    <td>
+                        <a target="_blank" href="{{ path('app_purchase_purchase_order_header_show', {'id': currentPurchaseOrderHeader.id}) }}">{{ currentPurchaseOrderHeader.codeNumber|default }}</a>
+                    </td>
+                    <td>{{ currentPurchaseOrderHeader.transactionDate ? currentPurchaseOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ currentPurchaseOrderHeader.supplier.company }}</td>
+                    <td>{{ purchaseOrderDetails|map(purchaseOrderDetail => purchaseOrderDetail.material.name)|reduce((a, b) => b in a ? a : a|merge([b]), [])|join(', ') }}</td>
+                    <td>
+                        {% set receiveHeaders = receiveDetails|map(receiveDetail => receiveDetail.receiveHeader)|reduce((a, b) => b in a ? a : a|merge([b]), []) %}
+                        {% for receiveHeader in receiveHeaders %}
+                            <a target="_blank" href="{{ path('app_purchase_receive_header_show', {'id': receiveHeader.id}) }}">{{ receiveHeader.codeNumber|default }}</a>{% if loop.index < receiveHeaders|length %}, {% endif %} 
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% set purchaseInvoiceHeaders = purchaseInvoiceDetails|map(purchaseInvoiceDetail => purchaseInvoiceDetail.purchaseInvoiceHeader)|reduce((a, b) => b in a ? a : a|merge([b]), []) %}
+                        {% for purchaseInvoiceHeader in purchaseInvoiceHeaders %}
+                            <a target="_blank" href="{{ path('app_purchase_purchase_invoice_header_show', {'id': purchaseInvoiceHeader.id}) }}">{{ purchaseInvoiceHeader.codeNumber|default }}</a>{% if loop.index < purchaseInvoiceHeaders|length %}, {% endif %} 
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% set purchasePaymentHeaders = purchasePaymentDetails|map(purchasePaymentDetail => purchasePaymentDetail.purchasePaymentHeader)|reduce((a, b) => b in a ? a : a|merge([b]), []) %}
+                        {% for purchasePaymentHeader in purchasePaymentHeaders %}
+                            <a target="_blank" href="{{ path('app_purchase_purchase_payment_header_show', {'id': purchasePaymentHeader.id}) }}">{{ purchasePaymentHeader.codeNumber|default }}</a>{% if loop.index < purchasePaymentHeaders|length %}, {% endif %} 
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(purchaseForm, purchaseCount, purchaseOrderHeaders) }}  
+
+<hr />
+
+{{ grid.form(purchasePaperForm) }}
+
+{{ grid.info(purchasePaperForm, purchasePaperCount, purchaseOrderPaperHeaders) }}
+
+<div class="table-responsive">
+    <h6>Purchase Paper Transactions</h6>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 280px" role="button"{{ grid.sort_link_item(purchasePaperForm, ['codeNumberOrdinal', 'codeNumberMonth', 'codeNumberYear']) }}>
+                    PO Kertas # {{ grid.sort_char(purchasePaperForm.sort.codeNumberOrdinal.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(purchasePaperForm, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(purchasePaperForm.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(purchasePaperForm, 'supplier:company') }}>
+                    Supplier {{ grid.sort_char(purchasePaperForm.sort['supplier:company'].vars.value) }}
+                </th>
+                <th style="min-width: 280px">
+                    Kertas
+                </th>
+                <th style="min-width: 350px">
+                    Penerimaan #
+                </th>
+                <th style="min-width: 200px">
+                    Invoice #
+                </th>
+                <th style="min-width: 200px">
+                    Pelunasan #
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(purchasePaperForm) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(purchasePaperForm, 'codeNumberOrdinal') }} value="{{ purchasePaperForm.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Purchase\\PurchaseOrderPaperHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(purchasePaperForm, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\PurchaseHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if purchasePaperForm.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(purchasePaperForm, 'codeNumberYear') }} value="{{ purchasePaperForm.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(purchasePaperForm, 'transactionDate') }} value="{{ purchasePaperForm.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(purchasePaperForm, 'supplier:company') }} value="{{ purchasePaperForm.filter['supplier:company'].1.vars.value }}" />
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseOrderPaperHeader in purchaseOrderPaperHeaders %}
+                {% set currentPurchaseOrderPaperHeader = purchaseOrderPaperHeaderData[purchaseOrderPaperHeader.id]|default(purchaseOrderPaperHeader) %}
+                {% set purchaseOrderPaperDetails = currentPurchaseOrderPaperHeader.purchaseOrderPaperDetails %}
+                {% set receiveDetails = purchaseOrderPaperDetails|map(purchaseOrderPaperDetail => purchaseOrderPaperDetail.receiveDetails)|reduce((a, b) => a|merge(b), []) %}
+                {% set purchaseInvoiceDetails = receiveDetails|map(receiveDetail => receiveDetail.purchaseInvoiceDetails)|reduce((a, b) => a|merge(b), []) %}
+                {% set purchasePaymentDetails = purchaseInvoiceDetails|map(purchaseInvoiceDetail => purchaseInvoiceDetail.purchaseInvoiceHeader.purchasePaymentDetails)|reduce((a, b) => a|merge(b), []) %}
+                <tr>
+                    <td>
+                        <a target="_blank" href="{{ path('app_purchase_purchase_order_paper_header_show', {'id': currentPurchaseOrderPaperHeader.id}) }}">{{ currentPurchaseOrderPaperHeader.codeNumber|default }}</a>
+                    </td>
+                    <td>{{ currentPurchaseOrderPaperHeader.transactionDate ? currentPurchaseOrderPaperHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ currentPurchaseOrderPaperHeader.supplier.company }}</td>
+                    <td>{{ purchaseOrderPaperDetails|map(purchaseOrderPaperDetail => purchaseOrderPaperDetail.paper.name)|reduce((a, b) => b in a ? a : a|merge([b]), [])|join(', ') }}</td>
+                    <td>
+                        {% set receiveHeaders = receiveDetails|map(receiveDetail => receiveDetail.receiveHeader)|reduce((a, b) => b in a ? a : a|merge([b]), []) %}
+                        {% for receiveHeader in receiveHeaders %}
+                            <a target="_blank" href="{{ path('app_purchase_receive_header_show', {'id': receiveHeader.id}) }}">{{ receiveHeader.codeNumber|default }}</a>{% if loop.index < receiveHeaders|length %}, {% endif %} 
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% set purchaseInvoiceHeaders = purchaseInvoiceDetails|map(purchaseInvoiceDetail => purchaseInvoiceDetail.purchaseInvoiceHeader)|reduce((a, b) => b in a ? a : a|merge([b]), []) %}
+                        {% for purchaseInvoiceHeader in purchaseInvoiceHeaders %}
+                            <a target="_blank" href="{{ path('app_purchase_purchase_invoice_header_show', {'id': purchaseInvoiceHeader.id}) }}">{{ purchaseInvoiceHeader.codeNumber|default }}</a>{% if loop.index < purchaseInvoiceHeaders|length %}, {% endif %} 
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% set purchasePaymentHeaders = purchasePaymentDetails|map(purchasePaymentDetail => purchasePaymentDetail.purchasePaymentHeader)|reduce((a, b) => b in a ? a : a|merge([b]), []) %}
+                        {% for purchasePaymentHeader in purchasePaymentHeaders %}
+                            <a target="_blank" href="{{ path('app_purchase_purchase_payment_header_show', {'id': purchasePaymentHeader.id}) }}">{{ purchasePaymentHeader.codeNumber|default }}</a>{% if loop.index < purchasePaymentHeaders|length %}, {% endif %} 
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(purchasePaperForm, purchasePaperCount, purchaseOrderPaperHeaders) }}

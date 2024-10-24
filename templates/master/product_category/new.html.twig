@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add Product Category' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_product_category_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/product_category/_form.html.twig') }}
+{% endblock %}

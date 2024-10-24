@@ -1,0 +1,250 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Purchase Order Material' %}
+
+{% block toolbar %}
+    {% if purchaseOrderHeader.transactionStatus == constant('TRANSACTION_STATUS_PARTIAL_RECEIVE', purchaseOrderHeader) or purchaseOrderHeader.transactionStatus == constant('TRANSACTION_STATUS_APPROVE', purchaseOrderHeader) %}
+        <div class="d-inline-block">{{ include('purchase/purchase_order_header/_complete_form.html.twig') }}</div>
+    {% endif %}
+    
+    <a class="btn btn-primary btn-sm" href="{{ path('app_purchase_purchase_order_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_PURCHASE_ORDER_MATERIAL_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_purchase_purchase_order_header_new') }}">Add</a>
+    {% endif %}
+    {% if purchaseOrderHeader.transactionStatus != constant('TRANSACTION_STATUS_REJECT', purchaseOrderHeader) and purchaseOrderHeader.transactionStatus != constant('TRANSACTION_STATUS_FULL_RECEIVE', purchaseOrderHeader) %}
+        {% if is_granted('ROLE_PURCHASE_ORDER_MATERIAL_EDIT') %}
+            <a class="btn btn-warning btn-sm" href="{{ path('app_purchase_purchase_order_header_edit', {'id': purchaseOrderHeader.id}) }}">Edit</a>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>PO #</th>
+                <td>{{ purchaseOrderHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal PO</th>
+                <td>{{ purchaseOrderHeader.transactionDate ? purchaseOrderHeader.transactionDate|date('j M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Supplier</th>
+                <td>{{ purchaseOrderHeader.supplier.company|default }}</td>
+            </tr>
+            <tr>
+                <th>TOP (days)</th>
+                <td>{{ purchaseOrderHeader.supplier.paymentTerm|default }}</td>
+            </tr>
+            <tr>
+                <th>Currency</th>
+                <td>{{ purchaseOrderHeader.supplier.currency.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ purchaseOrderHeader.transactionStatus }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ purchaseOrderHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>Retur Transaksi</th>
+                <td>{{ purchaseOrderHeader.hasReturnTransaction ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ purchaseOrderHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ purchaseOrderHeader.createdTransactionDateTime ? purchaseOrderHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ purchaseOrderHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ purchaseOrderHeader.modifiedTransactionDateTime ? purchaseOrderHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction On Hold?</th>
+                <td>{{ purchaseOrderHeader.isOnHold ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ purchaseOrderHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+            {% if purchaseOrderHeader.transactionStatus == constant('TRANSACTION_STATUS_REJECT', purchaseOrderHeader)  %}
+                <tr>
+                    <th>Reject Note</th>
+                    <td>{{ purchaseOrderHeader.rejectNote|default }}</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Item Code</th>
+                <th>Description</th>
+                <th>Tanggal Kirim</th>
+                <th>Quantity</th>
+                <th>Satuan</th>
+                {% if (is_granted('ROLE_MARKETING')) %}
+                    <th>Harga</th>
+                    <th>DPP</th>
+                    <th>Total</th>
+                {% endif %}
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseOrderDetail in purchaseOrderHeader.purchaseOrderDetails %}
+                {% if purchaseOrderDetail.isCanceled == false and purchaseOrderDetail.quantity > 0 %}
+                    <tr>
+                        <td>{{ purchaseOrderDetail.material.codeNumber|default }}</td>
+                        <td>{{ purchaseOrderDetail.material.name|default }}</td>
+                        <td>{{ purchaseOrderDetail.deliveryDate ? purchaseOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                        <td style="text-align: right">{{ purchaseOrderDetail.quantity|default|number_format(2) }}</td>
+                        <td>{{ purchaseOrderDetail.unit.name|default }}</td>
+                        {% if (is_granted('ROLE_MARKETING')) %}
+                            <td style="text-align: right">{{ purchaseOrderDetail.unitPrice|default|number_format(2) }}</td>
+                            <td style="text-align: right">{{ purchaseOrderDetail.unitPriceBeforeTax|default|number_format(2) }}</td>
+                            <td style="text-align: right">{{ purchaseOrderDetail.total|default|number_format(2) }}</td>
+                        {% endif %}
+                        <td>{{ purchaseOrderDetail.isTransactionClosed ? 'Closed' : 'Open' }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        {% if (is_granted('ROLE_MARKETING')) %}
+            <tfoot>
+                <tr>
+                    <td colspan="7" style="text-align: right"><strong>Sub Total</strong></td>
+                    <td style="text-align: right"><strong>{{ purchaseOrderHeader.subTotal|default|number_format(2) }}</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="text-align: right"><strong>Disc {{ purchaseOrderHeader.discountValue|default }}%</strong></td>
+                    <td style="text-align: right"><strong>{{ purchaseOrderHeader.discountNominal|default|number_format(2) }}</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="text-align: right">
+                        <strong>
+                            {% if purchaseOrderHeader.taxMode == constant('TAX_MODE_NON_TAX', purchaseOrderHeader) %}
+                                Non PPn 0%
+                            {% elseif purchaseOrderHeader.taxMode == constant('TAX_MODE_TAX_EXCLUSION', purchaseOrderHeader) %}
+                                Exclude PPn {{ purchaseOrderHeader.taxPercentage }}%
+                            {% elseif purchaseOrderHeader.taxMode == constant('TAX_MODE_TAX_INCLUSION', purchaseOrderHeader) %}
+                                Include PPn {{ purchaseOrderHeader.taxPercentage }}%
+                            {% endif %}
+                        </strong>
+                    </td>
+                    <td style="text-align: right"><strong>{{ purchaseOrderHeader.taxNominal|default|number_format(2) }}</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="text-align: right"><strong>Grand Total</strong></td>
+                    <td style="text-align: right"><strong>{{ purchaseOrderHeader.grandTotal|default|number_format(2) }}</strong></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        {% endif %}
+    </table>
+    
+    <ul class="nav nav-tabs" id="receive-purchase-return-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="receive-header-tab" data-bs-toggle="tab" data-bs-target="#receive-header-tab-pane" type="button" role="tab" aria-controls="receive-header-tab-pane" aria-selected="true">Penerimaan</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="purchase-return-header-tab" data-bs-toggle="tab" data-bs-target="#purchase-return-header-tab-pane" type="button" role="tab" aria-controls="purchase-return-header-tab-pane" aria-selected="false">Retur</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="receive-purchase-return-tab-content">
+        <div class="tab-pane fade show active" id="receive-header-tab-pane" role="tabpanel" aria-labelledby="receive-header-tab" tabindex="0">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr class="bg-warning">
+                        <th>Penerimaan #</th>
+                        <th>Tanggal</th>
+                        <th>SJ #</th>
+                        <th>Material</th>
+                        <th>Quantity</th>
+                        <th>Satuan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchaseOrderDetail in purchaseOrderHeader.purchaseOrderDetails %}
+                        {% for receiveDetail in purchaseOrderDetail.receiveDetails %}
+                            {% if (receiveDetail.isIsCanceled == false) %}
+                                <tr>
+                                    <td>{{ receiveDetail.receiveHeader.codeNumber|default }}</td>
+                                    <td>{{ receiveDetail.receiveHeader.transactionDate|default ? receiveDetail.receiveHeader.transactionDate|date('d M Y') : '' }}</td>
+                                    <td>{{ receiveDetail.receiveHeader.supplierDeliveryCodeNumber|default }}</td>
+                                    <td>{{ receiveDetail.material.name|default }}</td>
+                                    <td style="text-align: center">{{ receiveDetail.receivedQuantity|default }}</td>
+                                    <td>{{ receiveDetail.unit.name|default }}</td>
+                                </tr>
+                            {%  endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="purchase-return-header-tab-pane" role="tabpanel" aria-labelledby="purchase-return-header-tab" tabindex="0">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr class="bg-primary">
+                        <th>Retur #</th>
+                        <th>Tanggal</th>
+                        <th>Gudang</th>
+                        <th>Material</th>
+                        <th>Quantity</th>
+                        <th>Satuan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchaseOrderDetail in purchaseOrderHeader.purchaseOrderDetails %}
+                        {% for receiveDetail in purchaseOrderDetail.receiveDetails %}
+                            {% for purchaseReturnDetail in receiveDetail.purchaseReturnDetails %}
+                                <tr>
+                                    <td>{{ purchaseReturnDetail.purchaseReturnHeader.codeNumber|default }}</td>
+                                    <td>{{ purchaseReturnDetail.purchaseReturnHeader.transactionDate|default ? purchaseReturnDetail.purchaseReturnHeader.transactionDate|date('d M Y') : '' }}</td>
+                                    <td>{{ purchaseReturnDetail.purchaseReturnHeader.warehouse.name|default }}</td>
+                                    <td>{{ purchaseReturnDetail.material.name|default }}</td>
+                                    <td class="text-center">{{ purchaseReturnDetail.quantity|default|number_format(0) }}</td>
+                                    <td>{{ purchaseReturnDetail.unit.name|default }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="d-inline-block">{{ include('purchase/purchase_order_header/_delete_form.html.twig') }}</div>
+    
+    {% if purchaseOrderHeader.transactionStatus == constant('TRANSACTION_STATUS_DRAFT', purchaseOrderHeader) or purchaseOrderHeader.transactionStatus == constant('TRANSACTION_STATUS_RELEASE', purchaseOrderHeader) and is_granted('ROLE_APPROVAL') %}
+        <div class="d-inline-block">{{ include('purchase/purchase_order_header/_reject_form.html.twig') }}</div>
+        <div class="d-inline-block">{{ include('purchase/purchase_order_header/_approve_form.html.twig') }}</div>
+    {% endif %}
+    
+    {% if purchaseOrderHeader.transactionStatus != constant('TRANSACTION_STATUS_REJECT', purchaseOrderHeader) and purchaseOrderHeader.transactionStatus != constant('TRANSACTION_STATUS_APPROVE', purchaseOrderHeader) and purchaseOrderHeader.transactionStatus != constant('TRANSACTION_STATUS_FULL_RECEIVE', purchaseOrderHeader) %}
+        {% if purchaseOrderHeader.isOnHold == false %}
+            <div class="d-inline-block">{{ include('purchase/purchase_order_header/_hold_form.html.twig') }}</div>
+        {% else %}
+            <div class="d-inline-block">{{ include('purchase/purchase_order_header/_release_form.html.twig') }}</div>
+        {% endif %}
+    {% endif %}
+    
+    {% if (is_granted('ROLE_MARKETING')) %}
+        <div class="d-inline-block"><a target="_blank" class="btn btn-info btn-sm" href="{{ path('app_purchase_purchase_order_header_memo', {'id': purchaseOrderHeader.id}) }}">Print PO</a></div>
+    {% endif %}
+    
+{% endblock %}

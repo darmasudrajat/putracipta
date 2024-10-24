@@ -1,0 +1,95 @@
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward data-choice:select->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id', 'data-choice:select': 'id'}|json_encode }}">
+    
+    {{ form_start(form) }}
+
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.customer, {
+                    'attr': {
+                        'readonly': dielineMillar.id is not null,
+                        'data-controller': 'data-choice',
+                        'data-action': 'data-choice#select',
+                    }
+                }) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.version) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.quantityUpPrinting) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.printingLayout) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.date) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.note) }}
+                {{ form_row(form.isInactive) }}
+            </div>
+        </div>
+
+        <hr />
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Products</legend>
+            <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#product-dialog">Add</button>
+            {{ include('master/dieline_millar/_products_form.html.twig') }}
+        </fieldset>
+
+        <hr />
+
+        <legend class="float-none w-auto text-dark px-1">Millar List</legend>
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_master_dieline_millar__dieline_list') }}"
+             data-html-loader-auto-load-value="true"
+             data-action="{{ form.customer.vars.id }}:data-choice:select@document->html-loader#load">
+        </div>
+
+        <hr />
+
+        <div class="d-grid">
+        <div class="row">
+            <div class="col text-center">
+                <a class="btn btn-danger" href="{{ path('app_master_dieline_millar_index') }}"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                    Cancel
+                </a>
+                <button class="btn btn-success"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                    Save
+                </button>
+            </div>
+        </div>
+        <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+    </div>
+    {{ form_end(form) }}
+    
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('product-dialog', 'Product List') }}
+        <input type="hidden" id="product-table-identifiers" />
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_product__list') }}"
+             data-html-loader-auto-load-value="true"
+             data-action="{{ form.customer.vars.id }}:data-choice:select@document->html-loader#load">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+            Done
+        </button>
+    {{ dialog.end() }}
+
+</div>

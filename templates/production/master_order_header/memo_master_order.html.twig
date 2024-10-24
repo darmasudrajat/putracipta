@@ -1,0 +1,542 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Memo' %}
+
+{% block body %}
+    <div class="memo" style="font-size: 11px">
+        <div class="note">
+            <div class="table full">
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label"><img id="logo" alt="logo" max-height="300px" src="{{ asset('images/Logo.jpg') }}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label" style="font-size: 14px; text-align: center">FORMULIR</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label" style="font-size: 18px; text-align: center">MASTER ORDER</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                                <div class="cell label">No Dokumen</div>
+                                <div class="cell label">:</div>
+                                <div class="cell label">F/PCK/PPIC/8.1-1</div>
+                        </div>
+                        <div class="row">
+                                <div class="cell label">Revisi</div>
+                                <div class="cell label">:</div>
+                                <div class="cell label">0</div>
+                        </div>
+                        <div class="row">
+                                <div class="cell label">Tanggal</div>
+                                <div class="cell label">:</div>
+                                <div class="cell label"></div>
+                        </div>
+                        <div class="row">
+                                <div class="cell label">Halaman</div>
+                                <div class="cell label">:</div>
+                                <div class="cell label">1 dari 1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <hr />
+        
+        <div class="note">
+            <div class="table full">
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label">No MO</div>
+                            <div class="cell value">{{ masterOrderHeader.getCodeNumber|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Mesin Cetak</div>
+                            <div class="cell value">{{ masterOrderHeader.machinePrinting.name|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Nama Customer</div>
+                            <div class="cell value">{{ masterOrderHeader.customer.company|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Warna / Pantone</div>
+                            <div class="cell value">{{ masterOrderHeader.color }} / {{ masterOrderHeader.pantone }} + {{ masterOrderHeader.colorPantoneAdditional }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Coating</div>
+                            <div class="cell value">{{ masterOrderHeader.finishing|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Material Kertas</div>
+                            <div class="cell value">{{ masterOrderHeader.paper.name|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Jumlah Up Cetak</div>
+                            <div class="cell value">{{ masterOrderHeader.quantityPrinting }} Up/s</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Ukuran Mountage/Kris</div>
+                            <div class="cell value">{{ masterOrderHeader.mountageSize }} cm</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Hot Stamping</div>
+                            <div class="cell value">{{ masterOrderHeader.hotStamping }}</div>
+                        </div>
+                    </div>
+                </div>
+                        
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label">Jenis</div>
+                            <div class="cell value">{{ masterOrderHeader.orderType|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Tanggal MO</div>
+                            <div class="cell value">{{ masterOrderHeader.transactionDate ? masterOrderHeader.transactionDate|date('d M Y') : '' }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Berat per pcs</div>
+                            <div class="cell value">{{ masterOrderHeader.weightPerPiece|default|number_format(2) }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Glossiness</div>
+                            <div class="cell value">{{ masterOrderHeader.glossiness|default|number_format(2) }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Status Cetakan</div>
+                            <div class="cell value">{{ masterOrderHeader.printingStatus ? masterOrderHeader.printingStatus|join(', ') : '' }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Design Code</div>
+                            <div class="cell value">{{ masterOrderHeader.designCode.codeNumber|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Pisau Die Cut</div>
+                            <div class="cell value">{{ masterOrderHeader.dieCutBlade }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">No. Pisau Die Cut</div>
+                            <div class="cell value">{{ masterOrderHeader.diecutKnife.codeNumber|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">No. Film Dieline (Millar)</div>
+                            <div class="cell value">{{ masterOrderHeader.dielineMillar.codeNumber|default }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                   
+            <div class="note">
+                <div class="table full">
+                    <div class="cell col">  
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">Model Layout </div>
+                                <div style="min-width: 64px; min-height: 64px">
+                                    <img id="upload" width="256px" alt="Layout Model Image" src="{{ asset('uploads/master-order/' ~ masterOrderHeader.fileName) }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cell col">  
+                        <div class="table full">
+                            <div class="row">
+                                <table  class="detail">
+                                    <thead>
+                                        <tr>
+                                            <th>PO#</th>
+                                            <th>Kode</th>
+                                            <th>Nama</th>
+                                            <th>Tgl Kirim</th>
+                                            <th>Up Cetak</th>
+                                            <th>Qty Order</th>
+                                            <th>Qty Produksi</th>
+                                            <th>Stock</th>
+                                            <th>Kekurangan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for masterOrderProductDetail in masterOrderHeader.masterOrderProductDetails %}
+                                            <tr>
+                                                <td>{{ masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                                                <td>{{ masterOrderProductDetail.saleOrderDetail.product.code|default }}</td>
+                                                <td>{{ masterOrderProductDetail.saleOrderDetail.product.name|default }}</td>
+                                                <td>{{ masterOrderProductDetail.saleOrderDetail.deliveryDate ? masterOrderProductDetail.saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                                                <td style="text-align:center">{{ masterOrderProductDetail.quantityPrinting|default|number_format(0) }}</td>
+                                                <td style="text-align:right">{{ masterOrderProductDetail.quantityOrder|default|number_format(0) }}</td>
+                                                <td style="text-align:right">{{ masterOrderProductDetail.quantityProduction|default|number_format(0) }}</td>
+                                                <td style="text-align:right">{{ masterOrderProductDetail.quantityStock|default|number_format(0) }}</td>
+                                                <td style="text-align:right">{{ masterOrderProductDetail.quantityShortage|default|number_format(0) }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td style="text-align:right; font-weight: bold" colspan="5">TOTAL</td>
+                                            <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityOrder|default|number_format(0) }}</td>
+                                            <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityProduction|default|number_format(0) }}</td>
+                                            <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityStock|default|number_format(0) }}</td>
+                                            <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityShortage|default|number_format(0) }}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4><u>Kebutuhan Material Kertas</u></h4>
+                <div class="table full">
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">% Insit Print</div>
+                                <div class="cell value">{{ masterOrderHeader.insitPrintingPercentage|default|number_format(2) }}%</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Insit Cetak</div>
+                                <div class="cell value">{{ masterOrderHeader.insitPrintingQuantity|default|number_format(0) }} dreek</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">% Insit Sortir</div>
+                                <div class="cell value">{{ masterOrderHeader.insitSortingPercentage|default|number_format(2) }}%</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Insit Sortir</div>
+                                <div class="cell value">{{ masterOrderHeader.insitSortingQuantity|default|number_format(0) }} dreek</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">Quantity Kertas</div>
+                                <div class="cell value">{{ masterOrderHeader.quantityPaper|default|number_format(2) }} Rim</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Mountage Kertas</div>
+                                <div class="cell value">{{ masterOrderHeader.paperMountage|default }} Up</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Kebutuhan</div>
+                                <div class="cell value">{{ masterOrderHeader.paperRequirement|default|number_format(2) }} dreek</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Total Kertas</div>
+                                <div class="cell value">{{ masterOrderHeader.paperTotal|default|number_format(2) }} dreek</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Uk Kertas</div>
+                                <div class="cell value">{{ masterOrderHeader.paperPlanoLength|number_format(2) }} x {{ masterOrderHeader.paperPlanoWidth|number_format(2) }} cm</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">Uk Potong 1</div>
+                                <div class="cell value">{{ masterOrderHeader.cuttingLengthSize1|number_format(2) }} x {{ masterOrderHeader.cuttingWidthSize1|number_format(2) }} cm</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Uk Potong 2</div>
+                                <div class="cell value">{{ masterOrderHeader.cuttingLengthSize2|number_format(2) }} x {{ masterOrderHeader.cuttingWidthSize2|number_format(2) }} cm</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">PO Kertas #</div>
+                                <div class="cell value">{{ masterOrderHeader.purchaseOrderPaperHeader.getCodeNumber|default }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Tanggal PO Kertas</div>
+                                <div class="cell value">{{ masterOrderHeader.purchaseOrderPaperHeader.transactionDate|default ? masterOrderHeader.purchaseOrderPaperHeader.transactionDate|date('d M Y') : '' }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Supplier</div>
+                                <div class="cell value">{{ masterOrderHeader.purchaseOrderPaperHeader.supplier.company|default }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4><u>Estimasi Tinta / Chemical</u></h4>
+                <div class="table full">
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">Cyan</div>
+                                <div class="cell value">{{ masterOrderHeader.inkCyanPercentage|number_format(2) }}% = {{ masterOrderHeader.inkCyanWeight|number_format(2) }} kg</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Magenta</div>
+                                <div class="cell value">{{ masterOrderHeader.inkMagentaPercentage|number_format(2) }}% = {{ masterOrderHeader.inkMagentaWeight|number_format(2) }} kg</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Yellow</div>
+                                <div class="cell value">{{ masterOrderHeader.inkYellowPercentage|number_format(2) }}% = {{ masterOrderHeader.inkYellowWeight|number_format(2) }} kg</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Black</div>
+                                <div class="cell value">{{ masterOrderHeader.inkBlackPercentage|number_format(2) }}% = {{ masterOrderHeader.inkBlackWeight|number_format(2) }} kg</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">Khusus-1</div>
+                                <div class="cell value">
+                                    {% if (masterOrderHeader.inkK1Percentage > 0) %}
+                                        {{ masterOrderHeader.inkK1Color }} : {{ masterOrderHeader.inkK1Percentage|number_format(2) }}% = {{ masterOrderHeader.inkK1Weight|number_format(2) }} kg
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Khusus-2</div>
+                                <div class="cell value">
+                                    {% if (masterOrderHeader.inkK2Percentage > 0) %}
+                                        {{ masterOrderHeader.inkK2Color }} : {{ masterOrderHeader.inkK2Percentage|number_format(2) }}% = {{ masterOrderHeader.inkK2Weight|number_format(2) }} kg
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Khusus-3</div>
+                                <div class="cell value">
+                                    {% if (masterOrderHeader.inkK3Percentage > 0) %}
+                                        {{ masterOrderHeader.inkK3Color }} : {{ masterOrderHeader.inkK3Percentage|number_format(2) }}% = {{ masterOrderHeader.inkK3Weight|number_format(2) }} kg
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Khusus-4</div>
+                                <div class="cell value">
+                                    {% if (masterOrderHeader.inkK4Percentage > 0) %}
+                                        {{ masterOrderHeader.inkK4Color }} : {{ masterOrderHeader.inkK4Percentage|number_format(2) }}% = {{ masterOrderHeader.inkK4Weight|number_format(2) }} kg
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">OPV/WB/UV</div>
+                                <div class="cell value">{{ masterOrderHeader.inkOpvPercentage|number_format(2) }}% = {{ masterOrderHeader.inkOpvWeight|number_format(2) }} kg</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Hot Stamping</div>
+                                <div class="cell value">{{ masterOrderHeader.inkHotStampingSize|number_format(2) }}% cm = {{ masterOrderHeader.inkHotStampingQuantity|number_format(0) }} Roll</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Laminating</div>
+                                <div class="cell value">{{ masterOrderHeader.inkLaminatingSize|number_format(2) }} cm = {{ masterOrderHeader.inkLaminatingQuantity|number_format(0) }} roll</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4><u>Estimasi Packaging</u></h4>
+                <div class="table full">
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">Lem</div>
+                                <div class="cell value">{{ masterOrderHeader.packagingGlueQuantity|number_format(0) }} cm/pcs = {{ masterOrderHeader.packagingGlueWeight|number_format(2) }} kg</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Karet</div>
+                                <div class="cell value">{{ masterOrderHeader.packagingRubberQuantity|number_format(0) }} pcs/ikat = {{ masterOrderHeader.packagingRubberWeight|number_format(2) }} pcs</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">Kertas Packing</div>
+                                <div class="cell value">{{ masterOrderHeader.packagingPaperQuantity|number_format(0) }} pcs/pak = {{ masterOrderHeader.packagingPaperWeight|number_format(2) }} lbr</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Dus</div>
+                                <div class="cell value">{{ masterOrderHeader.packagingBoxQuantity|number_format(0) }} pcs/dus = {{ masterOrderHeader.packagingBoxWeight|number_format(2) }} pcs</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">Lakban >besar</div>
+                                <div class="cell value">{{ masterOrderHeader.packagingTapeLargeQuantity|number_format(0) }} cm/pak (dus) = {{ masterOrderHeader.packagingTapeLargeSize|number_format(2) }} roll</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Lakban >kecil</div>
+                                <div class="cell value">{{ masterOrderHeader.packagingTapeSmallQuantity|number_format(0) }} cm/pak (dus) = {{ masterOrderHeader.packagingTapeSmallSize|number_format(2) }} roll</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Plastik</div>
+                                <div class="cell value">{{ masterOrderHeader.packagingPlasticQuantity|number_format(0) }} cm2/pack = {{ masterOrderHeader.packagingPlasticSize|number_format(2) }} m2</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+
+                <fieldset class="border border-secondary rounded mb-3 p-3">
+                    <div class="note">
+                        <div class="table full">
+                            <div class="cell col">
+                                <div class="table full">
+                                    <div class="row">
+                                        <table  class="detail">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="3">Urutan Proses</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Proses</th>
+                                                    <th>Subcon</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for masterOrderProcessDetail in masterOrderHeader.masterOrderProcessDetails %}
+                                                    <tr>
+                                                        <td style="text-align: center; width: 5%">{{ loop.index }}</td>
+                                                        <td>{{ masterOrderProcessDetail.workOrderProcess.name|default }}</td>
+                                                        <td style="text-align: center">{{ masterOrderProcessDetail.isSubcon ? 'Yes' : '' }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cell col">
+                                <div class="table full">
+                                    <div class="row">
+                                        <table class="detail">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2">Distribusi WO</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>WO</th>
+                                                    <th>Subcon</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for masterOrderDistributionDetail in masterOrderHeader.masterOrderDistributionDetails %}
+                                                    <tr>
+                                                        <td>{{ masterOrderDistributionDetail.workOrderDistribution.name|default }}</td>
+                                                        <td style="text-align: center">{{ masterOrderDistributionDetail.isSubcon ? 'Yes' : '' }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cell col">
+                                <div class="table full">
+                                    <div class="row">
+                                        <table class="detail">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2">Check Sheet</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Check Sheet</th>
+                                                    <th>Subcon</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for masterOrderCheckSheetDetail in masterOrderHeader.masterOrderCheckSheetDetails %}
+                                                    <tr>
+                                                        <td>{{ masterOrderCheckSheetDetail.workOrderCheckSheet.name|default }}</td>
+                                                        <td style="text-align: center">{{ masterOrderCheckSheetDetail.isSubcon ? 'Yes' : '' }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="note">
+                <div class="table full">
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">Catatan (Buatkan Standar Produk)</div>
+                                <div class="cell value">{{ masterOrderHeader.note|default }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table full">
+                <div class="cell sig ">
+                    <div>Disetujui oleh,</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">Plant Manager</div>
+                </div>
+                <div class="cell sig">
+                    <div>Dibuat oleh,</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">&nbsp;</div>
+                    <div>PPIC</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('memo') }}
+    <style>
+        .col:nth-child(1) { width: 50% }
+        .col:nth-child(2) { width: 50% }
+        
+        .col:nth-child(1) .label { width: 35% }
+        .col:nth-child(1) .value { width: 65% }
+        .col:nth-child(2) .label { width: 35% }
+        .col:nth-child(2) .value { width: 65% }
+        
+        .sig:nth-child(1) { width: 50% }
+        .sig:nth-child(2) { width: 50% }
+    </style>
+{% endblock %}

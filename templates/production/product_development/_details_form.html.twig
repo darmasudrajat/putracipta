@@ -1,0 +1,37 @@
+<div class="table-responsive">
+    <table class="table table-bordered"
+       data-controller="form-collection"
+       data-form-collection-start-index-value="{{ form.productDevelopmentDetails|length > 0 ? form.productDevelopmentDetails|last.vars.name + 1 : 0 }}"
+       data-form-collection-prototype-value="{{ _self.collection_item(form.productDevelopmentDetails.vars.prototype)|e('html_attr') }}"
+       data-action="form-collection:collection-item-removed->json-loader#load:self">
+        <thead class="table-secondary">
+            <tr>
+                <th class="d-none">Product Prototype Detail Id</th>
+                <th class="d-none">Product Id</th>
+                <th style="min-width: 150px">Item Code</th>
+                <th style="min-width: 250px">Item Name</th>
+                <th style="min-width: 100px">Ukuran Jadi</th>
+            </tr>
+        </thead>
+        <tbody data-form-collection-target="items" data-action="product-prototype-table:data-table:select@document->form-collection#clearCollectionItems product-prototype-table:data-table:select@document->form-collection#addCollectionItems">
+            {% macro collection_item(detailForm) %}
+                <tr data-form-collection-target="item" data-item-identifier-name="productId" data-item-identifier-value="{{ detailForm.vars.value.product.id|default }}">
+                    <td class="d-none">{{ form_widget(detailForm.productPrototypeDetail, {'attr': {'data-item-field-name': 'productPrototypeDetailId'}}) }}</td>
+                    <td class="d-none">{{ form_widget(detailForm.product, {'attr': {'data-item-field-name': 'productId'}}) }}</td>
+                    <td data-item-field-name="productCode">
+                        {{ detailForm.vars.value.product.code|default }}
+                    </td>
+                    <td data-item-field-name="productName">
+                        {{ detailForm.vars.value.product.name|default }}
+                    </td>
+                    <td data-item-field-name="productMeasurement">
+                        {{ detailForm.vars.value.product.productLengthWidthHeightCombination|default }}
+                    </td>
+                </tr>
+            {% endmacro %}
+            {% for detailForm in form.productDevelopmentDetails %}
+                {{ _self.collection_item(detailForm) }}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

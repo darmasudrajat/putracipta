@@ -1,0 +1,86 @@
+{% macro sort_char(op_name) %}
+    {%- if op_name == 'App\\Common\\Data\\Operator\\SortAscending' -%}
+        &#x25B2;
+    {%- elseif op_name == 'App\\Common\\Data\\Operator\\SortDescending' -%}
+        &#x25BC;
+    {%- endif -%}
+{% endmacro %}
+
+{% macro filter_link(form) %}
+    data-controller="filter-link" data-filter-link-panel-target-value="#{{ form.filter.vars.id }}"
+{% endmacro %}
+
+{% macro sort_link(form) %}
+    data-controller="sort-link" data-sort-link-panel-target-value="#{{ form.sort.vars.id }}"
+{% endmacro %}
+
+{% macro filter_link_item(form, fields, values_map = null, special_values_map = null) %}
+    {%- set field_list = fields is iterable ? fields : [fields] -%}
+    {%- set filter_values_map = values_map == null ? [form.filter[field_list[0]].0.vars.choices.0.value, true] : values_map -%}
+    {%- set filter_special_values_map = special_values_map == null ? {'': ['']} : special_values_map -%}
+    data-controller="dom-element"
+    data-action="change->dom-element#bind change->filter-link#post"
+    data-filter-link-field-list-param="{{ field_list|json_encode }}"
+    data-filter-link-values-map-param="{{ filter_values_map|json_encode }}"
+    data-filter-link-special-values-map-param="{{ filter_special_values_map|json_encode }}"
+{% endmacro %}
+
+{% macro sort_link_item(form, fields, value_list = null) %}
+    {%- set field_list = fields is iterable ? fields : [fields] -%}
+    {%- set sort_value_list = value_list == null ? form.sort[field_list[0]].vars.choices|map(choice => choice.value) : value_list -%}
+    data-action="click->sort-link#reset click->sort-link#post"
+    data-sort-order="{{ form.sort[field_list[0]].vars.value|default }}"
+    data-sort-link-field-list-param="{{ field_list|json_encode }}"
+    data-sort-link-value-list-param="{{ sort_value_list|json_encode }}"
+{% endmacro %}
+
+{% macro form(form, button_label = null) %}
+    {{ form_start(form, {'attr': {'data-action': 'html-loader#load:self:prevent'}}) }}
+        {{ form_widget(form, {'attr': {'class': 'd-inline'}}) }}
+        <button class="btn btn-outline-dark btn-sm">{{ button_label|default('Submit') }}</button>
+    {{ form_end(form) }}
+{% endmacro %}
+
+{% macro info(form, count, objects) %}
+    {% if objects is not empty %}
+        {% set size = form.vars.value.pagination.size %}
+        {% set number = form.vars.value.pagination.number %}
+        {% set start = min(size * (number - 1) + 1, count) %}
+        {% set end = min(size * number, count) %}
+        <div class="small d-flex justify-content-end">
+            Showing {{ start }} - {{ end }} of {{ count }} item(s).
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro navigation(form, count, objects) %}
+    {% set size = form.vars.value.pagination.size %}
+    {% if objects is not empty > 0 and size > 0 %}
+        {% set last = (count / size)|round(0, 'ceil') %}
+        {% if last > 1 %}
+            {% set current = form.vars.value.pagination.number %}
+            {% set offset = 2 %}
+            <ul class="pagination pagination-sm justify-content-end" style="margin: 0" data-controller="pagination-link" data-pagination-link-panel-target-value="#{{ form.pagination.vars.id }}">
+                <li class="page-item {%- if (current == 1) %} disabled {%- endif %}" data-action="click->pagination-link#post:prevent" data-pagination-link-number-param="1">
+                    <a class="page-link" data-ordinal="1" href="#">&laquo; First</a>
+                </li>
+                <li class="page-item {%- if (current == 1) %} disabled {%- endif %}" data-action="click->pagination-link#post:prevent" data-pagination-link-number-param="{{ current - 1 }}">
+                    <a class="page-link" data-ordinal="{{ current - 1 }}" href="#">&lsaquo; Previous</a>
+                </li>
+                {% for i in current-offset..current+offset %}
+                    {% if (i >= 1 and i <= last) %}
+                        <li class="page-item {%- if (current == i) %} active {%- endif %}" data-action="click->pagination-link#post:prevent" data-pagination-link-number-param="{{ i }}">
+                            <a class="page-link" data-ordinal="{{ i }}" href="#">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                <li class="page-item {%- if (current == last) %} disabled {%- endif %}" data-action="click->pagination-link#post:prevent" data-pagination-link-number-param="{{ current + 1 }}">
+                    <a class="page-link" data-ordinal="{{ current + 1 }}" href="#">Next &rsaquo;</a>
+                </li>
+                <li class="page-item {%- if (current == last) %} disabled {%- endif %}" data-action="click->pagination-link#post:prevent" data-pagination-link-number-param="{{ last }}">
+                    <a class="page-link" data-ordinal="{{ last }}" href="#">Last &raquo;</a>
+                </li>
+            </ul>
+        {% endif %}
+    {% endif %}
+{% endmacro %}

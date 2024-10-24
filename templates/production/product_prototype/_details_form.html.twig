@@ -1,0 +1,58 @@
+<div class="table-responsive">
+    <table class="table table-bordered"
+       data-controller="form-collection"
+       data-form-collection-start-index-value="{{ form.productPrototypeDetails|length > 0 ? form.productPrototypeDetails|last.vars.name + 1 : 0 }}"
+       data-form-collection-prototype-value="{{ _self.collection_item(form.productPrototypeDetails.vars.prototype)|e('html_attr') }}">
+        <thead class="table-secondary">
+            <tr>
+                <th class="d-none">Product Id</th>
+                <th style="min-width: 150px">Item Code</th>
+                <th style="min-width: 250px">Item Name</th>
+                <th style="min-width: 250px">Kertas</th>
+                <th style="min-width: 100px">Ukuran Jadi</th>
+                <th style="min-width: 70px">Quantity (pcs)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody data-form-collection-target="items" data-action="customer-table:data-table:select@document->form-collection#clearCollectionItems product-table:data-table:select@document->form-collection#addCollectionItem">
+            {% macro collection_item(detailForm) %}
+                <tr data-form-collection-target="item" {% if (detailForm.vars.value.isCanceled) %}class="d-none"{% endif %}>
+                    <td class="d-none">{{ form_widget(detailForm.product, {'attr': {'data-item-field-name': 'productId'}}) }}</td>
+                    <td data-item-field-name="productCode">{{ detailForm.vars.value.product.code|default }}</td>
+                    <td data-item-field-name="productName">{{ detailForm.vars.value.product.name|default }}</td>
+                    <td data-item-field-name="productMaterial">{{ detailForm.vars.value.product.material|default }}</td>
+                    <td data-item-field-name="productMeasurement">{{ detailForm.vars.value.product.productLengthWidthHeightCombination|default }}</td>
+                    <td>{{ form_row(detailForm.quantity, {'label': false, 'attr': {
+                            'size': 3,
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 0)'}}
+                            ]|json_encode,
+                        }}) }}</td>
+                    <td>
+                        {% if (detailForm.vars.value.id == null) %}
+                            <button type="button" class="btn btn-outline-dark" data-action="form-collection#removeCollectionItem"><i class="bi-x-lg"></i></button>
+                        {% endif %}
+                        <div {% if (detailForm.vars.value.id == null) %}class="d-none"{% endif %}>
+                            {{ form_row(detailForm.isCanceled, {
+                                'label': 'X',
+                                'attr': {
+                                    'data-controller': 'dom-element',
+                                    'data-action': 'dom-element#bind change->json-loader#load',
+                                    'data-dom-element-bind-specifications-param': [
+                                        {'destinationsTarget': "table tr[data-item-identifier-value=\"#{detailForm.vars.value.productPrototypeDetail.id|default}\"]", 'action': 'removeClass', 'descriptor': {'name': 'bg-secondary'}, 'condition': '!$element.checked'},
+                                        {'destinationsTarget': "table tr[data-item-identifier-value=\"#{detailForm.vars.value.productPrototypeDetail.id|default}\"]", 'action': 'addClass', 'descriptor': {'name': 'bg-secondary'}, 'condition': '$element.checked'},
+                                    ]|json_encode,
+                                },
+                            }) }}
+                        </div>
+                    </td>
+                </tr>
+            {% endmacro %}
+            {% for detailForm in form.productPrototypeDetails %}
+                {{ _self.collection_item(detailForm) }}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

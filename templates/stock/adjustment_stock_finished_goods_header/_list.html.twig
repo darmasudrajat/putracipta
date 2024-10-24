@@ -1,0 +1,91 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, adjustmentStockHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button"{{ grid.sort_link_item(form, 'id') }}>
+                    Penyesuaian Stok # {{ grid.sort_char(form.sort.id.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'warehouse') }}>
+                    Gudang {{ grid.sort_char(form.sort.warehouse.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'adjustmentStockItemCodeList') }}>
+                    Code {{ grid.sort_char(form.sort.adjustmentStockItemCodeList.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'adjustmentStockItemList') }}>
+                    Item {{ grid.sort_char(form.sort.adjustmentStockItemList.vars.value) }}
+                </th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'note') }}>
+                    Note {{ grid.sort_char(form.sort.note.vars.value) }}
+                </th>
+                <th style="min-width: 50px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberOrdinal') }} value="{{ form.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Stock\\AdjustmentStockHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\StockHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>/</small></span>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberYear') }} value="{{ form.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'warehouse') }}>
+                        <option value="" {% if form.filter.warehouse.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.warehouse.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.warehouse.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'adjustmentStockItemCodeList') }} value="{{ form.filter.adjustmentStockItemCodeList.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'adjustmentStockItemList') }} value="{{ form.filter.adjustmentStockItemList.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'note') }} value="{{ form.filter.note.1.vars.value }}" />
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for adjustmentStockHeader in adjustmentStockHeaders %}
+                <tr>
+                    <td>{{ adjustmentStockHeader.codeNumber }}</td>
+                    <td>{{ adjustmentStockHeader.transactionDate ? adjustmentStockHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ adjustmentStockHeader.warehouse.name|default }}</td>
+                    <td>{{ adjustmentStockHeader.adjustmentStockItemCodeList }}</td>
+                    <td>{{ adjustmentStockHeader.adjustmentStockItemList }}</td>
+                    <td>{{ adjustmentStockHeader.note }}</td>
+                    <td>
+                        {% if is_granted('ROLE_ADJUSTMENT_VIEW') or is_granted('ROLE_ADJUSTMENT_EDIT') or is_granted('ROLE_ADJUSTMENT_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_stock_adjustment_stock_finished_goods_header_show', {'id': adjustmentStockHeader.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, adjustmentStockHeaders) }}

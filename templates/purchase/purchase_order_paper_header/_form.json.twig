@@ -1,0 +1,21 @@
+{
+    "subTotal": "{{ purchaseOrderPaperHeader.subTotal|default|number_format(2) }}",
+    "discountNominal": "{{ purchaseOrderPaperHeader.discountNominal|default|number_format(2) }}",
+    "taxNominal": "{{ purchaseOrderPaperHeader.taxNominal|default|number_format(2) }}",
+    "shippingFee": "{{ purchaseOrderPaperHeader.shippingFee|default|number_format(2) }}",
+    "grandTotal": "{{ purchaseOrderPaperHeader.grandTotal|default|number_format(2) }}",
+    "purchaseOrderPaperDetails": {
+        {%- for purchaseOrderPaperDetailForm in form.purchaseOrderPaperDetails -%}
+            {%- set purchaseOrderPaperDetail = purchaseOrderPaperDetailForm.vars.data -%}
+            "{{ purchaseOrderPaperDetailForm.vars.name }}": {
+                "weightPrice": "{{ purchaseOrderPaperDetail.weightPrice|default|number_format(2) }}",
+                "weightPriceRaw": "{{ purchaseOrderPaperDetail.weightPrice|default }}",
+                "unitPrice": "{{ purchaseOrderPaperDetail.unitPrice|default|number_format(2) }}",
+                "unitPriceRaw": "{{ purchaseOrderPaperDetail.unitPrice|default }}",
+                "unitPriceBeforeTax": "{{ purchaseOrderPaperDetail.unitPriceBeforeTax|default|number_format(2) }}",
+                "total": "{{ purchaseOrderPaperDetail.total|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

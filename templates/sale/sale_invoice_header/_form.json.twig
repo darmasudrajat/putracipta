@@ -1,0 +1,28 @@
+{%- set discountInfo -%}
+    Discount
+    {% if saleInvoiceHeader.discountValueType == constant('DISCOUNT_VALUE_TYPE_PERCENTAGE', saleInvoiceHeader) %}
+        {{ saleInvoiceHeader.discountValue|default }}%
+    {% endif %}
+{%- endset -%}
+{
+    "dueDate": "{{ saleInvoiceHeader.dueDate ? saleInvoiceHeader.dueDate|date('d M Y') : '' }}",
+    "subTotal": "{{ saleInvoiceHeader.subTotal|default|number_format(2) }}",
+    "discountInfo": "{{ discountInfo|trim|replace({'\n': ''}) }}",
+    "discountNominal": "{{ saleInvoiceHeader.discountNominal|default|number_format(2) }}",
+    "taxNominal": "{{ saleInvoiceHeader.taxNominal|default|number_format(2) }}",
+    "serviceTaxNominal": "{{ saleInvoiceHeader.serviceTaxNominal|default|number_format(2) }}",
+    "shippingFee": "{{ saleInvoiceHeader.shippingFee|default|number_format(2) }}",
+    "grandTotal": "{{ saleInvoiceHeader.grandTotal|default|number_format(2) }}",
+    "saleInvoiceDetails": {
+        {%- for saleInvoiceDetailForm in form.saleInvoiceDetails -%}
+            {%- set saleInvoiceDetail = saleInvoiceDetailForm.vars.data -%}
+            "{{ saleInvoiceDetailForm.vars.name }}": {
+                "quantity": "{{ saleInvoiceDetail.quantity|default|number_format(0) }}",
+                "unitPrice": "{{ saleInvoiceDetail.unitPrice|default|number_format(6) }}",
+                "unitPriceBeforeTax": "{{ saleInvoiceDetail.unitPriceBeforeTax|default|number_format(6) }}",
+                "total": "{{ saleInvoiceDetail.total|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

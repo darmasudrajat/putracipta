@@ -1,0 +1,15 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+<select class="form-select"
+        data-controller="dom-element"
+        data-action="dom-element#bind event-emitter#trigger"
+        data-dom-element-bind-specifications-param="{{ [
+            {'destinationsTarget': '#product-id-text', 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$element.value'}},
+        ]|json_encode }}"
+        data-event-emitter-trigger-elements-target-param="#product-id-text"
+        data-event-emitter-trigger-event-type-param="change">
+    <option value="" {% if productId == '' %}selected="selected"{% endif %}></option>
+    {% for product in products %}
+        <option value="{{ product.id }}" {% if productId == product.id %}selected="selected"{% endif %}>{{ product.name }}</option>
+    {% endfor %}
+</select>

@@ -1,0 +1,14 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Outstanding Penerimaan' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_purchase_receive_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    <div data-controller="html-loader"
+         data-html-loader-url-value="{{ path('app_purchase_purchase_invoice_header__list_outstanding_receive_header') }}"
+         data-html-loader-auto-load-value="true">
+    </div>
+{% endblock %}

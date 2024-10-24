@@ -1,0 +1,93 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>Laporan Penyesuaian Stok</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Penyesuaian #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Jenis</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Gudang</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+        </tr>
+        <tr>
+            <th></th>
+            <th style="text-align: center"><strong>Kode</strong></th>
+            <th style="text-align: center"><strong>Nama Item</strong></th>
+            <th style="text-align: center"><strong>Qty Stok</strong></th>
+            <th style="text-align: center"><strong>Qty Adjustment</strong></th>
+            <th style="text-align: center"><strong>Qty Selisih</strong></th>
+            <th style="text-align: center"><strong>Satuan</strong></th>
+            <th style="text-align: center"><strong>Memo</strong></th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for adjustmentStockHeader in adjustmentStockHeaders %}
+            <tr>
+                <td style="text-align: left">{{ adjustmentStockHeader.codeNumber|default }}</td>
+                <td style="text-align: left">{{ adjustmentStockHeader.transactionDate|default ? adjustmentStockHeader.transactionDate|date('j M Y') }}</td>
+                <td style="text-align: left">{{ adjustmentStockHeader.adjustmentMode|default }}</td>
+                <td style="text-align: left">{{ adjustmentStockHeader.warehouse.name|default }}</td>
+                <td style="text-align: left">{{ adjustmentStockHeader.note|default }}</td>
+            </tr>
+            {% if (adjustmentStockHeader.adjustmentMode == 'paper') %}
+                {% for adjustmentStockPaperDetail in adjustmentStockHeader.adjustmentStockPaperDetails %}
+                    <tr>
+                        <td style="text-align: left"></td>
+                        <td style="text-align: left">{{ adjustmentStockPaperDetail.paper.codeNumber|default }}</td>
+                        <td style="text-align: left">{{ adjustmentStockPaperDetail.paper.name|default }}</td>
+                        <td style="text-align: center">{{ adjustmentStockPaperDetail.quantityCurrent|default }}</td>
+                        <td style="text-align: center">{{ adjustmentStockPaperDetail.quantityAdjustment|default }}</td>
+                        <td style="text-align: center">{{ adjustmentStockPaperDetail.quantityDifference|default }}</td>
+                        <td style="text-align: left">{{ adjustmentStockPaperDetail.paper.unit.name|default }}</td>
+                        <td style="text-align: left">{{ adjustmentStockPaperDetail.memo|default }}</td>
+                    </tr>
+                {% endfor %}
+            {% elseif (adjustmentStockHeader.adjustmentMode == 'material') %} 
+                {% for adjustmentStockMaterialDetail in adjustmentStockHeader.adjustmentStockMaterialDetails %}
+                    <tr>
+                        <td style="text-align: left"></td>
+                        <td style="text-align: left">{{ adjustmentStockMaterialDetail.material.code|default }}</td>
+                        <td style="text-align: left">{{ adjustmentStockMaterialDetail.material.name|default }}</td>
+                        <td style="text-align: center">{{ adjustmentStockMaterialDetail.quantityCurrent|default }}</td>
+                        <td style="text-align: center">{{ adjustmentStockMaterialDetail.quantityAdjustment|default }}</td>
+                        <td style="text-align: center">{{ adjustmentStockMaterialDetail.quantityDifference|default }}</td>
+                        <td style="text-align: left">{{ adjustmentStockMaterialDetail.material.unit.name|default }}</td>
+                        <td style="text-align: left">{{ adjustmentStockMaterialDetail.memo|default }}</td>
+                    </tr>
+                {% endfor %}
+            {% elseif (adjustmentStockHeader.adjustmentMode == 'product') %} 
+                {% for adjustmentStockProductDetail in adjustmentStockHeader.adjustmentStockProductDetails %}
+                    <tr>
+                        <td style="text-align: left"></td>
+                        <td style="text-align: left">{{ adjustmentStockProductDetail.product.code|default }}</td>
+                        <td style="text-align: left">{{ adjustmentStockProductDetail.product.name|default }}</td>
+                        <td style="text-align: center">{{ adjustmentStockProductDetail.quantityCurrent|default }}</td>
+                        <td style="text-align: center">{{ adjustmentStockProductDetail.quantityAdjustment|default }}</td>
+                        <td style="text-align: center">{{ adjustmentStockProductDetail.quantityDifference|default }}</td>
+                        <td style="text-align: left">{{ adjustmentStockProductDetail.product.unit.name|default }}</td>
+                        <td style="text-align: left">{{ adjustmentStockProductDetail.memo|default }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %} 
+        {% endfor %}
+    </tbody>
+</table>

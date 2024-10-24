@@ -1,0 +1,66 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Paper' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_paper_index') }}">Manage</a>
+    {% if is_granted('ROLE_PAPER_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_master_paper_edit', {'id': paper.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_PAPER_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_master_paper_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code</th>
+                <td>{{ paper.codeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ paper.name }}</td>
+            </tr>
+            <tr>
+                <th>Panjang (cm)</th>
+                <td>{{ paper.length|default|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Lebar (cm)</th>
+                <td>{{ paper.width|default|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Berat (gsm)</th>
+                <td>{{ paper.weight|default|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Satuan</th>
+                <td>{{ paper.unit.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Jenis</th>
+                <td>{{ paper.materialSubCategory.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Pricing Mode</th>
+                <td>{{ paper.pricingMode }}</td>
+            </tr>
+            <tr>
+                <th>FSC/non</th>
+                <td>{{ paper.type }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ paper.note }}</td>
+            </tr>
+            <tr>
+                <th>Inactive</th>
+                <td>{{ paper.isInactive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {#{{ include('master/paper/_delete_form.html.twig') }}#}
+{% endblock %}

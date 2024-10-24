@@ -1,0 +1,80 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, purchaseInvoiceHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="purchase-invoice-header-table" 
+           data-controller="data-table"
+           data-data-table-selected-identifiers-target-value="#paper-table-identifiers"
+           data-data-table-selected-class="table-primary"
+           data-data-table-active-class="table-active">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'supplierInvoiceCodeNumber') }}>
+                    Invoice # {{ grid.sort_char(form.sort.supplierInvoiceCodeNumber.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'grandTotal') }}>
+                    Total {{ grid.sort_char(form.sort.grandTotal.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'totalPayment') }}>
+                    Payment {{ grid.sort_char(form.sort.totalPayment.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'totalReturn') }}>
+                    Return {{ grid.sort_char(form.sort.totalReturn.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'remainingPayment') }}>
+                    Remaining {{ grid.sort_char(form.sort.remainingPayment.vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'supplierInvoiceCodeNumber') }} value="{{ form.filter.supplierInvoiceCodeNumber.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'grandTotal') }} value="{{ form.filter.grandTotal.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'totalPayment') }} value="{{ form.filter.totalPayment.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'totalReturn') }} value="{{ form.filter.totalReturn.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'remainingPayment') }} value="{{ form.filter.remainingPayment.1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseInvoiceHeader in purchaseInvoiceHeaders %}
+                <tr data-data-table-target="selectable" data-selected-identifier="{{ paper.id }}" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'purchaseInvoiceHeaderId': purchaseInvoiceHeader.id, 
+                    'purchaseInvoiceHeaderSupplierInvoiceNumber': purchaseInvoiceHeader.supplierInvoiceCodeNumber, 
+                    'purchaseInvoiceHeaderGrandTotal': purchaseInvoiceHeader.grandTotal|default|number_format(0), 
+                    'purchaseInvoiceHeaderTotalReturn': purchaseInvoiceHeader.totalreturn|default|number_format(0), 
+                    'purchaseInvoiceHeaderRemainingPayment': purchaseInvoiceHeader.remainingPayment|default|number_format(0)
+                }|json_encode }}">
+                    <td>{{ purchaseInvoiceHeader.supplierInvoiceCodeNumber }}</td>
+                    <td>{{ purchaseInvoiceHeader.transactionDate ? purchaseInvoiceHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td class="text-end">{{ purchaseInvoiceHeader.grandTotal|number_format(0) }}</td>
+                    <td class="text-end">{{ purchaseInvoiceHeader.totalPayment|number_format(0) }}</td>
+                    <td class="text-end">{{ purchaseInvoiceHeader.totalReturn|number_format(0) }}</td>
+                    <td class="text-end">{{ purchaseInvoiceHeader.remainingPayment|number_format(0) }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, purchaseInvoiceHeaders) }}

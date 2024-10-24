@@ -1,0 +1,96 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, saleOrderHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button"{{ grid.sort_link_item(form, ['codeNumberOrdinal', 'codeNumberMonth', 'codeNumberYear']) }}>
+                    SO # {{ grid.sort_char(form.sort.codeNumberOrdinal.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'customer:company') }}>
+                    Customer {{ grid.sort_char(form.sort['customer:company'].vars.value) }}
+                </th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'referenceNumber') }}>
+                    PO # {{ grid.sort_char(form.sort.referenceNumber.vars.value) }}
+                </th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'note') }}>
+                    Note {{ grid.sort_char(form.sort.note.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionStatus') }}>
+                    Status {{ grid.sort_char(form.sort.transactionStatus.vars.value) }}
+                </th>
+                <th style="min-width: 130px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberOrdinal') }} value="{{ form.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Sale\\SaleOrderHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\SaleHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberYear') }} value="{{ form.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'customer:company') }} value="{{ form.filter['customer:company'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'referenceNumber') }} value="{{ form.filter.referenceNumber.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'note') }} value="{{ form.filter.note.1.vars.value }}" />
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'transactionStatus') }}>
+                        <option value="" {% if form.filter.transactionStatus.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.transactionStatus.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.transactionStatus.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for saleOrderHeader in saleOrderHeaders %}
+                <tr>
+                    <td>{{ saleOrderHeader.codeNumber }}</td>
+                    <td>{{ saleOrderHeader.transactionDate ? saleOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ saleOrderHeader.customer.company|default }}</td>
+                    <td>{{ saleOrderHeader.referenceNumber }}</td>
+                    <td>{{ saleOrderHeader.note }}</td>
+                    <td>{{ saleOrderHeader.transactionStatus }}</td>
+                    <td>
+                        {% if is_granted('ROLE_SALE_ORDER_VIEW') or is_granted('ROLE_SALE_ORDER_EDIT') or is_granted('ROLE_SALE_ORDER_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_sale_sale_order_header_show', {'id': saleOrderHeader.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_SALE_ORDER_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_sale_sale_order_header_edit', {'id': saleOrderHeader.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_SALE_ORDER_ADD') %}
+                            <a class="btn btn-success btn-sm" href="{{ path('app_sale_sale_order_header_new_repeat', {'source_id': saleOrderHeader.id}) }}"><i class="bi-c-square"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, saleOrderHeaders) }}

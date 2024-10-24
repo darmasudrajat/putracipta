@@ -1,0 +1,66 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Employee' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_employee_index') }}">Manage</a>
+    {% if is_granted('ROLE_EMPLOYEE_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_master_employee_edit', {'id': employee.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_EMPLOYEE_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_master_employee_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{ employee.name }}</td>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <td>{{ employee.user.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Mulai Kerja</th>
+                <td>{{ employee.startDate ? employee.startDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ employee.email }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ employee.address }}</td>
+            </tr>
+            <tr>
+                <th>Divisi</th>
+                <td>{{ employee.division.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Lahir</th>
+                <td>{{ employee.birthDate ? employee.birthDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Tempat Lahir</th>
+                <td>{{ employee.birthPlace }}</td>
+            </tr>
+            <tr>
+                <th>KTP #</th>
+                <td>{{ employee.identityNumber }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ employee.phone }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ employee.note }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {#{{ include('master/employee/_delete_form.html.twig') }}#}
+{% endblock %}

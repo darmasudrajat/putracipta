@@ -1,0 +1,160 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Stock Transfer Header' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_stock_stock_transfer_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_TRANSFER_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_stock_stock_transfer_header_edit', {'id': stockTransferHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_TRANSFER_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_stock_stock_transfer_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Stock Transfer #</th>
+                <td>{{ stockTransferHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Transfer</th>
+                <td>{{ stockTransferHeader.transactionDate ? stockTransferHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Gudang Asal</th>
+                <td>{{ stockTransferHeader.warehouseFrom.name }}</td>
+            </tr>
+            <tr>
+                <th>Gudang Tujuan</th>
+                <td>{{ stockTransferHeader.warehouseTo.name }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ stockTransferHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ stockTransferHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ stockTransferHeader.createdTransactionDateTime ? stockTransferHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ stockTransferHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ stockTransferHeader.modifiedTransactionDateTime ? stockTransferHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ stockTransferHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if stockTransferHeader.stockTransferMaterialDetails is not empty %}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr class="bg-info">
+                    <th>Kode</th>
+                    <th>Nama Material</th>
+                    <th>Quantity</th>
+                    <th>Satuan</th>
+                    <th>Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stockTransferMaterialDetail in stockTransferHeader.stockTransferMaterialDetails %}
+                    {% if stockTransferMaterialDetail.isCanceled == false and stockTransferMaterialDetail.quantity > 0 %}
+                        <tr>
+                            <td>{{ stockTransferMaterialDetail.material.code|default }}</td>
+                            <td>{{ stockTransferMaterialDetail.material.name|default }}</td>
+                            <td class="text-center">{{ stockTransferMaterialDetail.quantity|default|number_format(0) }}</td>
+                            <td>{{ stockTransferMaterialDetail.material.unit.name|default }}</td>
+                            <td>{{ stockTransferMaterialDetail.memo|default }}</td>
+                        </tr>
+                    {% endif %} 
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" class="text-end"><strong>Total</strong></td>
+                    <td class="text-center"><strong>{{ stockTransferHeader.totalQuantity|default|number_format(0) }}</strong></td>
+                    <td colspan="2"></td>
+                </tr>
+            </tfoot>
+        </table>
+    {% elseif stockTransferHeader.stockTransferPaperDetails is not empty %}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr class="bg-info">
+                    <th>Kode</th>
+                    <th>Nama Paper</th>
+                    <th>Quantity</th>
+                    <th>Satuan</th>
+                    <th>Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stockTransferPaperDetail in stockTransferHeader.stockTransferPaperDetails %}
+                    {% if stockTransferPaperDetail.isCanceled == false and stockTransferPaperDetail.quantity > 0 %}
+                        <tr>
+                            <td>{{ stockTransferPaperDetail.paper.code|default }}</td>
+                            <td>{{ stockTransferPaperDetail.paper.name|default }}</td>
+                            <td class="text-center">{{ stockTransferPaperDetail.quantity|default|number_format(0) }}</td>
+                            <td>{{ stockTransferPaperDetail.paper.unit.name|default }}</td>
+                            <td>{{ stockTransferPaperDetail.memo|default }}</td>
+                        </tr>
+                    {% endif %} 
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" class="text-end"><strong>Total</strong></td>
+                    <td class="text-center"><strong>{{ stockTransferHeader.totalQuantity|default|number_format(0) }}</strong></td>
+                    <td colspan="2"></td>
+                </tr>
+            </tfoot>
+        </table>
+    {% elseif stockTransferHeader.stockTransferProductDetails is not empty %}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr class="bg-info">
+                    <th>Kode</th>
+                    <th>Nama Product</th>
+                    <th>Quantity</th>
+                    <th>Satuan</th>
+                    <th>Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stockTransferProductDetail in stockTransferHeader.stockTransferProductDetails %}
+                    {% if stockTransferProductDetail.isCanceled == false and stockTransferProductDetail.quantity > 0 %}
+                        <tr>
+                            <td>{{ stockTransferProductDetail.product.code|default }}</td>
+                            <td>{{ stockTransferProductDetail.product.name|default }}</td>
+                            <td class="text-center">{{ stockTransferProductDetail.quantity|default|number_format(0) }}</td>
+                            <td>{{ stockTransferProductDetail.product.unit.name|default }}</td>
+                            <td>{{ stockTransferProductDetail.memo|default }}</td>
+                        </tr>
+                    {% endif %} 
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" class="text-end"><strong>Total</strong></td>
+                    <td class="text-center"><strong>{{ stockTransferHeader.totalQuantity|default|number_format(0) }}</strong></td>
+                    <td colspan="2"></td>
+                </tr>
+            </tfoot>
+        </table>
+    {% endif %}
+    
+    {#{{ include('stock/stock_transfer_header/_delete_form.html.twig') }}#}
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Sale Return' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_sale_sale_return_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_SALE_RETURN_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_sale_sale_return_header_edit', {'id': saleReturnHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_SALE_RETURN_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_sale_sale_return_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Return #</th>
+                <td>{{ saleReturnHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Return</th>
+                <td>{{ saleReturnHeader.transactionDate ? saleReturnHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Pengiriman #</th>
+                <td>{{ saleReturnHeader.deliveryHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Kirim</th>
+                <td>{{ saleReturnHeader.deliveryHeader.transactionDate ? saleReturnHeader.deliveryHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Supplier</th>
+                <td>{{ saleReturnHeader.customer.company }}</td>
+            </tr>
+            <tr>
+                <th>Nota Customer #</th>
+                <td>{{ saleReturnHeader.referenceNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Atas Faktur Pajak</th>
+                <td>{{ saleReturnHeader.taxNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Gudang</th>
+                <td>{{ saleReturnHeader.warehouse.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ saleReturnHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ saleReturnHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ saleReturnHeader.createdTransactionDateTime ? saleReturnHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ saleReturnHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ saleReturnHeader.modifiedTransactionDateTime ? saleReturnHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Tukar Guling?</th>
+                <td>{{ saleReturnHeader.isIsProductExchange ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ saleReturnHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>PO #</th>
+                <th>Item Code</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Satuan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for saleReturnDetail in saleReturnHeader.saleReturnDetails %}
+                {% if saleReturnDetail.isCanceled == false and saleReturnDetail.quantity > 0 %}
+                    <tr>
+                        <td>{{ saleReturnDetail.deliveryDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                        <td>{{ saleReturnDetail.product.code|default }}</td>
+                        <td>{{ saleReturnDetail.product.name|default }}</td>
+                        <td style="text-align: right">{{ saleReturnDetail.quantity|default|number_format(0) }}</td>
+                        <td>{{ saleReturnDetail.unit.name|default }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+                
+    {#{{ include('sale/sale_return_header/_delete_form.html.twig') }}#}
+{% endblock %}

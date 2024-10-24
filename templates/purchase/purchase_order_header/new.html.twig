@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'New Purchase Order Material' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_purchase_purchase_order_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('purchase/purchase_order_header/_form.html.twig') }}
+{% endblock %}

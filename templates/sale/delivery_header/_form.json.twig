@@ -1,0 +1,12 @@
+{
+    "totalQuantity": "{{ deliveryHeader.totalQuantity|default|number_format(0) }}",
+    "deliveryDetails": {
+        {%- for deliveryDetailForm in form.deliveryDetails -%}
+            {%- set deliveryDetail = deliveryDetailForm.vars.data -%}
+            "{{ deliveryDetailForm.vars.name }}": {
+                "quantityCurrent": "{{ deliveryDetail.quantityCurrent|default|number_format(0) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

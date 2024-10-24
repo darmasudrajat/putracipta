@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Work Order Process' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_work_order_process_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_master_work_order_process_show', {'id': workOrderProcess.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/work_order_process/_form.html.twig') }}
+{% endblock %}

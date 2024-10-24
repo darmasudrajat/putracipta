@@ -1,0 +1,51 @@
+{% macro start() %}
+    {% set activeClass = 'bg-light border border-3 border-primary rounded' %}
+    <div class="mb-sm-auto mb-0 overflow-auto" style="max-height: 512px">
+        <ul class="nav nav-pills flex-column align-items-center align-items-sm-start" id="menu" data-controller="scroll-element" data-scroll-element-active-class="{{ activeClass }}">
+{% endmacro %}
+
+{% macro end() %}
+        </ul>
+    </div>
+{% endmacro %}
+
+{% macro render_1(name, label = null, route = null) %}
+    {% if user_menu.authorized(name) %}
+        {% set activeClass = 'bg-light border border-3 border-primary rounded' %}
+        {% set title = label is not null ? label : name|replace({'MENU_': '', '_': ' '}) %}
+        {% set url = user_menu.menuAttributes[name].route is defined ? path(user_menu.menuAttributes[name].route) : (route is not null ? path(route) : '#') %}
+        {% set accessed = route is null ? false : route == app.request.attributes.get('_route') %}
+        <li class="w-100 {% if accessed or user_menu.accessed(name) %}{{ activeClass }}{% endif %}">
+            <a href="{{ url }}" class="nav-link px-0 align-middle">
+                <span class="ps-1 d-none d-sm-inline {% if accessed or user_menu.accessed(name) %}text-dark{% else %}text-white{% endif %}">{{ title }}</span>
+            </a>
+        </li>
+    {% endif %}
+{% endmacro %}
+
+{% macro render_2(name, labels = {}, routes = {}) %}
+    {% if user_menu.authorized(name) %}
+        {% set activeClass = 'bg-light border border-3 border-primary rounded' %}
+        {% set nameTitle = labels[name] is defined ? labels[name] : name|replace({'MENU_': '', '_': ' '}) %}
+        {% set nameAccessed = user_menu.menuHierarchy[name]|map(subName => routes[subName] is not defined ? false : routes[subName] == app.request.attributes.get('_route'))|reduce((a, b) => a or b, false) %}
+        <li>
+            <a href="#submenu-{{ name }}" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                <span class="ps-1 d-none d-sm-inline text-white">{{ nameTitle }}</span>
+            </a>
+            <ul class="collapse nav flex-column ms-1 {% if nameAccessed or user_menu.accessed(name) %}show{% endif %}" id="submenu-{{ name }}" data-bs-parent="#menu">
+                {% for subName in user_menu.menuHierarchy[name] %}
+                    {% if user_menu.authorized(subName) %}
+                        {% set subNameTitle = labels[subName] is defined ? labels[subName] : subName|replace({'MENU_': '', '_': ' '}) %}
+                        {% set subNameUrl = user_menu.menuAttributes[subName].route is defined ? path(user_menu.menuAttributes[subName].route) : (routes[subName] is defined ? path(routes[subName]) : '#') %}
+                        {% set subNameAccessed = routes[subName] is not defined ? false : routes[subName] == app.request.attributes.get('_route') %}
+                        <li class="w-100 ps-3 {% if subNameAccessed or user_menu.accessed(subName) %}{{ activeClass }}{% endif %}" data-scroll-element-target="item">
+                            <a href="{{ subNameUrl }}" class="nav-link px-0">
+                                <span class="d-none d-sm-inline {% if subNameAccessed or user_menu.accessed(subName) %}text-dark{% else %}text-white{% endif %}">{{ subNameTitle }}</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </li>
+    {% endif %}
+{% endmacro %}

@@ -1,0 +1,99 @@
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id'}|json_encode }}"
+     data-json-loader-url-value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}"
+     data-json-loader-form-target-value="{{ "form[name=#{form.vars.name}]" }}">
+
+    {{ form_start(form) }}
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Header</legend>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.transactionDate, {'label': 'Tanggal Terima', 'attr': {'data-controller': 'flatpickr-element', 'class': 'readonly-form-input', 'data-flatpickr-element-options-value': {'dateFormat': 'j M Y'}|json_encode}}) }}
+                    {{ form_row(form.warehouse, {'label': 'Gudang'}) }}
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="{{ form.masterOrderHeader.vars.id }}-text" class="form-label">MO #</label>
+                        {{ form_row(form.masterOrderHeader, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'master-order-header-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].masterOrderHeaderId'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        <input type="text" id="{{ form.masterOrderHeader.vars.id }}-text" class="form-control readonly-form-input {% if not form.masterOrderHeader.vars.valid %}is-invalid{% endif %}" value="{{ inventoryProductReceiveHeader.masterOrderHeader.codeNumber|default }}" readonly="readonly"
+                               {% if inventoryProductReceiveHeader.id == null %}data-bs-toggle="modal" data-bs-target="#master-order-header-dialog"{% endif %}
+                               data-controller="dom-element"
+                               data-action="master-order-header-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].masterOrderHeaderCodeNumber'}},
+                               ]|json_encode }}" />
+                        {{ form_errors(form.masterOrderHeader) }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Customer</label>
+                        <input type="text" class="form-control" value="{{ inventoryProductReceiveHeader.masterOrderHeader.customer.company|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-header-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].customerCompany'}},
+                               ]|json_encode }}" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.note) }}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Details</legend>
+            {{ include('stock/inventory_product_receive_header/_details_form.html.twig') }}
+        </fieldset>
+
+        <hr />
+
+        <legend class="float-none w-auto text-dark px-1">Penerimaan Barang Jadi</legend>
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_stock_inventory_product_receive_header__receive_list') }}"
+             data-html-loader-auto-load-value="true"
+             data-action="master-order-header-table:data-table:select@document->html-loader#load">
+        </div>
+
+        <hr />
+
+        <div class="d-grid">
+            <div class="row">
+                <div class="col text-center">
+                    <a class="btn btn-danger" href="{{ path('app_stock_inventory_product_receive_header_index') }}"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                        Cancel
+                    </a>
+                    <button class="btn btn-success"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                        Save
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+        </div>
+    {{ form_end(form) }}
+
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('master-order-header-dialog', 'Master Order List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_master_order_header__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+</div>

@@ -1,0 +1,88 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, materials) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'codeOrdinal') }}>
+                    Code {{ grid.sort_char(form.sort.codeOrdinal.vars.value) }}
+                </th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    Name {{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'materialCategory:name') }}>
+                    Category {{ grid.sort_char(form.sort['materialCategory:name'].vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'materialSubCategory:name') }}>
+                    Sub Category {{ grid.sort_char(form.sort['materialSubCategory:name'].vars.value) }}
+                </th>
+                <th style="min-width: 90px" role="button" {{ grid.sort_link_item(form, 'isInactive') }}>
+                    Status {{ grid.sort_char(form.sort.isInactive.vars.value) }}
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'codeOrdinal') }} value="{{ form.filter.codeOrdinal.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'materialSubCategory:materialCategory') }}>
+                        <option value="" {% if form.filter['materialSubCategory:materialCategory'].1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter['materialSubCategory:materialCategory'].1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter['materialSubCategory:materialCategory'].1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'materialSubCategory') }}>
+                        <option value="" {% if form.filter.materialSubCategory.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.materialSubCategory.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.materialSubCategory.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'isInactive') }}>
+                        <option value="" {% if form.filter.isInactive.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.isInactive.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.isInactive.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for material in materials %}
+                <tr>
+                    <td>{{ material.codeNumber }}</td>
+                    <td>{{ material.name }}</td>
+                    <td>{{ material.materialSubCategory.materialCategory.name|default }}</td>
+                    <td>{{ material.materialSubCategory.name|default }}</td>
+                    <td>{{ material.isInactive ? 'InActive' : 'Active' }}</td>
+                    <td>
+                        {% if is_granted('ROLE_MATERIAL_VIEW') or is_granted('ROLE_MATERIAL_EDIT') or is_granted('ROLE_MATERIAL_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_master_material_show', {'id': material.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_MATERIAL_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_master_material_edit', {'id': material.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, materials) }}

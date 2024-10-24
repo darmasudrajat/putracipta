@@ -1,0 +1,36 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, receiveHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 150px">Penerimaan #</th>
+                <th style="min-width: 120px">Tanggal</th>
+                <th style="min-width: 250px">Supplier</th>
+                <th style="min-width: 150px">PO #</th>
+                <th style="min-width: 250px">Supplier SJ #</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for receiveHeader in receiveHeaders %}
+                <tr>
+                    <td>{{ receiveHeader.codeNumber }}</td>
+                    <td>{{ receiveHeader.transactionDate ? receiveHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ receiveHeader.supplier.company|default }}</td>
+                    <td>{{ receiveHeader.purchaseOrderHeader is null ? receiveHeader.purchaseOrderPaperHeader.codeNumber|default : receiveHeader.purchaseOrderHeader.codeNumber|default }}</td>
+                    <td>{{ receiveHeader.supplierDeliveryCodeNumber|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="9">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, receiveHeaders) }}

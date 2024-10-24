@@ -1,0 +1,85 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, customers) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button" {{ grid.sort_link_item(form, 'code') }}>
+                    Code {{ grid.sort_char(form.sort.code.vars.value) }}
+                </th>
+                <th style="min-width: 280px" role="button" {{ grid.sort_link_item(form, 'company') }}>
+                    Company {{ grid.sort_char(form.sort.company.vars.value) }}
+                </th>
+                <th style="min-width: 280px" role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    PIC {{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'phone') }}>
+                    Phone {{ grid.sort_char(form.sort.phone.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'email') }}>
+                    Email {{ grid.sort_char(form.sort.email.vars.value) }}
+                </th>
+                <th style="min-width: 90px" role="button" {{ grid.sort_link_item(form, 'isInactive') }}>
+                    Status {{ grid.sort_char(form.sort.isInactive.vars.value) }}
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'code') }} value="{{ form.filter.code.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'company') }} value="{{ form.filter.company.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'phone') }} value="{{ form.filter.phone.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'email') }} value="{{ form.filter.email.1.vars.value }}" />
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'isInactive') }}>
+                        <option value="" {% if form.filter.isInactive.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.isInactive.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.isInactive.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+                <tr>
+                    <td>{{ customer.code }}</td>
+                    <td>{{ customer.company }}</td>
+                    <td>{{ customer.name }}</td>
+                    <td>{{ customer.phone }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.isInactive ? 'InActive' : 'Active' }}</td>
+                    <td>
+                        {% if is_granted('ROLE_CUSTOMER_VIEW') or is_granted('ROLE_ACCOUNT_EDIT') or is_granted('ROLE_ACCOUNT_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_master_customer_show', {'id': customer.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_CUSTOMER_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_master_customer_edit', {'id': customer.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, customers) }}

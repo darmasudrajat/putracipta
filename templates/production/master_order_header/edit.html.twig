@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Master Order' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_master_order_header_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_production_master_order_header_show', {'id': masterOrderHeader.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('production/master_order_header/_form.html.twig') }}
+{% endblock %}

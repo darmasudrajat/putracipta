@@ -1,0 +1,281 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Memo' %}
+
+{% block body %}
+    <div class="memo">
+        <div class="note" style="font-size: 10px; visibility: hidden">
+            <div class="table full">
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label"><img src="{{ asset('images/Logo.jpg') }}" alt="logo" max-height="300px"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label" style="color: blue; font-size: 14px">PT. Putracipta Karindomas</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Millenium 15A, Kawasan Industri Millenium I2 No. 05</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Peusar, Panongan</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Kab. Tangerang Banten</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">NPWP: 01.539.872.0-452.001</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label">Factory: Kawasan Industri Millenium</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Jl. Millenium 15A Blok I2 No. 5 Pos 12</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Cikupa - Tigaraksa - Tangerang</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Banten 15710 - Indonesia</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Tel. (62-21) 2915 9191 Fax. (62-21) 2915 9194</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Email: pck_karindomas@yahoo.com</div>
+                        </div>
+                        {#<div class="row">
+                            <div class="cell label">Web: www.putraciptakarindomas.com</div>
+                        </div>#}
+                    </div>
+                </div>
+            </div>
+            {#<br />
+            <div class="header">
+                <h2 class="title">INVOICE</h2>
+            </div>#}
+        </div>
+        
+        <div class="note">
+            <div class="table full">
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label" style="min-width: 60px">&nbsp;</div>
+                            <div class="cell value">{{ saleInvoiceHeader.customer.company|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">&nbsp;</div>
+                            <div class="cell value">{{ attribute(saleInvoiceHeader.customer, 'addressTax' ~ saleInvoiceHeader.customerAddressTaxOrdinal)|default|nl2br }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">&nbsp;</div>
+                            <div class="cell value">&nbsp;</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">&nbsp;</div>
+                            <div class="cell value">&nbsp;</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">NPWP:</div>
+                            <div class="cell value">{{ saleInvoiceHeader.customerTaxNumber|default }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">&nbsp;</div>
+                                <div class="cell value">&nbsp;</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">&nbsp;</div>
+                                <div class="cell value">&nbsp;</div>
+                            </div>
+                        <div class="row">
+                            <div class="cell label" style="min-width: 130px">Invoice #</div>
+                            <div class="cell value" style="min-width: 150px">{{ saleInvoiceHeader.codeNumber|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Tanggal Invoice</div>
+                            <div class="cell value">{{ saleInvoiceHeader.transactionDate|default ? saleInvoiceHeader.transactionDate|date('d M Y') }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Jatuh Tempo</div>
+                            <div class="cell value">{{ saleInvoiceHeader.dueDate|default ? saleInvoiceHeader.dueDate|date('d M Y') }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Delivery #</div>
+                            <div class="cell value">{{ saleInvoiceHeader.deliveryReferenceNumbers|default }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <br /><br />
+        
+        <table class="detail">
+            <thead>
+                <tr>
+                    <th class="center">PO #</th>
+                    {% if saleInvoiceHeader.isUsingFscPaper %}
+                        <th class="center">FSC Code</th>
+                        <th class="center">WO #</th>
+                    {% endif %}
+                    <th class="center">Code</th>
+                    <th class="center">Description</th>
+                    <th class="center">Qty</th>
+                    <th class="center">Unit</th>
+                    <th class="center">Price</th>
+                    <th class="center">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set rowspan = 20 %}
+                {% for row in saleInvoiceHeader.saleInvoiceDetails|filter(saleInvoiceDetail => not saleInvoiceDetail.isCanceled and saleInvoiceDetail.quantity > 0)|batch(rowspan, '') %}
+                    {% for saleInvoiceDetail in row %}
+                        <tr>
+                            {% if saleInvoiceDetail %}
+                                <td class="left">{{ saleInvoiceDetail.deliveryDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                                {% if saleInvoiceHeader.isUsingFscPaper %}
+                                    <td class="center">{{ deliveryDetail.fscCode|default }}</td>
+                                    <td class="left"></td>
+                                {% endif %}
+                                <td class="left">{{ saleInvoiceDetail.product.code|default }}</td>
+                                <td class="left">{{ saleInvoiceDetail.product.name|default }}</td>
+                                <td class="center">{{ saleInvoiceDetail.quantity|default|number_format(0) }}</td>
+                                <td class="left">{{ saleInvoiceDetail.unit.name|default }}</td>
+                                <td class="right">{{ saleInvoiceDetail.unitPrice|default|number_format(0) }}</td>
+                                <td class="right">{{ saleInvoiceDetail.total|default|number_format(0) }}</td>
+                            {% else %}
+                                {% if saleInvoiceHeader.isUsingFscPaper %}
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                {% endif %}
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan={% if saleInvoiceHeader.isUsingFscPaper %}"8"{% else %} "6" {% endif %} class="label right">Sub Total</td>
+                    <td class="right">{{ saleInvoiceHeader.subTotal|default|number_format(0) }}</td>
+                </tr>
+                {% if saleInvoiceHeader.discountNominal > 0.00 %}
+                    <tr>
+                        <td colspan={% if saleInvoiceHeader.isUsingFscPaper %}"8"{% else %} "6" {% endif %} class="label right">
+                            Diskon
+                            {% if saleInvoiceHeader.discountValueType == constant('DISCOUNT_VALUE_TYPE_PERCENTAGE', saleInvoiceHeader) %}
+                                {{ saleInvoiceHeader.discountValue|default }}%
+                            {% endif %}
+                        </td>
+                        <td class="right">{{ saleInvoiceHeader.discountNominal|default|number_format(0) }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td colspan={% if saleInvoiceHeader.isUsingFscPaper %}"8"{% else %} "6" {% endif %} class="label right">
+                        PPn 11%
+                    </td>
+                    <td class="right">{{ saleInvoiceHeader.taxNominal|default|number_format(0) }}</td>
+                </tr>
+                {#{% if saleInvoiceHeader.serviceTaxMode == constant('SERVICE_TAX_MODE_TAX', saleInvoiceHeader) %}
+                    <tr>
+                        <td colspan={% if saleInvoiceHeader.isUsingFscPaper %}"8"{% else %} "6" {% endif %} class="label right">
+                            PPh 23 ({{ saleInvoiceHeader.serviceTaxPercentage }}%)
+                        </td>
+                        <td class="right">{{ saleInvoiceHeader.serviceTaxNominal|default|number_format(0) }}</td>
+                    </tr>
+                {% endif %}#}
+                <tr>
+                    <td colspan={% if saleInvoiceHeader.isUsingFscPaper %}"8"{% else %} "6" {% endif %} class="label right">Grand Total</td>
+                    <td class="right">{{ saleInvoiceHeader.grandTotal|default|number_format(0) }}</td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <br />
+        
+        <div class="note">
+            <table class="detail">
+                <tr>
+                    <td class="cell label">Terbilang:</td>
+                    <td class="cell label">Pembayaran dengan BG / Cek dapat ditransfer ke:</td>
+                </tr>
+                <tr>
+                    <td class="cell">{{ saleInvoiceHeader.grandTotal|default|number_format(0, '.', '')|say|capitalize }} rupiah.</td>
+                    <td class="cell label">BCA KCU Wisma Asia</td>
+                </tr>
+                <tr>
+                    <td class="cell label"></td>
+                    <td class="cell label">ACC: 0843330123</td>
+                </tr>
+                <tr>
+                    <td class="cell"></td>
+                    <td class="cell label">A/N: PT. Putracipta Karindomas</td>
+                </tr>
+            </table>
+        </div>
+        
+        <br />
+        
+        <div>
+            <div class="table full">
+                {% if saleInvoiceHeader.isUsingFscPaper %}
+                    <div class="cell sig">
+                        <div class="signature" style="text-decoration: underline">{{ ifscCode }}</div>
+                        <div>FSC Code: </div>
+                        <div>A = FSC 100%</div>
+                        <div>B = FSC Mix Credit</div>
+                        <div>C = FSC Mix 70%</div>
+                        <div>D = FSC Recycle</div>
+                    </div>
+                {% else %}
+                    <div>
+                        <div>{% for i in range(1, 20) %}&nbsp;{% endfor %}</div>
+                    </div>
+                {% endif %}
+                <div class="cell sig signature">
+                    <div class="center">Hormat kami,</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="blank">&nbsp;</div>
+                    <div class="center">Inggrid Haryanto</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('memo') }}
+    <style>
+        .col:nth-child(1) { width: 50% }
+        .col:nth-child(2) { width: 50% }
+        
+        .col:nth-child(1) .label { width: 35% }
+        .col:nth-child(1) .value { width: 65% }
+        .col:nth-child(2) .label { width: 35% }
+        .col:nth-child(2) .value { width: 65% }
+        
+        .sig:nth-child(1) { width: 50% }
+        .sig:nth-child(2) { width: 50% }
+    </style>
+{% endblock %}

@@ -1,0 +1,67 @@
+<div class="row">
+    <div class="col">
+        <div class="row">
+            <div class="col border border-secondary rounded">
+                <table class="table table-sm table-bordered table-striped" id="work-order-process-table" data-controller="data-table">
+                    <tbody>
+                        {% for workOrderProcess in workOrderProcesses %}
+                            <tr role="button" data-action="click->data-table#select" data-data-table-values-param="{{ {'workOrderProcessId': workOrderProcess.id, 'workOrderProcessName': workOrderProcess.name}|json_encode }}">
+                                <td>{{ workOrderProcess.name }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col border border-secondary rounded">
+                <table class="table table-bordered"
+                       data-controller="form-collection"
+                       data-form-collection-start-index-value="{{ form.designCodeProcessDetails|length > 0 ? form.designCodeProcessDetails|last.vars.name + 1 : 0 }}"
+                       data-form-collection-start-ordinal-value="{{ form.designCodeProcessDetails|length }}"
+                       data-form-collection-prototype-value="{{ _self.process_collection_item(0, form.designCodeProcessDetails.vars.prototype, form)|e('html_attr') }}">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>No.</th>
+                            <th class="d-none">Work Order Process Id</th>
+                            <th>Nama</th>
+                            <th style="max-width: 10px"></th>
+                        </tr>
+                    </thead>
+                    <tbody data-form-collection-target="items" data-action="work-order-process-table:data-table:select@document->form-collection#addCollectionItem">
+                        {% macro process_collection_item(ordinal, detailForm) %}
+                            <tr data-form-collection-target="item" data-item-identifier-name="workOrderProcessId" data-item-identifier-value="{{ detailForm.vars.value.workOrderProcess.id|default }}" {% if detailForm.isInactive.vars.data %}class="d-none"{% endif %}>
+                                <td data-form-collection-target="ordinal" {% if detailForm.isInactive.vars.data %}data-ordinal-ignore="true"{% endif %}>{{ ordinal + 1 }}</td>
+                                <td class="d-none">{{ form_widget(detailForm.workOrderProcess, {'attr': {'data-item-field-name': 'workOrderProcessId'}}) }}</td>
+                                <td data-item-field-name="workOrderProcessName">{{ detailForm.vars.value.workOrderProcess.name|default }}</td>
+                                <td class="text-center">
+                                    {% if (detailForm.vars.value.id == null) %}
+                                        <button type="button" class="btn btn-outline-dark btn-sm" data-action="form-collection#removeCollectionItem"><i class="bi-x-lg"></i></button>
+                                    {% else %}
+                                        <button type="button" class="btn btn-danger"
+                                                data-controller="dom-element"
+                                                data-action="dom-element#bind"
+                                                data-dom-element-bind-specifications-param="{{ [
+                                                    {'destinationsTarget': '#' ~ detailForm.isInactive.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'checked', 'value': 'true'}},
+                                                    {'destinations': '[$element.closest("tr")]', 'action': 'addClass', 'descriptor': {'name': 'd-none'}},
+                                                ]|json_encode }}">
+                                            <i class="bi-x-lg"></i>
+                                        </button>
+                                    {% endif %}
+                                    <div class="d-none">
+                                        {{ form_row(detailForm.isInactive) }}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endmacro %}
+                        {% set counter = 0 %}
+                        {% for detailForm in form.designCodeProcessDetails %}
+                            {{ _self.process_collection_item(counter, detailForm) }}
+                            {% if not detailForm.isInactive.vars.data %}
+                                {% set counter = counter + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

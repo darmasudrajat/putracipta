@@ -1,0 +1,413 @@
+<div class="memo">
+    <div class="header" style="font-size: 10px; text-align: left">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label"><img id="logo" alt="logo" max-height="300px" src="{{ asset('images/Logo.jpg') }}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label" style="font-size: 14px; text-align: center">FORMULIR</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label" style="font-size: 18px; text-align: center">WORK ORDER PREPRESS</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">No Dokumen</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">F/PCK/PPIC/8.1-4</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Revisi</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">0</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Tanggal</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label"></div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Halaman</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">1 dari 1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="note">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">Mesin Cetak</div>
+                        <div class="cell value">: {{ masterOrderHeader.machinePrinting.name|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Nama Customer</div>
+                        <div class="cell value">: {{ masterOrderHeader.customer.company|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Design Code</div>
+                        <div class="cell value">: {{ masterOrderHeader.designCode.codeNumber|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Warna</div>
+                        <div class="cell value">: {{ masterOrderHeader.color }} / {{ masterOrderHeader.pantone }} + {{ masterOrderHeader.colorPantoneAdditional }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Ukuran Kertas</div>
+                        <div class="cell value">: {{ masterOrderHeader.paperPlanoLength|default|number_format(2) }} x {{ masterOrderHeader.paperPlanoWidth|default|number_format(2) }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Ukuran Mountage/Kris</div>
+                        <div class="cell value">: {{ masterOrderHeader.mountageSize }} cm / kertas cetak</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">No MO</div>
+                        <div class="cell value">: {{ masterOrderHeader.getCodeNumber|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Tanggal WO</div>
+                        <div class="cell value">: {{ masterOrderHeader.transactionDate ? masterOrderHeader.transactionDate|date('d M Y') : '' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Jumlah Dreek</div>
+                        <div class="cell value">: {{ masterOrderHeader.paperRequirement|default|number_format(0) }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Finishing</div>
+                        <div class="cell value">: {{ masterOrderHeader.finishing|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Status Cetakan</div>
+                        <div class="cell value">: {{ masterOrderHeader.printingStatus ? masterOrderHeader.printingStatus|join(', ') : '' }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <table class="detail">
+        <thead>
+            <tr>
+                <th>PO#</th>
+                <th>Kode</th>
+                <th>Nama Produk</th>
+                <th>Tanggal Kirim</th>
+                <th>Qty Order</th>
+                <th>Qty Produksi</th>
+                <th>Stock</th>
+                <th>Kekurangan</th>
+                <th>Up/s (Mata)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderProductDetail in masterOrderHeader.masterOrderProductDetails %}
+                <tr>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.product.code|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.product.name|default }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.deliveryDate ? masterOrderProductDetail.saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityOrder|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityProduction|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityStock|default|number_format(0) }}</td>
+                    <td style="text-align:right">{{ masterOrderProductDetail.quantityShortage|default|number_format(0) }}</td>
+                    <td style="text-align:center">{{ masterOrderProductDetail.quantityPrinting|default|number_format(0) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td style="text-align:right; font-weight: bold" colspan="4">TOTAL</td>
+                <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityOrder|default|number_format(0) }}</td>
+                <td></td>
+                <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityStock|default|number_format(0) }}</td>
+                <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityShortage|default|number_format(0) }}</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="note">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">Model Layout </div>
+                        <div style="min-width: 100px">
+                            <img id="upload" width="300px" alt="Layout Model Image" src="{{ asset('uploads/master-order/' ~ masterOrderHeader.fileName) }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <fieldset>
+        <div class="note">
+            <div class="table full">
+                <div class="cell col" style="width: 50%">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell" style="width: 10%; font-weight: bold">Plate </div>
+                            <div class="cell" style="width: 15%">Baru </div>
+                            <div class="cell">: ____________ Lbr</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell"></div>
+                            <div class="cell">Lama </div>
+                            <div class="cell">: ____________ Lbr</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell"></div>
+                            <div class="cell">Bekas </div>
+                            <div class="cell">: ____________ Lbr</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label">Merek</div>
+                            <div class="cell value">: _________________________</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Tanggal Dikerjakan</div>
+                            <div class="cell value">: _________________________</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <table class="detail">
+        <thead class="table-secondary">
+            <tr>
+                <th rowspan="2">&nbsp;</th>
+                <th rowspan="2" class="text-center">Warna</th>
+                <th colspan="2" class="text-center">Output Awal</th>
+                <th colspan="2" class="text-center">Tambahan / Revisi</th>
+                <th colspan="3" class="text-center">Downtime</th>
+            </tr>
+            <tr>
+                <th class="text-center">Mulai</th>
+                <th class="text-center">Selesai</th>
+                <th class="text-center">Mulai</th>
+                <th class="text-center">Selesai</th>
+                <th class="text-center">Mulai</th>
+                <th class="text-center">Selesai</th>
+                <th class="text-center">Keterangan</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td rowspan="7">CTcP</td>
+                <td class="center">C</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">M</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">Y</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">B</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td rowspan="7">Plate Subcon</td>
+                <td class="center">C</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">M</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">Y</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="center">B</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="note">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">Penjelasan Tambahan</div>
+                        <div class="cell value">: ___________________________________________</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Plate diserahkan kepada</div>
+                        <div class="cell value">: ___________________________________________</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Tanggal Pengembalian WO#</div>
+                        <div class="cell value">: ___________________________________________</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">WO# Dikembalikan oleh</div>
+                        <div class="cell value">: ___________________________________________</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Note</div>
+                        <div class="cell value">: Setiap cetakan diberi nama produk dan spesifikasinya dan juga tanggal waktu plate dan no. WO</div>
+                    </div>
+                </div>
+            </div>    
+        </div>
+    </div>
+
+    <br />
+
+    <div class="signature">
+        <div class="table full">
+            <div class="cell sig">
+                <div>Dikerjakan oleh,</div>
+                <div class="blank"></div>
+                <div>_________________________________</div>
+            </div>
+            <div class="cell sig">
+                <div>WO# dikeluarkan oleh,</div>
+                <div class="blank"></div>
+                <div>_________________________________</div>
+            </div>
+        </div>
+    </div>
+</div>

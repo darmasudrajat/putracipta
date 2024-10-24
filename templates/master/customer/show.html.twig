@@ -1,0 +1,264 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Customer' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_customer_index') }}">Manage</a>
+    {% if is_granted('ROLE_CUSTOMER_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_master_customer_edit', {'id': customer.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_CUSTOMER_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_master_customer_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code</th>
+                <td>{{ customer.code }}</td>
+            </tr>
+            <tr>
+                <th>Company</th>
+                <td>{{ customer.company }}</td>
+            </tr>
+            <tr>
+                <th>PIC 1</th>
+                <td>{{ customer.name }}</td>
+            </tr>
+            {% if (customer.name2 != '') %}
+                <tr>
+                    <th>PIC 2</th>
+                    <td>{{ customer.name2 }}</td>
+                </tr>
+            {% endif %}
+            {% if (customer.name3 != '') %}
+                <tr>
+                    <th>PIC 3</th>
+                    <td>{{ customer.name3 }}</td>
+                </tr>
+            {% endif %}
+            {% if (customer.name4 != '') %}
+                <tr>
+                    <th>PIC 4</th>
+                    <td>{{ customer.name4 }}</td>
+                </tr>
+            {% endif %}
+            {% if (customer.name5 != '') %}
+                <tr>
+                    <th>PIC 5</th>
+                    <td>{{ customer.name5 }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>Alamat Kirim 1</th>
+                <td>{{ customer.addressDelivery1 }}</td>
+            </tr>
+            {% if (customer.addressDelivery2 != '') %}
+                <tr>
+                    <th>Alamat Kirim 2</th>
+                    <td>{{ customer.addressDelivery2 }}</td>
+                </tr>
+            {% endif %}
+            {% if (customer.addressDelivery3 != '') %}
+                <tr>
+                    <th>Alamat Kirim 3</th>
+                    <td>{{ customer.addressDelivery3 }}</td>
+                </tr>
+            {% endif %}
+            {% if (customer.addressDelivery4 != '') %}
+                <tr>
+                    <th>Alamat Kirim 4</th>
+                    <td>{{ customer.addressDelivery4 }}</td>
+                </tr>
+            {% endif %}
+            {% if (customer.addressDelivery5 != '') %}
+                <tr>
+                    <th>Alamat Kirim 5</th>
+                    <td>{{ customer.addressDelivery5 }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>Alamat Penagihan</th>
+                <td>{{ customer.addressInvoice }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ customer.phone }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ customer.email }}</td>
+            </tr>
+            <tr>
+                <th>NPWP</th>
+                <td>{{ customer.taxNumber }}</td>
+            </tr>
+            <tr>
+                <th>Alamat NPWP 1</th>
+                <td>{{ customer.addressTax1 }}</td>
+            </tr>
+            {% if (customer.addressTax2 != '') %}
+                <tr>
+                    <th>Alamat NPWP 2</th>
+                    <td>{{ customer.addressTax2 }}</td>
+                </tr>
+            {% endif %}
+            {% if (customer.addressTax3 != '') %}
+                <tr>
+                    <th>Alamat NPWP 3</th>
+                    <td>{{ customer.addressTax3 }}</td>
+                </tr>
+            {% endif %}
+            {% if (customer.addressTax4 != '') %}
+                <tr>
+                    <th>Alamat NPWP 4</th>
+                    <td>{{ customer.addressTax4 }}</td>
+                </tr>
+            {% endif %}
+            {% if (customer.addressTax5 != '') %}
+                <tr>
+                    <th>Alamat NPWP 5</th>
+                    <td>{{ customer.addressTax5 }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>TOP (hari)</th>
+                <td>{{ customer.paymentTerm }}</td>
+            </tr>
+            <tr>
+                <th>Toleransi Bawah Quantity Order (%)</th>
+                <td>{{ customer.minimumTolerancePercentage }}</td>
+            </tr>
+            <tr>
+                <th>Toleransi Atas Quantity Order (%)</th>
+                <td>{{ customer.maximumTolerancePercentage }}</td>
+            </tr>
+            <tr>
+                <th>Kawasan Berikat 017?</th>
+                <td>{{ customer.isBondedZone ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ customer.note }}</td>
+            </tr>
+            <tr>
+                <th>Is Inactive</th>
+                <td>{{ customer.isInactive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+            
+    <hr />
+    
+    <legend class="float-none w-auto text-dark px-1">Product List</legend>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class='text-center bg-info'>Code</th>
+                <th class='text-center bg-info'>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in customer.products %}
+                <tr>
+                    <td>{{ product.code }}</td>
+                    <td>{{ product.name }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr />
+    
+    <legend class="float-none w-auto text-dark px-1">Design Code List</legend>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class='text-center bg-info'>Code</th>
+                <th class='text-center bg-info'>Name</th>
+                <th class='text-center bg-info'>Jml Warna</th>
+                <th class='text-center bg-info'>C</th>
+                <th class='text-center bg-info'>M</th>
+                <th class='text-center bg-info'>Y</th>
+                <th class='text-center bg-info'>K</th>
+                <th class='text-center bg-info'>K-1</th>
+                <th class='text-center bg-info'>K-2</th>
+                <th class='text-center bg-info'>K-3</th>
+                <th class='text-center bg-info'>K-4</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for designCode in customer.designCodes %}
+                <tr>
+                    <td>{{ designCode.codeNumber }}</td>
+                    <td>{{ designCode.name }}</td>
+                    <td>{{ designCode.color }}</td>
+                    <td>{{ designCode.inkCyanPercentage|number_format(2) }}</td>
+                    <td>{{ designCode.inkMagentaPercentage|number_format(2) }}</td>
+                    <td>{{ designCode.inkYellowPercentage|number_format(2) }}</td>
+                    <td>{{ designCode.inkBlackPercentage|number_format(2) }}</td>
+                    <td>{{ designCode.colorSpecial1 }}</td>
+                    <td>{{ designCode.colorSpecial2 }}</td>
+                    <td>{{ designCode.colorSpecial3 }}</td>
+                    <td>{{ designCode.colorSpecial4 }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr />
+    
+    <legend class="float-none w-auto text-dark px-1">Pisau Diecut List</legend>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class='text-center bg-info'>Code</th>
+                <th class='text-center bg-info'>Name</th>
+                <th class='text-center bg-info'>Up/s Pisau</th>
+                <th class='text-center bg-info'>Up/s Cetak</th>
+                <th class='text-center bg-info'>Uk. Cetak</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for diecutKnife in customer.diecutKnives %}
+                <tr>
+                    <td>{{ diecutKnife.codeNumber }}</td>
+                    <td>{{ diecutKnife.name }}</td>
+                    <td>{{ diecutKnife.upPerSecondKnife }}</td>
+                    <td>{{ diecutKnife.upPerSecondPrint }}</td>
+                    <td>{{ diecutKnife.printingSize }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr />
+    
+    <legend class="float-none w-auto text-dark px-1">Millar List</legend>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class='text-center bg-info'>Code</th>
+                <th class='text-center bg-info'>Name</th>
+                <th class='text-center bg-info'>Jml</th>
+                <th class='text-center bg-info'>Jml Up Cetak</th>
+                <th class='text-center bg-info'>Layout Cetak</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dielineMillar in customer.dielineMillars %}
+                <tr>
+                    <td>{{ dielineMillar.codeNumber }}</td>
+                    <td>{{ dielineMillar.name }}</td>
+                    <td>{{ dielineMillar.quantity }}</td>
+                    <td>{{ dielineMillar.quantityUpPrinting }}</td>
+                    <td>{{ dielineMillar.printingLayout }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {#{{ include('master/customer/_delete_form.html.twig') }}#}
+{% endblock %}

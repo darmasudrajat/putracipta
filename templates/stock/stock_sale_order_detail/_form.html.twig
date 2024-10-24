@@ -1,0 +1,70 @@
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id'}|json_encode }}"
+     data-json-loader-url-value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}"
+     data-json-loader-form-target-value="{{ "form[name=#{form.vars.name}]" }}">
+
+    {{ form_start(form) }}
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.deliveryDate, {'label': 'Tanggal Kirim', 'attr': {'data-controller': 'flatpickr-element', 'class': 'readonly-form-input', 'data-flatpickr-element-options-value': {'dateFormat': 'j M Y'}|json_encode}}) }}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Data</legend>
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <label class="form-label">Customer</label>
+                        <input type="text" class="form-control" value="{{ saleOrderDetail.saleOrderHeader.customer.company|default }}" readonly="readonly" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">PO #</label>
+                        <input type="text" class="form-control" value="{{ saleOrderDetail.saleOrderHeader.referenceNumber|default }}" readonly="readonly" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal PO</label>
+                        <input type="text" class="form-control" value="{{ saleOrderDetail.saleOrderHeader.transactionDate ? saleOrderDetail.saleOrderHeader.transactionDate|date('d M Y') : ''  }}" readonly="readonly" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label class="form-label">Product</label>
+                        <input type="text" class="form-control" value="{{ saleOrderDetail.product.name|default }}" readonly="readonly" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantity</label>
+                        <input type="text" class="form-control" value="{{ saleOrderDetail.quantity|default|number_format(2) }}" readonly="readonly" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Product</label>
+                        <input type="text" class="form-control" value="{{ saleOrderDetail.unit.name|default }}" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="d-grid">
+            <div class="row">
+                <div class="col text-center">
+                    <a class="btn btn-danger" href="{{ path('app_sale_sale_order_header_index') }}"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                        Cancel
+                    </a>
+                    <button class="btn btn-success"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                        Save
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+        </div>
+    {{ form_end(form) }}
+</div>

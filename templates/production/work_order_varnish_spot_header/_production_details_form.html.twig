@@ -1,0 +1,70 @@
+<div class="table-responsive">
+    <table class="table table-bordered"
+       data-controller="form-collection"
+       data-form-collection-start-index-value="{{ form.workOrderVarnishSpotProductionDetails|length > 0 ? form.workOrderVarnishSpotProductionDetails|last.vars.name + 1 : 0 }}"
+       data-form-collection-prototype-value="{{ _self.collection_item(form.workOrderVarnishSpotProductionDetails.vars.prototype)|e('html_attr') }}"
+       data-action="form-collection:collection-item-removed->json-loader#load:self">
+        <thead class="table-secondary">
+            <tr>
+                <th style="min-width: 200px">Shift #</th>
+                <th style="min-width: 200px">Tanggal</th>
+                <th style="min-width: 100px">Jam Mulai</th>
+                <th style="min-width: 100px">Jam Selesai</th>
+                <th style="min-width: 100px">Hasil</th>
+                <th style="min-width: 100px">Reject</th>
+                <th style="min-width: 150px">Keterangan Produksi</th>
+                <th style="min-width: 100px">OPR/Kenek</th>
+                <th style="min-width: 100px">OPV</th>
+                <th style="min-width: 100px">UV</th>
+                <th style="min-width: 100px">Alcohol</th>
+                <th style="min-width: 100px">WB</th>
+                <th style="min-width: 0"></th>
+            </tr>
+        </thead>
+        <tbody data-form-collection-target="items" data-action="new-detail-button:click@document->form-collection#addCollectionItem">
+            {% macro collection_item(detailForm) %}
+                {#<tr data-form-collection-target="item" {% if (detailForm.vars.value.isCanceled) %}class="bg-secondary"{% endif %}>
+                    <td>{{ form_row(detailForm.shiftNumber, {'label': false}) }}</td>
+                    <td>{{ form_row(detailForm.cuttingDate, {'label': false}) }}</td>
+                    <td>{{ form_row(detailForm.cuttingStartTime, {'label': false}) }}</td>
+                    <td>{{ form_row(detailForm.cuttingEndTime, {'label': false}) }}</td>
+                    <td>{{ form_row(detailForm.cuttingQuantityRim, {'label': false}) }}</td>
+                    <td>{{ form_row(detailForm.cuttingQuantityDreek, {'label': false}) }}</td>
+                    <td>{{ form_row(detailForm.memo, {'label': false}) }}</td>
+                    <td>
+                        <div {% if (detailForm.vars.value.id == null) %}class="d-none"{% endif %}>
+                            {{ form_row(detailForm.isCanceled, {
+                                'label': 'X',
+                                'attr': {
+                                    'data-controller': 'dom-element',
+                                    'data-action': 'dom-element#bind change->json-loader#load',
+                                    'data-dom-element-bind-specifications-param': [
+                                        {'destinationsTarget': "table tr[data-item-identifier-value=\"#{detailForm.vars.value.purchaseOrderDetail.id|default}\"]", 'action': 'removeClass', 'descriptor': {'name': 'bg-secondary'}, 'condition': '!$element.checked'},
+                                        {'destinationsTarget': "table tr[data-item-identifier-value=\"#{detailForm.vars.value.purchaseOrderDetail.id|default}\"]", 'action': 'addClass', 'descriptor': {'name': 'bg-secondary'}, 'condition': '$element.checked'},
+                                    ]|json_encode,
+                                },
+                            }) }}
+                        </div>
+                    </td>
+                </tr>#}
+            {% endmacro %}
+            {% for detailForm in form.workOrderVarnishSpotProductionDetails %}
+                {{ _self.collection_item(detailForm) }}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            {#<tr>
+                <td class="text-end" colspan="4">Total Quantity</td>
+                <td class="text-center" data-json-loader-target="placeholder"
+                    data-property-path="totalQuantityRim">
+                    {{ workOrderCuttingHeader.totalQuantityRim|default|number_format(0) }}
+                </td>
+                <td class="text-center" data-json-loader-target="placeholder"
+                    data-property-path="totalQuantityDreek">
+                    {{ workOrderCuttingHeader.totalQuantityDreek|default|number_format(0) }}
+                </td>
+                <td colspan="2"></td>
+            </tr>#}
+        </tfoot>
+    </table>
+</div>

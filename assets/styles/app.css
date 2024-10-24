@@ -1,0 +1,22 @@
+@import '~bootstrap/dist/css/bootstrap';
+@import '~flatpickr/dist/flatpickr';
+
+body {
+    background-color: white;
+}
+
+label.form-label, legend.col-form-label {
+    text-transform: capitalize;
+}
+
+[readonly]:not(.readonly-form-input), [readonly]:not(.readonly-form-input):focus {
+    background-color: #CFD8DC;
+}
+
+select[readonly] {
+    pointer-events: none;
+}
+
+tbody:-moz-only-whitespace {
+    display: none;
+}

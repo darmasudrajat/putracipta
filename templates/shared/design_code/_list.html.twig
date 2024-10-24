@@ -1,0 +1,131 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, designCodes) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="design-code-table" data-controller="data-table">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'code') }}>
+                    Code {{ grid.sort_char(form.sort.code.vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    Name {{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th style="min-width: 250px">
+                    Product
+                </th>
+                <th style="min-width: 150px">
+                    Tanggal Buat
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'note') }}>
+                    Note {{ grid.sort_char(form.sort.note.vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    P<input style="width: 100px" type="text" {{ grid.filter_link_item(form, 'code') }} value="{{ form.filter.code.1.vars.value }}" />-
+                    V<input style="width: 100px" type="text" {{ grid.filter_link_item(form, 'variant') }} value="{{ form.filter.variant.1.vars.value }}" />-
+                    R<input style="width: 64px" type="text" {{ grid.filter_link_item(form, 'version') }} value="{{ form.filter.version.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th></th>
+                <th></th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'note') }} value="{{ form.filter.note.1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for designCode in designCodes %}
+                {% set designCodeData = {
+                    'designCodeId': designCode.id, 
+                    'designCodeNumber': designCode.codeNumber, 
+                    'designCodeColor': designCode.color, 
+                    'designCodePantone': designCode.pantone, 
+                    'designCodeColorSpecial1': designCode.colorSpecial1, 
+                    'designCodeColorSpecial2': designCode.colorSpecial2, 
+                    'designCodeColorSpecial3': designCode.colorSpecial3, 
+                    'designCodeColorSpecial4': designCode.colorSpecial4, 
+                    'designCodeCoating': designCode.coating, 
+                    'designCodePrintingUpQuantity': designCode.printingUpQuantity|number_format(0), 
+                    'designCodePrintingKrisSize': designCode.printingKrisSize, 
+                    'designCodePaperCuttingLength': designCode.paperCuttingLength|number_format(2), 
+                    'designCodePaperCuttingWidth': designCode.paperCuttingWidth|number_format(2), 
+                    'designCodePaperMountage': designCode.paperMountage, 
+                    'designCodeDiecutKnifeCodeNumber': designCode.diecutKnife.codeNumber|default, 
+                    'designCodeDiecutKnifeId': designCode.diecutKnife.id|default, 
+                    'designCodeDielineMillarCodeNumber': designCode.dielineMillar.codeNumber|default, 
+                    'designCodeDielineMillarId': designCode.dielineMillar.id|default, 
+                    'designCodeInkCyanPercentage': designCode.inkCyanPercentage|default|number_format(2), 
+                    'designCodeInkMagentaPercentage': designCode.inkMagentaPercentage|default|number_format(2), 
+                    'designCodeInkYellowPercentage': designCode.inkYellowPercentage|default|number_format(2), 
+                    'designCodeInkBlackPercentage': designCode.inkBlackPercentage|default|number_format(2), 
+                    'designCodeInkOpvPercentage': designCode.inkOpvPercentage|default|number_format(2), 
+                    'designCodeInkK1Percentage': designCode.inkK1Percentage|default|number_format(2), 
+                    'designCodeInkK2Percentage': designCode.inkK2Percentage|default|number_format(2), 
+                    'designCodeInkK3Percentage': designCode.inkK3Percentage|default|number_format(2), 
+                    'designCodeInkK4Percentage': designCode.inkK4Percentage|default|number_format(2), 
+                    'designCodePackagingGlueQuantity': designCode.packagingGlueQuantity|default|number_format(2), 
+                    'designCodePackagingRubberQuantity': designCode.packagingRubberQuantity|default|number_format(2), 
+                    'designCodePackagingPaperQuantity': designCode.packagingPaperQuantity|default|number_format(2), 
+                    'designCodePackagingBoxQuantity': designCode.packagingBoxQuantity|default|number_format(2), 
+                    'designCodePackagingTapeLargeQuantity': designCode.packagingTapeLargeQuantity|default|number_format(2), 
+                    'designCodePackagingTapeSmallQuantity': designCode.packagingTapeSmallQuantity|default|number_format(2), 
+                    'designCodePackagingPlasticQuantity': designCode.packagingPlasticQuantity|default|number_format(2), 
+                    'designCodeColorPantoneAdditional': designCode.colorPantoneAdditional,
+                    'designCodeHotStamping': designCode.hotStamping,
+                    'designCodeNote': designCode.note,
+                    'paperId': designCode.paper.id|default,
+                    'paperCodeNumber': designCode.paper.codeNumber|default,
+                    'paperName': designCode.paper.name|default,
+                    'designCodeGlossiness': designCode.glossiness|number_format(2),
+                } %}
+                {% set designCodeProcessDetailsData = designCode.designCodeProcessDetails|filter(designCodeProcessDetail => not designCodeProcessDetail.isInactive)|slice(0)|map(designCodeProcessDetail => {
+                    'designCodeProcessDetailId': designCodeProcessDetail.id, 
+                    'workOrderProcessId': designCodeProcessDetail.workOrderProcess.id, 
+                    'workOrderProcessName': designCodeProcessDetail.workOrderProcess.name})
+                %}
+                {% set designCodeDistributionDetailsData = designCode.designCodeDistributionDetails|filter(designCodeDistributionDetail => not designCodeDistributionDetail.isInactive)|slice(0)|map(designCodeDistributionDetail => {
+                    'designCodeDistributionDetailId': designCodeDistributionDetail.id, 
+                    'workOrderDistributionId': designCodeDistributionDetail.workOrderDistribution.id, 
+                    'workOrderDistributionName': designCodeDistributionDetail.workOrderDistribution.name})
+                %}
+                {% set designCodeCheckSheetDetailsData = designCode.designCodeCheckSheetDetails|filter(designCodeCheckSheetDetail => not designCodeCheckSheetDetail.isInactive)|slice(0)|map(designCodeCheckSheetDetail => {
+                    'designCodeCheckSheetDetailId': designCodeCheckSheetDetail.id, 
+                    'workOrderCheckSheetId': designCodeCheckSheetDetail.workOrderCheckSheet.id, 
+                    'workOrderCheckSheetName': designCodeCheckSheetDetail.workOrderCheckSheet.name})
+                %}
+                {% set designCodeProductDetailsData = designCode.designCodeProductDetails|filter(designCodeProductDetail => not designCodeProductDetail.isInactive)|slice(0)|map(designCodeProductDetail => {
+                    'designCodeProductDetailId': designCodeProductDetail.id, 
+                    'productId': designCodeProductDetail.product.id, 
+                    'productCode': designCodeProductDetail.product.code, 
+                    'productName': designCodeProductDetail.product.name, 
+                    'productMeasurement': designCodeProductDetail.product.productLengthWidthHeightCombination})
+                %}
+                <tr data-bs-dismiss="modal" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'designCodeData': designCodeData, 
+                    'designCodeProcessDetailsData': designCodeProcessDetailsData, 
+                    'designCodeDistributionDetailsData': designCodeDistributionDetailsData, 
+                    'designCodeProductDetailsData': designCodeProductDetailsData, 
+                    'designCodeCheckSheetDetailsData': designCodeCheckSheetDetailsData}|json_encode }}">
+                    <td>{{ designCode.codeNumber }}</td>
+                    <td>{{ designCode.name }}</td>
+                    <td>{{ designCode.designCodeProductList }}</td>
+                    <td>{{ designCode.createdTransactionDateTime ? designCode.createdTransactionDateTime|date('d M Y') : '' }}</td>
+                    <td>{{ designCode.note }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, designCodes) }}

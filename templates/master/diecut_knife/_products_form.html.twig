@@ -1,0 +1,48 @@
+<div class="table-responsive">
+    <table class="table table-bordered"
+       data-controller="form-collection"
+       data-form-collection-start-index-value="{{ form.diecutKnifeDetails|length > 0 ? form.diecutKnifeDetails|last.vars.name + 1 : 0 }}"
+       data-form-collection-prototype-value="{{ _self.collection_item(form.diecutKnifeDetails.vars.prototype)|e('html_attr') }}"
+       data-action="form-collection:collection-item-removed->json-loader#load:self">
+        <thead class="table-secondary">
+            <tr>
+                <th class="d-none">Product Id</th>
+                <th style="min-width: 250px">Item Code</th>
+                <th style="min-width: 250px">Item Name</th>
+                <th style="min-width: 250px">Description</th>
+                <th style="width: 0"></th>
+            </tr>
+        </thead>
+        <tbody data-form-collection-target="items" data-action="customer-table:data-table:select@document->form-collection#clearCollectionItems product-table:data-table:select@document->form-collection#addCollectionItem product-table:data-table:select@document->json-loader#load">
+            {% macro collection_item(detailForm) %}
+                <tr data-form-collection-target="item" {% if detailForm.isInactive.vars.data %}class="d-none"{% endif %}>
+                    <td class="d-none">{{ form_widget(detailForm.product, {'attr': {'data-item-field-name': 'productId'}}) }}</td>
+                    <td data-item-field-name="productCode">{{ detailForm.vars.value.product.code|default }}</td>
+                    <td data-item-field-name="productName">{{ detailForm.vars.value.product.name|default }}</td>
+                    <td data-item-field-name="productMeasurement">{{ detailForm.vars.value.product.productLengthWidthHeightCombination|default }}</td>
+                    <td>
+                        {% if (detailForm.vars.value.id == null) %}
+                            <button type="button" class="btn btn-outline-dark" data-action="form-collection#removeCollectionItem"><i class="bi-x-lg"></i></button>
+                        {% else %}
+                            <button type="button" class="btn btn-danger"
+                                    data-controller="dom-element"
+                                    data-action="dom-element#bind json-loader#load"
+                                    data-dom-element-bind-specifications-param="{{ [
+                                        {'destinationsTarget': '#' ~ detailForm.isInactive.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'checked', 'value': 'true'}},
+                                        {'destinations': '[$element.closest("tr")]', 'action': 'addClass', 'descriptor': {'name': 'd-none'}},
+                                    ]|json_encode }}">
+                                <i class="bi-x-lg"></i>
+                            </button>
+                        {% endif %}
+                        <div class="d-none">
+                            {{ form_row(detailForm.isInactive) }}
+                        </div>
+                    </td>
+                </tr>
+            {% endmacro %}
+            {% for detailForm in form.diecutKnifeDetails %}
+                {{ _self.collection_item(detailForm) }}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

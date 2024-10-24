@@ -1,0 +1,22 @@
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr class="bg-info">
+            <th>Code</th>
+            <th>Name</th>
+            <th>Jml</th>
+            <th>Jml Up Cetak</th>
+            <th>Layout Cetak</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for lastDielineMillar in lastDielineMillars %}
+            <tr>
+                <td>{{ lastDielineMillar.codeNumber }}</td>
+                <td>{{ lastDielineMillar.name }}</td>
+                <td>{{ lastDielineMillar.quantity }}</td>
+                <td>{{ lastDielineMillar.quantityUpPrinting }}</td>
+                <td>{{ lastDielineMillar.printingLayout }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

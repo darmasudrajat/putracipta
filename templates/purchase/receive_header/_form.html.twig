@@ -1,0 +1,171 @@
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward data-choice:select->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id', 'data-choice:select': 'id'}|json_encode }}"
+     data-json-loader-url-value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}"
+     data-json-loader-form-target-value="{{ "form[name=#{form.vars.name}]" }}">
+
+    {{ form_start(form) }}
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Header</legend>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.transactionDate, {'label': 'Tanggal', 'attr': {'data-controller': 'flatpickr-element', 'class': 'readonly-form-input', 'data-flatpickr-element-options-value': {'dateFormat': 'j M Y'}|json_encode}}) }}
+                    {{ form_row(form.warehouse, {'label': 'Gudang'}) }}
+                    {{ form_row(form.supplierDeliveryCodeNumber, {'label': 'Supplier SJ #'}) }}
+                </div>
+                <div class="col">
+                    {% if receiveHeader.id is null %}
+                        <div class="mb-3">
+                            <label class="form-label">PO Type</label>
+                            <select id="purchase-order-header-mode" class="form-control"
+                                    data-controller="dom-element data-choice"
+                                    data-action="change->dom-element#bind change->data-choice#select"
+                                    data-dom-element-bind-specifications-param="{{ [
+                                        {'destinationsTarget': "\##{form.purchaseOrderHeader.vars.id}-container", 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value === "paper"'},
+                                        {'destinationsTarget': "\##{form.purchaseOrderHeader.vars.id}-container", 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value === "ordinary"'},
+                                        {'destinationsTarget': "\##{form.purchaseOrderPaperHeader.vars.id}-container", 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value === "ordinary"'},
+                                        {'destinationsTarget': "\##{form.purchaseOrderPaperHeader.vars.id}-container", 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value === "paper"'},
+                                    ]|json_encode }}">
+                                <option value="">-- Pilih --</option>
+                                <option value="ordinary" {% if form.purchaseOrderHeader.vars.value != '' and form.purchaseOrderPaperHeader.vars.value == ''  %}selected="selected"{% endif %}>PO Material</option>
+                                <option value="paper" {% if form.purchaseOrderPaperHeader.vars.value != '' and form.purchaseOrderHeader.vars.value == '' %}selected="selected"{% endif %}>PO Kertas</option>
+                            </select>
+                        </div>
+                    {% endif %}
+                    <div class="{{ form.purchaseOrderHeader.vars.value == '' ? 'd-none' : '' }}" id="{{ form.purchaseOrderHeader.vars.id }}-container">
+                        <div class="mb-3">
+                            <label for="{{ form.purchaseOrderHeader.vars.id }}-text" class="form-label">PO Material #</label>
+                            {{ form_row(form.purchaseOrderHeader, {
+                                'attr': {
+                                    'data-controller': 'dom-element',
+                                    'data-action': 'purchase-order-header-table:data-table:select@document->dom-element#bind purchase-order-header-mode:data-choice:select@document->dom-element#bind',
+                                    'data-dom-element-bind-specifications-param': [
+                                        {'eventTypes': ['purchase-order-header-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].purchaseOrderHeaderId'}},
+                                        {'eventTypes': ['purchase-order-header-mode:data-choice:select'], 'action': 'removeAttribute', 'descriptor': {'name': 'value'}},
+                                    ]|json_encode,
+                                },
+                            }) }}
+                            <input type="text" id="{{ form.purchaseOrderHeader.vars.id }}-text" class="form-control readonly-form-input" value="{{ receiveHeader.purchaseOrderHeader.codeNumber|default }}" readonly="readonly"
+                                   {% if receiveHeader.id == null %}data-bs-toggle="modal" data-bs-target="#purchase-order-header-dialog"{% endif %}
+                                   data-controller="dom-element"
+                                   data-action="purchase-order-header-table:data-table:select@document->dom-element#bind purchase-order-header-mode:data-choice:select@document->dom-element#bind"
+                                   data-dom-element-bind-specifications-param="{{ [
+                                       {'eventTypes': ['purchase-order-header-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].purchaseOrderHeaderCodeNumber'}},
+                                       {'eventTypes': ['purchase-order-header-mode:data-choice:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}},
+                                   ]|json_encode }}" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Supplier</label>
+                            <input type="text" class="form-control" value="{{ receiveHeader.supplier.company|default }}" readonly="readonly"
+                                   data-controller="dom-element"
+                                   data-action="purchase-order-header-table:data-table:select@document->dom-element#bind purchase-order-header-mode:data-choice:select@document->dom-element#bind"
+                                   data-dom-element-bind-specifications-param="{{ [
+                                       {'eventTypes': ['purchase-order-header-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].supplierCompany'}},
+                                       {'eventTypes': ['purchase-order-header-mode:data-choice:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}},
+                                   ]|json_encode }}" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal PO</label>
+                            <input type="text" class="form-control" value="{{ receiveHeader.purchaseOrderHeader.transactionDate|default ? receiveHeader.purchaseOrderHeader.transactionDate|date('d M Y') : '' }}" readonly="readonly"
+                                   data-controller="dom-element"
+                                   data-action="purchase-order-header-table:data-table:select@document->dom-element#bind purchase-order-header-mode:data-choice:select@document->dom-element#bind"
+                                   data-dom-element-bind-specifications-param="{{ [
+                                       {'eventTypes': ['purchase-order-header-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].purchaseOrderHeaderTransactionDate'}},
+                                       {'eventTypes': ['purchase-order-header-mode:data-choice:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}},
+                                   ]|json_encode }}" />
+                        </div>
+                    </div>
+                    <div class="{{ form.purchaseOrderPaperHeader.vars.value == '' ? 'd-none' : '' }}" id="{{ form.purchaseOrderPaperHeader.vars.id }}-container">
+                        <div class="mb-3">
+                            <label for="{{ form.purchaseOrderPaperHeader.vars.id }}-text" class="form-label">PO Kertas #</label>
+                            {{ form_row(form.purchaseOrderPaperHeader, {
+                                'attr': {
+                                    'data-controller': 'dom-element',
+                                    'data-action': 'purchase-order-paper-header-table:data-table:select@document->dom-element#bind purchase-order-header-mode:data-choice:select@document->dom-element#bind',
+                                    'data-dom-element-bind-specifications-param': [
+                                        {'eventTypes': ['purchase-order-paper-header-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].purchaseOrderPaperHeaderId'}},
+                                        {'eventTypes': ['purchase-order-header-mode:data-choice:select'], 'action': 'removeAttribute', 'descriptor': {'name': 'value'}},
+                                    ]|json_encode,
+                                },
+                            }) }}
+                            <input type="text" id="{{ form.purchaseOrderPaperHeader.vars.id }}-text" class="form-control readonly-form-input" value="{{ receiveHeader.purchaseOrderPaperHeader.codeNumber|default }}" readonly="readonly"
+                                   data-bs-toggle="modal" data-bs-target="#purchase-order-paper-header-dialog"
+                                   data-controller="dom-element"
+                                   data-action="purchase-order-paper-header-table:data-table:select@document->dom-element#bind purchase-order-header-mode:data-choice:select@document->dom-element#bind"
+                                   data-dom-element-bind-specifications-param="{{ [
+                                       {'eventTypes': ['purchase-order-paper-header-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].purchaseOrderPaperHeaderCodeNumber'}},
+                                       {'eventTypes': ['purchase-order-header-mode:data-choice:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}},
+                                   ]|json_encode }}" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Supplier Kertas</label>
+                            <input type="text" class="form-control" value="{{ receiveHeader.supplier.company|default }}" readonly="readonly"
+                                   data-controller="dom-element"
+                                   data-action="purchase-order-paper-header-table:data-table:select@document->dom-element#bind purchase-order-header-mode:data-choice:select@document->dom-element#bind"
+                                   data-dom-element-bind-specifications-param="{{ [
+                                       {'eventTypes': ['purchase-order-paper-header-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].supplierCompany'}},
+                                       {'eventTypes': ['purchase-order-header-mode:data-choice:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}},
+                                   ]|json_encode }}" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal PO Kertas</label>
+                            <input type="text" class="form-control" value="{{ receiveHeader.purchaseOrderPaperHeader.transactionDate|default ? receiveHeader.purchaseOrderPaperHeader.transactionDate|date('d M Y') : '' }}" readonly="readonly"
+                                   data-controller="dom-element"
+                                   data-action="purchase-order-paper-header-table:data-table:select@document->dom-element#bind purchase-order-header-mode:data-choice:select@document->dom-element#bind"
+                                   data-dom-element-bind-specifications-param="{{ [
+                                       {'eventTypes': ['purchase-order-paper-header-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].purchaseOrderPaperHeaderTransactionDate'}},
+                                       {'eventTypes': ['purchase-order-header-mode:data-choice:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}},
+                                   ]|json_encode }}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.note) }}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Details</legend>
+            {{ include('purchase/receive_header/_details_form.html.twig') }}
+        </fieldset>
+
+        <div class="d-grid">
+            <div class="row">
+                <div class="col text-center">
+                    <a class="btn btn-danger" href="{{ path('app_purchase_receive_header_index') }}"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                        Cancel
+                    </a>
+                    <button class="btn btn-success"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                        Save
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+        </div>
+    {{ form_end(form) }}
+
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('purchase-order-header-dialog', 'Purchase Order List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_purchase_order_header__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+
+    {{ dialog.start('purchase-order-paper-header-dialog', 'Purchase Order Kertas List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_purchase_order_paper_header__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+</div>

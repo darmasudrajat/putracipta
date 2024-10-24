@@ -1,0 +1,116 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Purchase Payment' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_purchase_purchase_payment_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_PURCHASE_PAYMENT_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_purchase_purchase_payment_header_edit', {'id': purchasePaymentHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_PURCHASE_PAYMENT_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_purchase_purchase_payment_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Payment #</th>
+                <td>{{ purchasePaymentHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ purchasePaymentHeader.transactionDate ? purchasePaymentHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Supplier</th>
+                <td>{{ purchasePaymentHeader.supplier.company }}</td>
+            </tr>
+            <tr>
+                <th>Jenis Pembayaran</th>
+                <td>{{ purchasePaymentHeader.paymentType.name }}</td>
+            </tr>
+            <tr>
+                <th>Cek / Giro #</th>
+                <td>{{ purchasePaymentHeader.referenceNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Cek / Giro</th>
+                <td>{{ purchasePaymentHeader.referenceDate ? purchasePaymentHeader.referenceDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Currency</th>
+                <td>{{ purchasePaymentHeader.supplier.currency.name }}</td>
+            </tr>
+            <tr>
+                <th>Kurs Mata Uang</th>
+                <td>{{ purchasePaymentHeader.currencyRate }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ purchasePaymentHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ purchasePaymentHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ purchasePaymentHeader.createdTransactionDateTime ? purchasePaymentHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ purchasePaymentHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ purchasePaymentHeader.modifiedTransactionDateTime ? purchasePaymentHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ purchasePaymentHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Invoice #</th>
+                <th>Jatuh Tempo</th>
+                <th>Memo</th>
+                <th>Akun</th>
+                <th>Total</th>
+                <th>Retur</th>
+                <th>Outstanding</th>
+                <th>Payment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchasePaymentDetail in purchasePaymentHeader.purchasePaymentDetails %}
+                {% if purchasePaymentDetail.isCanceled == false and purchasePaymentDetail.amount > 0 %}
+                    <tr>
+                        <td>{{ purchasePaymentDetail.purchaseInvoiceHeader.supplierInvoiceCodeNumber|default }}</td>
+                        <td>{{ purchasePaymentDetail.purchaseInvoiceHeader.dueDate ? purchasePaymentDetail.purchaseInvoiceHeader.dueDate|date('Y-m-d') : '' }}</td>
+                        <td>{{ purchasePaymentDetail.memo|default }}</td>
+                        <td>{{ purchasePaymentDetail.account.name|default }}</td>
+                        <td style="text-align: right">{{ purchasePaymentDetail.purchaseInvoiceHeader.grandTotal|default|number_format(2) }}</td>
+                        <td style="text-align: right">{{ purchasePaymentDetail.purchaseInvoiceHeader.totalReturn|default|number_format(2) }}</td>
+                        <td style="text-align: right">{{ purchasePaymentDetail.purchaseInvoiceHeader.remainingPayment|default|number_format(2) }}</td>
+                        <td style="text-align: right">{{ purchasePaymentDetail.amount|default|number_format(2) }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7" style="text-align: right"><strong>Total</strong></td>
+                <td style="text-align: right"><strong>{{ purchasePaymentHeader.totalAmount|default|number_format(2) }}</strong></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    {#{{ include('purchase/purchase_payment_header/_delete_form.html.twig') }}#}
+{% endblock %}

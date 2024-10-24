@@ -1,0 +1,299 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Sales Order' %}
+
+{% block toolbar %}
+    {% if saleOrderHeader.transactionStatus == constant('TRANSACTION_STATUS_PARTIAL_DELIVERY', saleOrderHeader) or saleOrderHeader.transactionStatus == constant('TRANSACTION_STATUS_APPROVE', saleOrderHeader) %}
+        <div class="d-inline-block">{{ include('sale/sale_order_header/_done_form.html.twig') }}</div>
+    {% endif %}
+    
+    <a class="btn btn-primary btn-sm" href="{{ path('app_sale_sale_order_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_SALE_ORDER_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_sale_sale_order_header_new') }}">Add</a>
+    {% endif %}
+    {% if saleOrderHeader.transactionStatus != constant('TRANSACTION_STATUS_REJECT', saleOrderHeader) and saleOrderHeader.transactionStatus != constant('TRANSACTION_STATUS_APPROVE', saleOrderHeader) and saleOrderHeader.transactionStatus != constant('TRANSACTION_STATUS_FULL_DELIVERY', saleOrderHeader) and saleOrderHeader.transactionStatus != constant('TRANSACTION_STATUS_PARTIAL_DELIVERY', saleOrderHeader) %}
+        {% if is_granted('ROLE_SALE_ORDER_EDIT') %}
+            <a class="btn btn-warning btn-sm" href="{{ path('app_sale_sale_order_header_edit', {'id': saleOrderHeader.id}) }}">Edit</a>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>SO #</th>
+                <td>{{ saleOrderHeader.getCodeNumberWithVersion }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal SO</th>
+                <td>{{ saleOrderHeader.transactionDate ? saleOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Terima</th>
+                <td>{{ saleOrderHeader.orderReceiveDate ? saleOrderHeader.orderReceiveDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Jenis Order</th>
+                <td>{{ saleOrderHeader.transactionType }}</td>
+            </tr>
+            <tr>
+                <th>Marketing</th>
+                <td>{{ saleOrderHeader.employee.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Customer</th>
+                <td>{{ saleOrderHeader.customer.company }}</td>
+            </tr>
+            <tr>
+                <th>PIC</th>
+                <td>{{ saleOrderHeader.customerName }}</td>
+            </tr>
+            <tr>
+                <th>Alamat Kirim</th>
+                <td>{{ attribute(saleOrderHeader.customer, 'addressDelivery' ~ saleOrderHeader.deliveryAddressOrdinal)|default|nl2br }}</td>
+            </tr>
+            <tr>
+                <th>Customer PO #</th>
+                <td>{{ saleOrderHeader.referenceNumber }}</td>
+            </tr>
+            <tr>
+                <th>TOP (days)</th>
+                <td>{{ saleOrderHeader.customer.paymentTerm }}</td>
+            </tr>
+            <tr>
+                <th>Toleransi Bawah (%)</th>
+                <td>{{ saleOrderHeader.customer.minimumTolerancePercentage }}</td>
+            </tr>
+            <tr>
+                <th>Toleransi Atas (%)</th>
+                <td>{{ saleOrderHeader.customer.maximumTolerancePercentage }}</td>
+            </tr>
+            <tr>
+                <th>Using FSC Paper?</th>
+                <td>{{ saleOrderHeader.isUsingFscPaper ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ saleOrderHeader.transactionStatus }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ saleOrderHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ saleOrderHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ saleOrderHeader.createdTransactionDateTime ? saleOrderHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ saleOrderHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ saleOrderHeader.modifiedTransactionDateTime ? saleOrderHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Retur Transaksi</th>
+                <td>{{ saleOrderHeader.hasReturnTransaction ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction On Hold?</th>
+                <td>{{ saleOrderHeader.isOnHold ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ saleOrderHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>No.</th>
+                <th>Item Code</th>
+                <th>Description</th>
+                <th>Tgl Kirim</th>
+                <th>Quantity</th>
+                <th>Satuan</th>
+                {% if (is_granted('ROLE_MARKETING')) %}
+                    <th>Harga</th>
+                    <th>DPP</th>
+                    <th>Total</th>
+                {% endif %}
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for saleOrderDetail in saleOrderHeader.saleOrderDetails %}
+                {% if saleOrderDetail.isCanceled == false and saleOrderDetail.quantity > 0 %}
+                    <tr>
+                        <td>{{ saleOrderDetail.linePo|default }}</td>
+                        <td>{{ saleOrderDetail.product.code|default }}</td>
+                        <td>{{ saleOrderDetail.product.name|default }}</td>
+                        <td>{{ saleOrderDetail.deliveryDate ? saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                        <td style="text-align: right">{{ saleOrderDetail.quantity|default|number_format(0) }}</td>
+                        <td>{{ saleOrderDetail.unit.name|default }}</td>
+                        {% if (is_granted('ROLE_MARKETING')) %}
+                            <td style="text-align: right">{{ saleOrderDetail.unitPrice|default|number_format(6) }}</td>
+                            <td style="text-align: right">{{ saleOrderDetail.unitPriceBeforeTax|default|number_format(6) }}</td>
+                            <td style="text-align: right">{{ saleOrderDetail.total|default|number_format(2) }}</td>
+                        {% endif %}
+                        <td>{{ saleOrderDetail.isTransactionClosed ? 'Closed' : 'Open' }}</td>
+                    </tr>
+                {% endif %}
+            {% else %}
+                <tr>
+                    <td colspan="7">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        {% if (is_granted('ROLE_MARKETING')) %}
+            <tfoot>
+                <tr>
+                    <td colspan="8" style="text-align: right"><strong>Sub Total</strong></td>
+                    <td style="text-align: right"><strong>{{ saleOrderHeader.subTotal|default|number_format(2) }}</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="8" style="text-align: right"><strong>Disc {{ saleOrderHeader.discountValue|default }}%</strong></td>
+                    <td style="text-align: right"><strong>{{ saleOrderHeader.discountNominal|default|number_format(2) }}</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="8" style="text-align: right">
+                        <strong>
+                            {% if saleOrderHeader.taxMode == constant('TAX_MODE_NON_TAX', saleOrderHeader) %}
+                                Non Tax 0%
+                            {% elseif saleOrderHeader.taxMode == constant('TAX_MODE_TAX_EXCLUSION', saleOrderHeader) %}
+                                Exclude Tax {{ saleOrderHeader.taxPercentage }}%
+                            {% elseif saleOrderHeader.taxMode == constant('TAX_MODE_TAX_INCLUSION', saleOrderHeader) %}
+                                Include Tax {{ saleOrderHeader.taxPercentage }}%
+                            {% endif %}
+                        </strong>
+                    </td>
+                    <td style="text-align: right"><strong>{{ saleOrderHeader.taxNominal|default|number_format(2) }}</strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="8" style="text-align: right"><strong>Grand Total</strong></td>
+                    <td style="text-align: right"><strong>{{ saleOrderHeader.grandTotal|default|number_format(2) }}</strong></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        {% endif %}
+    </table>
+                
+    <ul class="nav nav-tabs" id="delivery-sale-return-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="delivery-header-tab" data-bs-toggle="tab" data-bs-target="#delivery-header-tab-pane" type="button" role="tab" aria-controls="delivery-header-tab-pane" aria-selected="true">Pengiriman</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="sale-return-header-tab" data-bs-toggle="tab" data-bs-target="#sale-return-header-tab-pane" type="button" role="tab" aria-controls="sale-return-header-tab-pane" aria-selected="false">Retur</button>
+        </li>
+    </ul>
+                
+    <div class="tab-content" id="delivery-sale-return-tab-content">
+        <div class="tab-pane fade show active" id="delivery-header-tab-pane" role="tabpanel" aria-labelledby="delivery-header-tab" tabindex="0">
+            <legend class="float-none w-auto text-dark px-1">Data Pengiriman</legend>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr class="bg-warning">
+                        <th>Pengiriman #</th>
+                        <th>Tanggal</th>
+                        <th>Gudang</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Satuan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for saleOrderDetail in saleOrderHeader.saleOrderDetails %}
+                        {% for deliveryDetail in saleOrderDetail.deliveryDetails %}
+                            <tr>
+                                <td>{{ deliveryDetail.deliveryHeader.codeNumber|default }}</td>
+                                <td>{{ deliveryDetail.deliveryHeader.transactionDate ? deliveryDetail.deliveryHeader.transactionDate|date('d M Y') : '' }}</td>
+                                <td>{{ deliveryDetail.deliveryHeader.warehouse.name|default }}</td>
+                                <td>{{ deliveryDetail.product.name|default }}</td>
+                                <td class="text-center">{{ deliveryDetail.quantity|default|number_format(0) }}</td>
+                                <td>{{ deliveryDetail.unit.name|default }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6">No Records Found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+                
+        <div class="tab-pane fade" id="sale-return-header-tab-pane" role="tabpanel" aria-labelledby="sale-return-header-tab" tabindex="0">
+            <legend class="float-none w-auto text-dark px-1">Data Retur</legend>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr class="bg-primary">
+                        <th>Retur #</th>
+                        <th>Tanggal</th>
+                        <th>Gudang</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Satuan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for saleOrderDetail in saleOrderHeader.saleOrderDetails %}
+                        {% for deliveryDetail in saleOrderDetail.deliveryDetails %}
+                            {% for saleReturnDetail in deliveryDetail.saleReturnDetails %}
+                                <tr>
+                                    <td>{{ saleReturnDetail.saleReturnHeader.codeNumber|default }}</td>
+                                    <td>{{ saleReturnDetail.saleReturnHeader.transactionDate ? saleReturnDetail.saleReturnHeader.transactionDate|date('d M Y') : '' }}</td>
+                                    <td>{{ saleReturnDetail.saleReturnHeader.warehouse.name|default }}</td>
+                                    <td>{{ saleReturnDetail.product.name|default }}</td>
+                                    <td class="text-center">{{ saleReturnDetail.quantity|default|number_format(0) }}</td>
+                                    <td>{{ saleReturnDetail.unit.name|default }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6">No records found</td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+        
+    <div class="d-inline-block">{{ include('sale/sale_order_header/_delete_form.html.twig') }}</div>
+    
+    {#<div class="d-inline-block">{{ include('sale/sale_order_header/_delete_form.html.twig') }}</div>#}
+    {% if saleOrderHeader.transactionStatus == constant('TRANSACTION_STATUS_DRAFT', saleOrderHeader) or saleOrderHeader.transactionStatus == constant('TRANSACTION_STATUS_RELEASE', saleOrderHeader) or saleOrderHeader.transactionStatus == constant('TRANSACTION_STATUS_HOLD', saleOrderHeader) %}
+        {% if saleOrderHeader.isOnHold == false %}
+            {% if is_granted('ROLE_APPROVAL') %}
+                <div class="d-inline-block">{{ include('sale/sale_order_header/_reject_form.html.twig') }}</div>
+                <div class="d-inline-block">{{ include('sale/sale_order_header/_approve_form.html.twig') }}</div>
+            {% endif %}
+            <div class="d-inline-block">{{ include('sale/sale_order_header/_hold_form.html.twig') }}</div>
+        {% else %}
+            <div class="d-inline-block">{{ include('sale/sale_order_header/_release_form.html.twig') }}</div>
+        {% endif %}
+    {% endif %}
+    
+    {% if (is_granted('ROLE_MARKETING')) %}
+        <div class="text-center">
+            {% if saleOrderHeader.transactionFileExtension == 'pdf' %}
+                <a target="_blank" href="{{ asset('uploads/sale-order/' ~ saleOrderHeader.id ~ '.' ~ saleOrderHeader.transactionFileExtension) }}">Sale Order PDF File</a>
+            {% elseif saleOrderHeader.transactionFileExtension == 'jpg' or saleOrderHeader.transactionFileExtension == 'jpeg' or saleOrderHeader.transactionFileExtension == 'png' %}
+                <img width="512px" height="512px" src="{{ asset('uploads/sale-order/' ~ saleOrderHeader.id ~ '.' ~ saleOrderHeader.transactionFileExtension) }}" alt="Sale Order Image" />
+            {% elseif saleOrderHeader.transactionFileExtension == 'xls' or saleOrderHeader.transactionFileExtension == 'xlsx' %}
+                <a target="_blank" href="{{ asset('uploads/sale-order/' ~ saleOrderHeader.id ~ '.' ~ saleOrderHeader.transactionFileExtension) }}">Sale Order Excel File</a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

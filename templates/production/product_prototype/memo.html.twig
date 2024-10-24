@@ -1,0 +1,376 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Memo' %}
+
+{% block body %}
+    <div class="memo">
+        <div class="note" style="font-size: 10px">
+            <div class="table full">
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label"><img id="logo" alt="logo" max-height="300px" src="{{ asset('images/Logo.jpg') }}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label" style="font-size: 14px; text-align: center">FORMULIR</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label" style="font-size: 18px; text-align: center">FORMULIR PRODUK BARU</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                                <div class="cell label">No Dokumen</div>
+                                <div class="cell label">:</div>
+                                <div class="cell label">F/PCK/PPIC/8.3-1</div>
+                        </div>
+                        <div class="row">
+                                <div class="cell label">Revisi</div>
+                                <div class="cell label">:</div>
+                                <div class="cell label">0</div>
+                        </div>
+                        <div class="row">
+                                <div class="cell label">Tanggal</div>
+                                <div class="cell label">:</div>
+                                <div class="cell label"></div>
+                        </div>
+                        <div class="row">
+                                <div class="cell label">Halaman</div>
+                                <div class="cell label">:</div>
+                                <div class="cell label">1 dari 1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <hr />
+        
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <div class="note">
+                <div class="table full">
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <table class="detail">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center" colspan="2">PROSES DEVELOPMENT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="text-align: center; width: 10%">{{ constant('DEVELOPMENT_TYPE_EP', productPrototype) in productPrototype.developmentTypeList ? 'V' : '' }}</td>
+                                            <td>EP (Engineering Piloting)</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center">{{ constant('DEVELOPMENT_TYPE_FEP', productPrototype) in productPrototype.developmentTypeList ? 'V' : '' }}</td>
+                                            <td>FEP (Final Engineering Piloting)</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center">{{ constant('DEVELOPMENT_TYPE_PP', productPrototype) in productPrototype.developmentTypeList ? 'V' : '' }}</td>
+                                            <td>PP (Production Planning)</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center">{{ constant('DEVELOPMENT_TYPE_PS', productPrototype) in productPrototype.developmentTypeList ? 'V' : '' }}</td>
+                                            <td>PS (Production Schedule)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <table class="detail">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center" colspan="2">SUMBER DATA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="text-align: center">{{ constant('DATA_SOURCE_HARD_FA', productPrototype) in productPrototype.dataSource ? 'V' : '' }}</td>
+                                            <td>Hard FA</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center">{{ constant('DATA_SOURCE_EMAIL', productPrototype) in productPrototype.dataSource ? 'V' : '' }}</td>
+                                            <td>Email</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center">{{ constant('DATA_SOURCE_CD', productPrototype) in productPrototype.dataSource ? 'V' : '' }}</td>
+                                            <td>CD</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center">{{ constant('DATA_SOURCE_PRINT_SAMPLE', productPrototype) in productPrototype.dataSource ? 'V' : '' }}</td>
+                                            <td>Sample Cetakan</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+                       
+        <fieldset class="border border-secondary rounded mb-3 p-3">                     
+            <div class="note">
+                <div class="table full">
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">Hari / Tanggal:</div>
+                                <div class="cell value">{{ productPrototype.transactionDate ? productPrototype.transactionDate|date('d M Y') : '' }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Marketing</div>
+                                <div class="cell value">{{ productPrototype.employee.name|default }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Customer</div>
+                                <div class="cell value">{{ productPrototype.customer.company|default }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Kode Design</div>
+                                <div class="cell value">{{ productPrototype.designCode.codeNumber|default }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+                    
+        <fieldset class="border border-secondary rounded mb-3 p-3">  
+            <table class="detail">
+                <thead>
+                    <tr>
+                        <th colspan='3' class='center'>PRODUCTS</th>
+                    </tr>
+                    <tr>
+                        <th class="center">Item Code</th>
+                        <th class="center">Item Name</th>
+                        <th class="center">Quantity (pcs)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for productPrototypeDetail in productPrototype.productPrototypeDetails %}
+                    <tr>
+                        <td>{{ productPrototypeDetail.product.code|default }}</td>
+                        <td>{{ productPrototypeDetail.product.name|default }}</td>
+                        <td>{{ productPrototypeDetail.quantity|default|number_format(2) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </fieldset>
+                
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <div class="note">
+                <h3>SPESIFIKASI</h3>
+                <div class="table full">
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">Material Kertas</div>
+                                <div class="cell value">{{ productPrototype.paper.paperNameSizeCombination|default }} Gram</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Warna / Pantone</div>
+                                <div class="cell value">{{ productPrototype.color }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Jumlah Mata (up/sheet)</div>
+                                <div class="cell value">{{ productPrototype.quantityBlade }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+                     
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <div class="note">
+                <h3>FINISHING</h3>
+                <div class="table full">
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">Laminating</div>
+                                <div class="cell value">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('LAMINATING_MATT', productPrototype) in productPrototype.laminatingList ? 'V' : '' }}</td>
+                                                <td>Matt</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('LAMINATING_DOV', productPrototype) in productPrototype.laminatingList ? 'V' : '' }}</td>
+                                                <td>Doff</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                                                
+                            <div class="row">
+                                <div class="cell label">Coating</div>
+                                <div class="cell value">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('COATING_OPV_MATT', productPrototype) in productPrototype.coatingList ? 'V' : '' }}</td>
+                                                <td style="min-width: 90px">OPV Matt</td>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('COATING_WB_MATT', productPrototype) in productPrototype.coatingList ? 'V' : '' }}</td>
+                                                <td style="min-width: 90px">WB Matt</td>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('COATING_UV_GLOSSY_FULL', productPrototype) in productPrototype.coatingList ? 'V' : '' }}</td>
+                                                <td style="min-width: 90px">UV Glossy Full</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('COATING_OPV_GLOSSY', productPrototype) in productPrototype.coatingList ? 'V' : '' }}</td>
+                                                <td style="min-width: 150px">OPV Glossy</td>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('COATING_WB_GLOSSY_FULL', productPrototype) in productPrototype.coatingList ? 'V' : '' }}</td>
+                                                <td style="min-width: 150px">WB Glossy Full</td>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('COATING_UV_GLOSSY_FREE', productPrototype) in productPrototype.coatingList ? 'V' : '' }}</td>
+                                                <td style="min-width: 150px">UV Glossy Free</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td style="min-width: 90px"></td>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('COATING_WB_GLOSSY_FREE', productPrototype) in productPrototype.coatingList ? 'V' : '' }}</td>
+                                                <td style="min-width: 90px">WB Glossy Free</td>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('COATING_UV_GLOSSY_SPOT', productPrototype) in productPrototype.coatingList ? 'V' : '' }}</td>
+                                                <td style="min-width: 90px">UV Glossy Spot</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('COATING_WB_CALENDERING', productPrototype) in productPrototype.coatingList ? 'V' : '' }}</td>
+                                                <td style="min-width: 90px">WB Calendering</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                                                
+                            <div class="row">
+                                <div class="cell label">Proses</div>
+                                <div class="cell value">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('PROCESS_PRINTING', productPrototype) in productPrototype.processList ? 'V' : '' }}</td>
+                                                <td style="width: 90px">Printing</td>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('PROCESS_HOTSTAMP', productPrototype) in productPrototype.processList ? 'V' : '' }}</td>
+                                                <td style="width: 150px">Hot Stamp</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('PROCESS_COATING', productPrototype) in productPrototype.processList ? 'V' : '' }}</td>
+                                                <td style="width: 90px">Coating</td>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('PROCESS_LOCK_BOTTOM', productPrototype) in productPrototype.processList ? 'V' : '' }}</td>
+                                                <td style="width: 150px">Lem Lock Bottom</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('PROCESS_DIECUT', productPrototype) in productPrototype.processList ? 'V' : '' }}</td>
+                                                <td style="width: 90px">Diecut</td>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('PROCESS_STRAIGHT_JOINT', productPrototype) in productPrototype.processList ? 'V' : '' }}</td>
+                                                <td style="width: 150px">Lem Straight Joint</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('PROCESS_EMBOSS', productPrototype) in productPrototype.processList ? 'V' : '' }}</td>
+                                                <td style="width: 90px">Emboss</td>
+                                                <td style="text-align: center; border: 1px solid; min-width: 9px">{{ constant('PROCESS_JILID', productPrototype) in productPrototype.processList ? 'V' : '' }}</td>
+                                                <td style="width: 150px">Jilid Buku</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+                        
+        <hr />
+                        
+        <div class="note">
+            <div class="table full">
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label">Keterangan</div>
+                            <div class="cell value">{{ productPrototype.note|default|nl2br }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+               
+        <hr />
+                        
+        <div class="table full">
+            <div class="cell sig ">
+                <div>Dibuat oleh,</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">Marketing</div>
+            </div>
+            <div class="cell sig">
+                <div class="text-right">Menyetujui</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div>Manager Marketing</div>
+            </div>
+            <div class="cell sig">
+                <div></div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">&nbsp;</div>
+                <div>General Manager</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('memo') }}
+    <style>
+        .col:nth-child(1) { width: 50% }
+        .col:nth-child(2) { width: 50% }
+        
+        .col:nth-child(1) .label { width: 35% }
+        .col:nth-child(1) .value { width: 65% }
+        .col:nth-child(2) .label { width: 35% }
+        .col:nth-child(2) .value { width: 65% }
+        
+        .sig:nth-child(1) { width: 50% }
+        .sig:nth-child(2) { width: 50% }
+    </style>
+{% endblock %}

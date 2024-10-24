@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+for module in $@
+do
+  for file in ./src/Entity/$module/*
+  do
+    name=${file%.php}
+    name=${name##*/}
+    class="$module\\$name"
+    php bin/console custom:clear:crud $class && composer dump-autoload && php bin/console make:crud $class && php bin/console custom:finish:crud $class
+  done
+done

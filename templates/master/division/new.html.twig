@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add Division' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_division_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/division/_form.html.twig') }}
+{% endblock %}

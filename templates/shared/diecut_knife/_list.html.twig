@@ -1,0 +1,67 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, diecutKnives) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="diecut-knife-table" data-controller="data-table">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'code') }}>
+                    Kode Pisau{{ grid.sort_char(form.sort.code.vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    Nama Pisau{{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th style="min-width: 100px">
+                    Location
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'printingSize') }}>
+                    Kris Cetak {{ grid.sort_char(form.sort.printingSize.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'note') }}>
+                    Note {{ grid.sort_char(form.sort.note.vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    P<input style="width: 100px" type="text" {{ grid.filter_link_item(form, 'code') }} value="{{ form.filter.code.1.vars.value }}" />-
+                    R<input style="width: 100px" type="text" {{ grid.filter_link_item(form, 'version') }} value="{{ form.filter.version.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text"{{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" size="6" {{ grid.filter_link_item(form, 'location') }} value="{{ form.filter.location.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" size="10" {{ grid.filter_link_item(form, 'printingSize') }} value="{{ form.filter.printingSize.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'note') }} value="{{ form.filter.note.1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for diecutKnife in diecutKnives %}
+                <tr data-bs-dismiss="modal" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'diecutKnifeId': diecutKnife.id, 
+                    'diecutKnifeCodeNumber': diecutKnife.codeNumber, 
+                    'diecutKnifeNote': diecutKnife.note}|json_encode }}">
+                    <td>{{ diecutKnife.codeNumber }}</td>
+                    <td>{{ diecutKnife.name }}</td>
+                    <td>{{ diecutKnife.location }}</td>
+                    <td>{{ diecutKnife.printingSize }}</td>
+                    <td>{{ diecutKnife.note }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, diecutKnives) }}

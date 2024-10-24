@@ -1,0 +1,123 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Sale Payment' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_sale_sale_payment_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_SALE_PAYMENT_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_sale_sale_payment_header_edit', {'id': salePaymentHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_SALE_PAYMENT_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_sale_sale_payment_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Payment #</th>
+                <td>{{ salePaymentHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ salePaymentHeader.transactionDate ? salePaymentHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Customer</th>
+                <td>{{ salePaymentHeader.customer.company }}</td>
+            </tr>
+            <tr>
+                <th>Cek / Giro #</th>
+                <td>{{ salePaymentHeader.referenceNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Cek / Giro</th>
+                <td>{{ salePaymentHeader.referenceDate ? salePaymentHeader.referenceDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Jenis Pembayaran</th>
+                <td>{{ salePaymentHeader.paymentType.name }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ salePaymentHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ salePaymentHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ salePaymentHeader.createdTransactionDateTime ? salePaymentHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ salePaymentHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ salePaymentHeader.modifiedTransactionDateTime ? salePaymentHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ salePaymentHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Invoice #</th>
+                <th>Jatuh Tempo</th>
+                <th>Memo</th>
+                <th>Akun</th>
+                <th>Invoice</th>
+                <th colspan="2">PPh</th>
+                <th>Piutang</th>
+                <th>Payment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for salePaymentDetail in salePaymentHeader.salePaymentDetails %}
+                {% if salePaymentDetail.isCanceled == false and salePaymentDetail.amount > 0 %}
+                    <tr>
+                        <td>{{ salePaymentDetail.saleInvoiceHeader.codeNumber|default }}</td>
+                        <td>{{ salePaymentDetail.saleInvoiceHeader.dueDate ? salePaymentDetail.saleInvoiceHeader.dueDate|date('Y-m-d') : '' }}</td>
+                        <td>{{ salePaymentDetail.memo|default }}</td>
+                        <td>{{ salePaymentDetail.account.name|default }}</td>
+                        <td style="text-align: right">{{ salePaymentDetail.invoiceAmount|default|number_format(2) }}</td>
+                        <td style="text-align: right">
+                            {% if salePaymentDetail.serviceTaxMode == constant('SERVICE_TAX_MODE_NON_TAX', salePaymentDetail) %}
+                                0.00%
+                            {% elseif salePaymentDetail.serviceTaxMode == constant('SERVICE_TAX_MODE_TAX', salePaymentDetail) %}
+                                {{ salePaymentDetail.serviceTaxPercentage }}%
+                            {% endif %}
+                        </td>
+                        <td style="text-align: right">{{ salePaymentDetail.serviceTaxNominal|default|number_format(2) }}</td>
+                        <td style="text-align: right">{{ salePaymentDetail.receivableAmount|default|number_format(2) }}</td>
+                        <td style="text-align: right">{{ salePaymentDetail.amount|default|number_format(2) }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7" style="text-align: right"><strong>Total</strong></td>
+                <td style="text-align: right"><strong>{{ salePaymentHeader.totalReceivable|default|number_format(2) }}</strong></td>
+                <td style="text-align: right"><strong>{{ salePaymentHeader.totalAmount|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="8" style="text-align: right"><strong>Admin Fee</strong></td>
+                <td style="text-align: right"><strong>{{ salePaymentHeader.administrationFee|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="8" style="text-align: right"><strong>Jumlah Terima</strong></td>
+                <td style="text-align: right"><strong>{{ salePaymentHeader.receivedAmount|default|number_format(2) }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    {#{{ include('sale/sale_payment_header/_delete_form.html.twig') }}#}
+{% endblock %}

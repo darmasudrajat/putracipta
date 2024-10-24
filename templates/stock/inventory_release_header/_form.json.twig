@@ -1,0 +1,21 @@
+{
+    "totalQuantity": "{{ inventoryReleaseHeader.totalQuantity|default|number_format(2) }}",
+    "inventoryReleaseMaterialDetails": {
+        {%- for inventoryReleaseMaterialDetailForm in form.inventoryReleaseMaterialDetails -%}
+            {%- set inventoryReleaseMaterialDetail = inventoryReleaseMaterialDetailForm.vars.data -%}
+            "{{ inventoryReleaseMaterialDetailForm.vars.name }}": {
+                "quantityCurrent": "{{ inventoryReleaseMaterialDetail.quantityCurrent|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    },
+    "inventoryReleasePaperDetails": {
+        {%- for inventoryReleasePaperDetailForm in form.inventoryReleasePaperDetails -%}
+            {%- set inventoryReleasePaperDetail = inventoryReleasePaperDetailForm.vars.data -%}
+            "{{ inventoryReleasePaperDetailForm.vars.name }}": {
+                "quantityCurrent": "{{ inventoryReleasePaperDetail.quantityCurrent|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

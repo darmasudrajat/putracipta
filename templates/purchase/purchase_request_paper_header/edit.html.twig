@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Purchase Request Paper Kertas' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_purchase_purchase_request_paper_header_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_purchase_purchase_request_paper_header_show', {'id': purchaseRequestPaperHeader.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('purchase/purchase_request_paper_header/_form.html.twig') }}
+{% endblock %}

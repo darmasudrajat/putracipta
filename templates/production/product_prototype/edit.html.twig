@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Formulir Produk Baru' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_product_prototype_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_production_product_prototype_show', {'id': productPrototype.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('production/product_prototype/_form.html.twig') }}
+{% endblock %}

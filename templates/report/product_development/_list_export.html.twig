@@ -1,0 +1,106 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>Laporan Pengembangan Produk Baru</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="28"></th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+            <th colspan="7" style="text-align: center"><strong>EP Development</strong></th>
+            <th colspan="7" style="text-align: center"><strong>FEP Development</strong></th>
+            <th colspan="7" style="text-align: center"><strong>PP / PS Development</strong></th>
+            <th colspan="3"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Pengembangan #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Form Produk Baru #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Customer</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kode Design</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Proses</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>PIC</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Terima file artwork and sample</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Konfirmasi hasil review file ke customer</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Pembuatan pisau diecut ke subcon. (kirim file)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Pembuatan film dieline (kirim file)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Penyerahan gambar / sample ke produksi</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Penyerahan pisau diecut ke produksi (1 up)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Penyerahan gambar / film dieline ke produksi</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Terima file artwork and sample</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Konfirmasi hasil review file ke customer</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Pembuatan pisau diecut ke subcon. (kirim file)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Pembuatan film dieline (kirim file)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Penyerahan gambar / sample ke produksi</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Penyerahan pisau diecut ke produksi (1 up)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Penyerahan gambar / film dieline ke produksi</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Terima file artwork and sample</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Konfirmasi hasil review file ke customer</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Pembuatan pisau diecut ke subcon. (kirim file)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Pembuatan film dieline (kirim file)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Penyerahan gambar / sample ke produksi</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Penyerahan pisau diecut ke produksi (1 up)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Penyerahan gambar / film dieline ke produksi</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kode Account</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Nama Account</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Description</strong></th>
+        </tr>
+        <tr>
+            <th colspan="20"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for productDevelopment in productDevelopments %}
+            {% for productDevelopmentDetail in productDevelopment.productDevelopmentDetails %}
+                <tr>
+                    <td style="text-align: left">{{ productDevelopment.codeNumber|default }}</td>
+                    <td style="text-align: left">{{ productDevelopment.transactionDate|default ? productDevelopment.transactionDate|date('j M Y') }}</td>
+                    <td style="text-align: left">{{ productDevelopment.productPrototype.codeNumber|default }}</td>
+                    <td style="text-align: left">{{ productDevelopment.productPrototype.customer.company|default }}</td>
+                    <td style="text-align: left">{{ productDevelopment.productPrototype.designCode.codeNumber|default }}</td>
+                    <td style="text-align: left">{{ productDevelopment.developmentTypeList|default ? productDevelopment.developmentTypeList|join(', ') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.employeeDesigner.name|default }}</td>
+                    <td style="text-align: left">{{ productDevelopment.note|default }}</td>
+                    <td style="text-align: left">{{ productDevelopment.epArtworkFileDate ? productDevelopment.epArtworkFileDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.epCustomerReviewDate ? productDevelopment.epCustomerReviewDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.epSubconDiecutDate ? productDevelopment.epSubconDiecutDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.epDielineDevelopmentDate ? productDevelopment.epDielineDevelopmentDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.epImageDeliveryProductionDate ? productDevelopment.epImageDeliveryProductionDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.epDiecutDeliveryProductionDate ? productDevelopment.epDiecutDeliveryProductionDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.epDielineDeliveryProductionDate ? productDevelopment.epDielineDeliveryProductionDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.fepArtworkFileDate ? productDevelopment.fepArtworkFileDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.fepCustomerReviewDate ? productDevelopment.fepCustomerReviewDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.fepSubconDiecutDate ? productDevelopment.fepSubconDiecutDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.fepDielineDevelopmentDate ? productDevelopment.fepDielineDevelopmentDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.fepImageDeliveryProductionDate ? productDevelopment.fepImageDeliveryProductionDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.fepDiecutDeliveryProductionDate ? productDevelopment.fepDiecutDeliveryProductionDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.fepDielineDeliveryProductionDate ? productDevelopment.fepDielineDeliveryProductionDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.psArtworkFileDate ? productDevelopment.psArtworkFileDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.psCustomerReviewDate ? productDevelopment.psCustomerReviewDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.psSubconDiecutDate ? productDevelopment.psSubconDiecutDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.psDielineDevelopmentDate ? productDevelopment.psDielineDevelopmentDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.psImageDeliveryProductionDate ? productDevelopment.psImageDeliveryProductionDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.psDiecutDeliveryProductionDate ? productDevelopment.psDiecutDeliveryProductionDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopment.psDielineDeliveryProductionDate ? productDevelopment.psDielineDeliveryProductionDate|date('j M Y') : '' }}</td>
+                    <td style="text-align: left">{{ productDevelopmentDetail.product.code|default }}</td>
+                    <td style="text-align: left">{{ productDevelopmentDetail.product.name|default }}</td>
+                    <td style="text-align: left">{{ productDevelopmentDetail.product.productLengthWidthHeightCombination|default }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>

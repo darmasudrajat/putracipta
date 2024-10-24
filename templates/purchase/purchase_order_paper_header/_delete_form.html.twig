@@ -1,0 +1,10 @@
+<form method="post" action="{{ path('app_purchase_purchase_order_paper_header_delete', {'id': purchaseOrderPaperHeader.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ purchaseOrderPaperHeader.id) }}">
+    <button class="btn btn-danger btn-sm"
+            data-controller="dom-element"
+            data-action="dom-element#confirm"
+            data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+        Cancel Transaction
+    </button>
+    <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+</form>

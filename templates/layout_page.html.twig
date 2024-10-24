@@ -1,0 +1,215 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                    <a href="{{ path('app_home_page') }}" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <span class="fs-5 d-none d-sm-inline">
+                            <strong>PT Putracipta Karindomas (TRIAL)</strong>
+                        </span>
+                    </a>
+
+                    {% import 'app/navigation_menu.html.twig' as menu %}
+
+                    {{ menu.start() }}
+                        {{ menu.render_1('MENU_DASHBOARD') }}
+                       
+                        {{ menu.render_2('MENU_ADMINISTRATION', {
+                            'MENU_USER_MANAGEMENT': 'User Management', 
+                            'MENU_TRANSACTION_SETTING': 'Transaction Setting'
+                        }) }}
+                        {{ menu.render_2('MENU_MASTER', {
+                            'MENU_EMPLOYEE': 'Employee', 
+                            'MENU_SUPPLIER': 'Supplier', 
+                            'MENU_CUSTOMER': 'Customer',
+                            'MENU_PRODUCT': 'Product', 
+                            'MENU_PAPER': 'Kertas', 
+                            'MENU_MATERIAL': 'Material',
+                            'MENU_DESIGN_CODE': 'Design Code', 
+                            'MENU_DIECUT_KNIFE': 'Pisau Diecut', 
+                            'MENU_DIELINE_MILLAR': 'Millar',
+                            'MENU_WORK_ORDER_PROCESS': 'WO Process', 
+                            'MENU_WORK_ORDER_DISTRIBUTION': 'WO Distribusi', 
+                            'MENU_WORK_ORDER_CHECK_SHEET': 'WO Check Sheet',
+                            'MENU_MACHINE_PRINTING': 'Mesin Cetak', 
+                            'MENU_MATERIAL_CATEGORY': 'Kategori Material', 
+                            'MENU_MATERIAL_SUB_CATEGORY': 'Sub Kategori Material',
+                            'MENU_WAREHOUSE': 'Gudang', 
+                            'MENU_TRANSPORTATION': 'Kendaraan',
+                            'MENU_DIVISION': 'Divisi Employee',
+                            'MENU_UNIT': 'Satuan Barang', 
+                            'MENU_PAYMENT_TYPE': 'Jenis Pembayaran', 
+                            'MENU_CHART_OF_ACCOUNT': 'Chart of Account',
+                            'MENU_ACCOUNT_CATEGORY': 'COA Category',
+                        }) }}
+                        {{ menu.render_2('MENU_PURCHASE', {
+                            'MENU_PURCHASE': 'PEMBELIAN', 
+                            'MENU_PURCHASE_ORDER_MATERIAL': 'Order Pembelian Material', 
+                            'MENU_PURCHASE_ORDER_PAPER': 'Order Pembelian Kertas',
+                            'MENU_PURCHASE_INVOICE': 'Invoice Pembelian', 
+                            'MENU_PURCHASE_PAYMENT': 'Pembayaran Pembelian'
+                        }) }}
+                        {{ menu.render_2('MENU_SALE', {
+                            'MENU_SALE': 'PENJUALAN', 
+                            'MENU_SALE': 'PENJUALAN', 
+                            'MENU_SALE_ORDER': 'Customer Order', 
+                            'MENU_SALE_INVOICE': 'Faktur Penjualan', 
+                            'MENU_SALE_PAYMENT': 'Pelunasan Penjualan'
+                        }) }}
+                        
+                        {{ menu.render_2('MENU_WAREHOUSE_MATERIAL', {
+                            'MENU_WAREHOUSE_MATERIAL': 'GUDANG MATERIAL', 
+                            'MENU_PURCHASE_REQUEST_MATERIAL': 'Permintaan Pembelian Material', 
+                            'MENU_PURCHASE_REQUEST_PAPER': 'Permintaan Pembelian Kertas',
+                            'MENU_PURCHASE_RECEIVE': 'Penerimaan Material', 
+                            'MENU_PURCHASE_RETURN': 'Retur Pembelian', 
+                            'MENU_ADJUSTMENT_STOCK': 'Penyesuaian Stok', 
+                            'MENU_MATERIAL_RELEASE': 'Pengeluaran Material', 
+                            'MENU_STOCK_TRANSFER': 'Transfer Stok'
+                        }) }}
+                        {{ menu.render_2('MENU_WAREHOUSE_FINISHED_GOODS', {
+                            'MENU_WAREHOUSE_FINISHED_GOODS': 'GUDANG FG', 
+                            'MENU_SALE_DELIVERY': 'Pengiriman Barang', 
+                            'MENU_SALE_RETURN': 'Retur Penjualan', 
+                            'MENU_PRODUCTION_RECEIVE': 'Penerimaan Produksi FG',
+                            'MENU_ADJUSTMENT_STOCK_FINISHED_GOODS': 'Penyesuaian Stok',
+                            'MENU_STOCK_SALE_ORDER_DETAIL': 'Tanggal Kirim PO'
+                        }) }}
+                        {{ menu.render_2('MENU_PRODUCTION', {
+                            'MENU_PRODUCTION': 'PRODUKSI', 
+                            'MENU_PRODUCT_PROTOTYPE': 'Formulir Produk Baru', 
+                            'MENU_DEVELOPMENT_PRODUCT': 'Development Produk', 
+                            'MENU_MASTER_ORDER': 'Master Order',
+                            'MENU_MATERIAL_REQUEST': 'Permintaan Produksi', 
+                            'MENU_QUALITY_CONTROL_SORTING': 'QC Sortir', 
+                        }) }}
+                        {{ menu.render_2('MENU_FINANCE', {
+                            'MENU_FINANCE': 'KEUANGAN', 
+                            'MENU_DEPOSIT': 'Penerimaan kas / bank', 
+                            'MENU_EXPENSE': 'Pengeluaran kas / bank'
+                        }) }}
+                        {{ menu.render_2('MENU_REPORT_PURCHASE', {
+                            'MENU_REPORT_PURCHASE': 'REPORT PEMBELIAN', 
+                            'MENU_REPORT_PURCHASE_ORDER_MATERIAL': 'Pembelian Material',
+                            'MENU_REPORT_PURCHASE_ORDER_PAPER': 'Pembelian Kertas',
+                            'MENU_REPORT_SUPPLIER_PURCHASE_ORDER_MATERIAL': 'Pembelian Material per Supplier',
+                            'MENU_REPORT_SUPPLIER_PURCHASE_ORDER_PAPER': 'Pembelian Kertas per Supplier',
+                            'MENU_REPORT_MATERIAL_PURCHASE_ORDER': 'Pembelian per Material',
+                            'MENU_REPORT_PAPER_PURCHASE_ORDER': 'Pembelian per Kertas'
+                        }) }}
+                        {{ menu.render_2('MENU_REPORT_SALE', {
+                            'MENU_REPORT_SALE': 'REPORT PENJUALAN', 
+                            'MENU_REPORT_SALE_ORDER': 'PO Customer', 
+                            'MENU_REPORT_SALE_ORDER_DETAIL': 'PO Detail', 
+                            'MENU_REPORT_SALE_ORDER_SUMMARY': 'PO Rekap', 
+                            'MENU_REPORT_SALE_ORDER_CUSTOMER': 'PO per Customer', 
+                            'MENU_REPORT_SALE_ORDER_PRODUCT': 'PO per Produk'
+                        }) }}
+                        {{ menu.render_2('MENU_REPORT_WAREHOUSE_MATERIAL', {
+                            'MENU_REPORT_WAREHOUSE_MATERIAL': 'REPORT GUDANG MATERIAL', 
+                            'MENU_REPORT_PURCHASE_REQUEST_MATERIAL': 'Permintaan Pembelian Material', 
+                            'MENU_REPORT_PURCHASE_REQUEST_PAPER': 'Permintaan Pembelian Kertas', 
+                            'MENU_REPORT_PURCHASE_RECEIVE': 'Penerimaan Pembelian', 
+                            'MENU_REPORT_PURCHASE_RETURN': 'Retur Pembelian', 
+                            'MENU_REPORT_ADJUSTMENT_STOCK': 'Penyesuaian Stok',
+                            'MENU_REPORT_INVENTORY_RELEASE_MATERIAL': 'Pengeluaran Material', 
+                            'MENU_REPORT_INVENTORY_RELEASE_PAPER': 'Pengeluaran Kertas', 
+                            'MENU_REPORT_STOCK_TRANSFER': 'Transfer Antar Gudang', 
+                            'MENU_REPORT_INVENTORY_STOCK_MATERIAL': 'Mutasi Stok Material',
+                            'MENU_REPORT_INVENTORY_STOCK_SUMMARY_MATERIAL': 'Stok Material',
+                            'MENU_REPORT_INVENTORY_STOCK_PAPER': 'Mutasi Stok Kertas',
+                            'MENU_REPORT_INVENTORY_STOCK_SUMMARY_PAPER': 'Stok Kertas', 
+                            'MENU_REPORT_SALE_DELIVERY': 'Pengiriman',
+                            'MENU_REPORT_SALE_RETURN': 'Retur Penjualan'
+                        }) }}
+                        {{ menu.render_2('MENU_REPORT_WAREHOUSE_FINISHED_GOODS', {
+                            'MENU_REPORT_WAREHOUSE_FINISHED_GOODS': 'REPORT GUDANG FG', 
+                            'MENU_REPORT_SALE_DELIVERY': 'Pengiriman',
+                            'MENU_REPORT_SALE_RETURN': 'Retur Penjualan',
+                            'MENU_REPORT_PRODUCTION_RECEIVE': 'Penerimaan Produksi', 
+                            'MENU_REPORT_PRODUCT_INVENTORY_RECEIVE': 'Penerimaan Produksi per Produk', 
+                            'MENU_REPORT_INVENTORY_STOCK_FINISHED_GOODS': 'Mutasi Stok FG', 
+                            'MENU_REPORT_INVENTORY_STOCK_SUMMARY_PRODUCT': 'Stok FG', 
+                        }) }}
+                        {{ menu.render_2('MENU_REPORT_PRODUCTION', {
+                            'MENU_REPORT_PRODUCTION': 'REPORT PRODUKSI', 
+                            'MENU_REPORT_NEW_PRODUCT': 'Formulir Produk Baru',
+                            'MENU_REPORT_DEVELOPMENT_PRODUCT': 'Development Produk',
+                            'MENU_REPORT_MASTER_ORDER': 'Master Order',
+                            'MENU_REPORT_QUALITY_CONTROL_SORTING': 'QC Sortir',
+                            'MENU_REPORT_INVENTORY_REQUEST_MATERIAL': 'Permintaan Produksi Material',
+                            'MENU_REPORT_INVENTORY_REQUEST_PAPER': 'Permintaan Produksi Kertas',
+                            'MENU_REPORT_DESIGN_CODE': 'Design Code',
+                            'MENU_REPORT_DIECUT_KNIFE': 'Pisau Diecut',
+                            'MENU_REPORT_DIELINE_MILLAR': 'Millar'
+                        }) }}
+                        {{ menu.render_2('MENU_REPORT_FINANCE', {
+                            'MENU_REPORT_FINANCE': 'REPORT KEUANGAN', 
+                            'MENU_REPORT_PURCHASE_INVOICE': 'Invoice Pembelian', 
+                            'MENU_REPORT_PURCHASE_PAYMENT': 'Pembayaran Pembelian',
+                            'MENU_REPORT_SALE_INVOICE': 'Invoice Penjualan', 
+                            'MENU_REPORT_SALE_PAYMENT': 'Pelunasan Penjualan',
+                            'MENU_REPORT_DEPOSIT': 'Penerimaan Kas/Bank',
+                            'MENU_REPORT_EXPENSE': 'Pengeluaran Kas/Bank',
+                            'MENU_REPORT_ACCOUNT_RECEIVABLE': 'Piutang Customer',
+                            'MENU_REPORT_ACCOUNT_PAYABLE': 'Hutang Supplier'
+                        }) }}
+                        {#{{ menu.render_1('MENU_MASTER', null, 'app_menu_master') }}
+                        {{ menu.render_1('MENU_REPORT', null, 'app_menu_report') }}#}
+                         {{ menu.render_2('MENU_PROSES_PRODUKSI',{
+                            
+                            'MENU_PROSES_PRODUKSI_CETAK': 'Hasil Cetak', 
+                         }) }}
+                        {{ menu.render_1('MENU_TRANSACTION_LOG') }}
+                    {{ menu.end() }}
+
+                    {{ render(controller('App\\Controller\\ReferralController::userProfile', {'userId': app.user.id})) }}
+                </div>
+            </div>
+            <div class="col-auto col-md-9 col-xl-10 py-3">
+                <div class="container-fluid">
+                    <div class="row d-print-none">
+                        <div class="col d-flex justify-content-start">
+                            {% block tooltip %}
+                                <h4>{{ block('title') }}</h4>
+                            {% endblock %}
+                        </div>
+                        <div class="col d-flex justify-content-end">
+                            <div class="d-gap">
+                                {% block toolbar %}{% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    {% set frontRoute = 'app_home_page' %}
+                    {% set mainRoute = user_menu.menuAttributes|map((attr, name) => user_menu.accessed(name) ? attr.route : '')|join('') %}
+                    {% set currentRoute = app.request.attributes.get('_route') %}
+                    {% if currentRoute != frontRoute and mainRoute != '' %}
+                        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                {% set controllerNames = app.request.attributes.get("_controller")|split('\\')|last|split('::') %}
+                                {% set controllerClass = controllerNames[0]|replace({'Controller': ''})|humanize %}
+                                {% set controllerAction = controllerNames[1]|humanize %}
+                                <li class="breadcrumb-item"><a href="{{ path(frontRoute) }}">Home</a></li>
+                                <li class="breadcrumb-item text-capitalize {{ mainRoute == currentRoute ? 'active' : '' }}">
+                                    {% if mainRoute == currentRoute %}
+                                        {{ controllerClass }}
+                                    {% else %}
+                                        <a href="{{ path(mainRoute) }}">{{ controllerClass }}</a>
+                                    {% endif %}
+                                </li>
+                                {% if mainRoute != currentRoute %}
+                                    <li class="breadcrumb-item text-capitalize active">{{ controllerAction }}</li>
+                                {% endif %}
+                            </ol>
+                        </nav>
+                        <br />
+                    {% endif %}
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

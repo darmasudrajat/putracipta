@@ -1,0 +1,147 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Master Data Lists' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col">  
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="table-info">
+                        <th>Produksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if user_menu.authorized('MENU_DESIGN_CODE') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_DESIGN_CODE'].route) }}" class="d-block text-start btn btn-light">Data Design Code</a></td>
+                        </tr>
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_DIECUT_KNIFE') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_DIECUT_KNIFE'].route) }}" class="d-block text-start btn btn-light">Data Pisau Diecut</a></td>
+                        </tr>
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_DIELINE_MILLAR') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_DIELINE_MILLAR'].route) }}" class="d-block text-start btn btn-light">Data Millar</a></td>
+                        </tr>
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_WORK_ORDER_PROCESS') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_WORK_ORDER_PROCESS'].route) }}" class="d-block text-start btn btn-light">Data WO Process</a></td>
+                        </tr>
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_WORK_ORDER_DISTRIBUTION') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_WORK_ORDER_DISTRIBUTION'].route) }}" class="d-block text-start btn btn-light">Data WO Distribusi</a></td>
+                        </tr>
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_WORK_ORDER_CHECK_SHEET') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_WORK_ORDER_CHECK_SHEET'].route) }}" class="d-block text-start btn btn-light">Data WO Check Sheet</a></td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="table-info">
+                        <th>Main</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if user_menu.authorized('MENU_SUPPLIER') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_SUPPLIER'].route) }}" class="d-block text-start btn btn-light">Data Supplier</a></td>
+                        </tr>
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_CUSTOMER') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_CUSTOMER'].route) }}" class="d-block text-start btn btn-light">Data Customer</a></td>
+                        </tr>
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_PRODUCT') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_PRODUCT'].route) }}" class="d-block text-start btn btn-light">Data Finished Goods</a></td>
+                        </tr>
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_PAPER') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_PAPER'].route) }}" class="d-block text-start btn btn-light">Data Kertas</a></td>
+                        </tr>
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_MATERIAL') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_MATERIAL'].route) }}" class="d-block text-start btn btn-light">Data Material</a></td>
+                        </tr>
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_EMPLOYEE') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_EMPLOYEE'].route) }}" class="d-block text-start btn btn-light">Data Employee</a></td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col"> 
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="table-info">
+                        <th class="w-50">Secondary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if user_menu.authorized('MENU_MACHINE_PRINTING') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_MACHINE_PRINTING'].route) }}" class="d-block text-start btn btn-light">Data Mesin Cetak</a></td>
+                        </tr>   
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_MATERIAL_CATEGORY') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_MATERIAL_CATEGORY'].route) }}" class="d-block text-start btn btn-light">Data Kategori Material</a></td>
+                        </tr>   
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_MATERIAL_SUB_CATEGORY') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_MATERIAL_SUB_CATEGORY'].route) }}" class="d-block text-start btn btn-light">Data Sub Kategori Material</a></td>
+                        </tr>   
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_WAREHOUSE') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_WAREHOUSE'].route) }}" class="d-block text-start btn btn-light">Data Gudang</a></td>
+                        </tr>   
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_TRANSPORTATION') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_TRANSPORTATION'].route) }}" class="d-block text-start btn btn-light">Data Kendaraan</a></td>
+                        </tr>   
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_UNIT') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_DIVISION'].route) }}" class="d-block text-start btn btn-light">Data Divisi Employee</a></td>
+                        </tr>
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_UNIT') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_UNIT'].route) }}" class="d-block text-start btn btn-light">Data Satuan Barang</a></td>
+                        </tr>   
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_PAYMENT_TYPE') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_PAYMENT_TYPE'].route) }}" class="d-block text-start btn btn-light">Data Jenis Pembayaran</a></td>
+                        </tr>   
+                    {% endif %}
+                    {% if user_menu.authorized('MENU_CHART_OF_ACCOUNT') %}
+                        <tr>
+                            <td><a href="{{ path(user_menu.menuAttributes['MENU_CHART_OF_ACCOUNT'].route) }}" class="d-block text-start btn btn-light">Data Chart of Account</a></td>
+                        </tr>   
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

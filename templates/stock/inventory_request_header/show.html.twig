@@ -1,0 +1,183 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Permintaan Produksi' %}
+
+{% block toolbar %}
+    {% if inventoryRequestHeader.requestStatus == constant('REQUEST_STATUS_OPEN', inventoryRequestHeader) or inventoryRequestHeader.requestStatus == constant('REQUEST_STATUS_PARTIAL', inventoryRequestHeader) %}
+        <div class="d-inline-block">{{ include('stock/inventory_request_header/_complete_form.html.twig') }}</div>
+    {% endif %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_stock_inventory_request_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_MATERIAL_REQUEST_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_stock_inventory_request_header_edit', {'id': inventoryRequestHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_MATERIAL_REQUEST_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_stock_inventory_request_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Request Number</th>
+                <td>{{ inventoryRequestHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ inventoryRequestHeader.transactionDate ? inventoryRequestHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Pickup Date</th>
+                <td>{{ inventoryRequestHeader.pickupDate ? inventoryRequestHeader.pickupDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Gudang</th>
+                <td>{{ inventoryRequestHeader.warehouse.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Divisi</th>
+                <td>{{ inventoryRequestHeader.division.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Part Number</th>
+                <td>{{ inventoryRequestHeader.partNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ inventoryRequestHeader.note|default }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ inventoryRequestHeader.requestStatus|default }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ inventoryRequestHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ inventoryRequestHeader.createdTransactionDateTime ? inventoryRequestHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ inventoryRequestHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ inventoryRequestHeader.modifiedTransactionDateTime ? inventoryRequestHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ inventoryRequestHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Kode</th>
+                {% if (inventoryRequestHeader.requestMode == 'paper') %}
+                    <th>Nama Kertas</th>
+                {% elseif (inventoryRequestHeader.requestMode == 'material') %} 
+                    <th>Nama Material</th>
+                {% endif %} 
+                <th>Qty</th>
+                <th>Satuan</th>
+                <th>Keterangan</th>
+                {% if (inventoryRequestHeader.requestMode == 'paper') %}
+                    <th>MO #</th>
+                    <th>Customer</th>
+                {% endif %} 
+            </tr>
+        </thead>
+        <tbody>
+            {% if (inventoryRequestHeader.requestMode == 'paper') %}
+                {% for inventoryRequestPaperDetail in inventoryRequestHeader.inventoryRequestPaperDetails %}
+                    {% if inventoryRequestPaperDetail.isCanceled == false and inventoryRequestPaperDetail.quantity > 0 %}
+                        <tr>
+                            <td>{{ inventoryRequestPaperDetail.paper.codeNumber|default }}</td>
+                            <td>{{ inventoryRequestPaperDetail.paper.name|default }}</td>
+                            <td>{{ inventoryRequestPaperDetail.quantity|default|number_format(2) }}</td>
+                            <td>{{ inventoryRequestPaperDetail.unit.name|default }}</td>
+                            <td>{{ inventoryRequestPaperDetail.memo|default }}</td>
+                            <td>{{ inventoryRequestPaperDetail.masterOrderHeader.codeNumber|default }}</td>
+                            <td>{{ inventoryRequestPaperDetail.masterOrderHeader.customer.company|default }}</td>
+                        </tr>
+                    {% endif %} 
+                {% endfor %}
+            {% elseif (inventoryRequestHeader.requestMode == 'material') %} 
+                {% for inventoryRequestMaterialDetail in inventoryRequestHeader.inventoryRequestMaterialDetails %}
+                    {% if inventoryRequestMaterialDetail.isCanceled == false and inventoryRequestMaterialDetail.quantity > 0 %}
+                        <tr>
+                            <td>{{ inventoryRequestMaterialDetail.material.code|default }}</td>
+                            <td>{{ inventoryRequestMaterialDetail.material.name|default }}</td>
+                            <td>{{ inventoryRequestMaterialDetail.quantity|default|number_format(2) }}</td>
+                            <td>{{ inventoryRequestMaterialDetail.unit.name|default }}</td>
+                            <td>{{ inventoryRequestMaterialDetail.memo|default }}</td>
+                        </tr>
+                    {% endif %} 
+                {% endfor %}
+            {% endif %} 
+        </tbody>
+    </table>
+         
+    <ul class="nav nav-tabs" id="inventory-release-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="inventory-release-header-tab" data-bs-toggle="tab" data-bs-target="#inventory-release-header-tab-pane" type="button" role="tab" aria-controls="inventory-release-header-tab-pane" aria-selected="true">Pengeluaran Material ke Produksi</button>
+        </li>
+    </ul>
+                
+    <div class="tab-content" id="inventory-release-tab-content">
+        <div class="tab-pane fade show active" id="inventory-release-header-tab-pane" role="tabpanel" aria-labelledby="inventory-release-header-tab" tabindex="0">
+            <legend class="float-none w-auto text-dark px-1">Data Pengeluaran Material ke Produksi</legend>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr class="bg-warning">
+                        <th>Pengeluaran #</th>
+                        <th>Tanggal</th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Satuan</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if (inventoryRequestHeader.requestMode == 'paper') %}
+                        {% for inventoryRequestPaperDetail in inventoryRequestHeader.inventoryRequestPaperDetails %}
+                            {% for inventoryReleasePaperDetail in inventoryRequestPaperDetail.inventoryReleasePaperDetails %}
+                                {% if inventoryReleasePaperDetail.isCanceled == false and inventoryReleasePaperDetail.quantity > 0 %}
+                                    <tr>
+                                        <td>{{ inventoryReleasePaperDetail.inventoryReleaseHeader.codeNumber|default }}</td>
+                                        <td>{{ inventoryReleasePaperDetail.inventoryReleaseHeader.transactionDate ? inventoryReleasePaperDetail.inventoryReleaseHeader.transactionDate|date('d M Y') : '' }}</td>
+                                        <td>{{ inventoryReleasePaperDetail.paper.name|default }}</td>
+                                        <td class="text-center">{{ inventoryReleasePaperDetail.quantity|default|number_format(0) }}</td>
+                                        <td>{{ inventoryReleasePaperDetail.paper.unit.name|default }}</td>
+                                        <td>{{ inventoryReleasePaperDetail.memo|default }}</td>
+                                    </tr>
+                                {% endif %} 
+                            {% endfor %}
+                        {% endfor %}
+                    {% elseif (inventoryRequestHeader.requestMode == 'material') %} 
+                        {% for inventoryRequestMaterialDetail in inventoryRequestHeader.inventoryRequestMaterialDetails %}
+                            {% for inventoryReleaseMaterialDetail in inventoryRequestMaterialDetail.inventoryReleaseMaterialDetails %}
+                                {% if inventoryReleaseMaterialDetail.isCanceled == false and inventoryReleaseMaterialDetail.quantity > 0 %}
+                                    <tr>
+                                        <td>{{ inventoryReleaseMaterialDetail.inventoryReleaseHeader.codeNumber|default }}</td>
+                                        <td>{{ inventoryReleaseMaterialDetail.inventoryReleaseHeader.transactionDate ? inventoryReleaseMaterialDetail.inventoryReleaseHeader.transactionDate|date('d M Y') : '' }}</td>
+                                        <td>{{ inventoryReleaseMaterialDetail.material.name|default }}</td>
+                                        <td class="text-center">{{ inventoryReleaseMaterialDetail.quantity|default|number_format(0) }}</td>
+                                        <td>{{ inventoryReleaseMaterialDetail.material.unit.name|default }}</td>
+                                        <td>{{ inventoryReleaseMaterialDetail.memo|default }}</td>
+                                    </tr>
+                                {% endif %} 
+                            {% endfor %}
+                        {% endfor %}
+                    {% endif %} 
+                </tbody>
+            </table>
+        </div>
+    </div>
+        
+    {#{{ include('stock/inventory_request_header/_delete_form.html.twig') }}#}
+{% endblock %}

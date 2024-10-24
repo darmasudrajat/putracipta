@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'New Sales Order' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_sale_sale_order_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('sale/sale_order_header/_form.html.twig') }}
+{% endblock %}

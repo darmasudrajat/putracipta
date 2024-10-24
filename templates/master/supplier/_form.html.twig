@@ -1,0 +1,104 @@
+{{ form_start(form) }}
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.company) }}
+            {{ form_row(form.address) }}
+            {{ form_row(form.phone) }}
+            {{ form_row(form.fax) }}
+            {{ form_row(form.email) }}
+            {{ form_row(form.taxNumber) }}
+            {{ form_row(form.paymentTerm) }}
+            {{ form_row(form.currency) }}
+            {{ form_row(form.account) }}
+            {{ form_row(form.note) }}
+            {{ form_row(form.isInactive) }}
+        </div>
+    </div>
+        
+    <fieldset class="border border-secondary rounded mb-3 p-3">
+        <legend class="float-none w-auto text-dark px-1">Details</legend>
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.categoryList) }}
+            </div>
+
+            <div class="col">
+                <div class="mb-3">
+                    <span id="name-counter" class="d-none">
+                        {% if supplier.name5 != '' %}
+                            5
+                        {% elseif supplier.name4 != '' %}
+                            4
+                        {% elseif supplier.name3 != '' %}
+                            3
+                        {% elseif supplier.name2 != '' %}
+                            2
+                        {% else %}
+                            1
+                        {% endif %}
+                    </span>
+                    <button type="button" class="btn btn-sm btn-outline-dark"
+                            data-controller="dom-element"
+                            data-action="dom-element#bind"
+                            data-dom-element-bind-specifications-param="{{ [
+                                {'destinationsTarget': '#name-counter', 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': 'parseInt($destinations[0].textContent) + 1'}, 'condition': 'parseInt($destination.textContent) < 5'},
+                                {'destinationsTarget': '#name-2-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 2'},
+                                {'destinationsTarget': '#name-3-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 3'},
+                                {'destinationsTarget': '#name-4-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 4'},
+                                {'destinationsTarget': '#name-5-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 5'},
+                            ]|json_encode }}">Add PIC</button>
+                    <button type="button" class="btn btn-sm btn-outline-dark"
+                            data-controller="dom-element"
+                            data-action="dom-element#bind"
+                            data-dom-element-bind-specifications-param="{{ [
+                                {'destinationsTarget': '#' ~ form.name5.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 5'},
+                                {'destinationsTarget': '#name-5-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 5'},
+                                {'destinationsTarget': '#' ~ form.name4.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 4'},
+                                {'destinationsTarget': '#name-4-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 4'},
+                                {'destinationsTarget': '#' ~ form.name3.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 3'},
+                                {'destinationsTarget': '#name-3-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 3'},
+                                {'destinationsTarget': '#' ~ form.name2.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 2'},
+                                {'destinationsTarget': '#name-2-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 2'},
+                                {'destinationsTarget': '#name-counter', 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': 'parseInt($destinations[0].textContent) - 1'}, 'condition': 'parseInt($destination.textContent) > 1'},
+                            ]|json_encode }}">Remove PIC</button>
+                    <span>&nbsp;(** Maksimum 5 PIC)</span>
+                </div>
+                <div id="name-1-container">
+                    {{ form_row(form.name) }}
+                </div>
+                <div id="name-2-container" {% if supplier.name2 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.name2) }}
+                </div>
+                <div id="name-3-container" {% if supplier.name3 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.name3) }}
+                </div>
+                <div id="name-4-container" {% if supplier.name4 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.name4) }}
+                </div>
+                <div id="name-5-container" {% if supplier.name5 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.name5) }}
+                </div>
+            </div>
+        </div>
+    </fieldset>
+                
+    <div class="d-grid">
+        <div class="row">
+            <div class="col text-center">
+                <a class="btn btn-danger" href="{{ path('app_master_supplier_index') }}"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                    Cancel
+                </a>
+                <button class="btn btn-success"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                    Save
+                </button>
+            </div>
+        </div>
+        <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+    </div>
+{{ form_end(form) }}

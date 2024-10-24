@@ -1,0 +1,285 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Memo' %}
+
+{% block body %}
+    <div class="memo">
+        <div class="note" style="font-size: 10px">
+            <div class="table full">
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label"><img id="logo" alt="logo" max-height="300px" src="{{ asset('images/Logo.jpg') }}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label" style="font-size: 14px; text-align: center">FORMULIR</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label" style="font-size: 18px; text-align: center">LAPORAN PENGEMBANGAN PRODUK BARU</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                                <div class="cell label">No Dokumen</div>
+                                <div class="cell label">:</div>
+                                <div class="cell label">F/PCK/PPIC/8.3-2</div>
+                        </div>
+                        <div class="row">
+                                <div class="cell label">Revisi</div>
+                                <div class="cell label">:</div>
+                                <div class="cell label">0</div>
+                        </div>
+                        <div class="row">
+                                <div class="cell label">Tanggal</div>
+                                <div class="cell label">:</div>
+                                <div class="cell label"></div>
+                        </div>
+                        <div class="row">
+                                <div class="cell label">Halaman</div>
+                                <div class="cell label">:</div>
+                                <div class="cell label">1 dari 1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <hr />
+        
+        <fieldset class="border border-secondary rounded mb-3 p-3">                     
+            <div class="note">
+                <div class="table full">
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <div class="cell label">PIC Design:</div>
+                                <div class="cell value">{{ productDevelopment.employeeDesigner.name|default }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="cell label">Nama Customer</div>
+                                <div class="cell value">{{ productDevelopment.productPrototype.customer.company|default }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+                       
+        <fieldset class="border border-secondary rounded mb-3 p-3">  
+            <table class="detail">
+                <thead>
+                    <tr>
+                        <th colspan='2' class='center'>PRODUCTS</th>
+                    </tr>
+                    <tr>
+                        <th class="center">Item Code</th>
+                        <th class="center">Item Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for productDevelopmentDetail in productDevelopment.productDevelopmentDetails %}
+                    <tr>
+                        <td>{{ productDevelopmentDetail.product.code|default }}</td>
+                        <td>{{ productDevelopmentDetail.product.name|default }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </fieldset>
+                  
+        <fieldset class="border border-secondary rounded mb-3 p-3">  
+            <div class="table full">
+                <div class="row">
+                    <div class="cell label">Model Layout : </div>
+                    <div style="min-width: 64px; min-height: 64px">
+                        <img id="upload" height="128px" alt="Layout Model Image" src="{{ asset('uploads/product-development/' ~ productDevelopment.fileName) }}">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+                      
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <div class="note">
+                <h3>SPESIFIKASI</h3>
+                <div class="table full">
+                    <div class="row">
+                        <table class="detail" style="{% if 'ep' not in productDevelopment.developmentTypeList %}display:none{% endif %}">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%">No.</th>
+                                    <th colspan="2">Progress</th>
+                                    <th style="width: 15%">Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="9" style="font-weight: bold; text-align: center; vertical-align: top">I.</td>
+                                    <td colspan="2" style="font-weight: bold; text-align: center;">EP Development</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">1.</td>
+                                    <td>Spesifikasi produk</td>
+                                    <td>{{ productDevelopment.epArtworkFileDate ? productDevelopment.epArtworkFileDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">2.</td>
+                                    <td>Acuan cetak (drawdown + kromalin)</td>
+                                    <td>{{ productDevelopment.epCustomerReviewDate ? productDevelopment.epCustomerReviewDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">3.</td>
+                                    <td>File untuk pembuatan plat</td>
+                                    <td>{{ productDevelopment.epSubconDiecutDate ? productDevelopment.epSubconDiecutDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">4.</td>
+                                    <td>Film milar</td>
+                                    <td>{{ productDevelopment.epDielineDevelopmentDate ? productDevelopment.epDielineDevelopmentDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">5.</td>
+                                    <td>Pisau</td>
+                                    <td>{{ productDevelopment.epImageDeliveryProductionDate ? productDevelopment.epImageDeliveryProductionDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">6.</td>
+                                    <td>Contoh text</td>
+                                    <td>{{ productDevelopment.epDiecutDeliveryProductionDate ? productDevelopment.epDiecutDeliveryProductionDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                {#<tr>
+                                    <td style="width: 5%; text-align: center">7.</td>
+                                    <td>Penyerahan gambar / film dieline ke produksi</td>
+                                    <td>{{ productDevelopment.epDielineDeliveryProductionDate ? productDevelopment.epDielineDeliveryProductionDate|date('d M Y') : '' }}</td>
+                                </tr>#}
+                            </tbody>
+                        </table>
+                                
+                        <table class="detail" style="{% if 'fep' not in productDevelopment.developmentTypeList %}display:none{% endif %}">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%">No.</th>
+                                    <th colspan="2">Progress</th>
+                                    <th style="width: 15%">Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="9" style="font-weight: bold; text-align: center; vertical-align: top">II.</td>
+                                    <td colspan="2" style="font-weight: bold; text-align: center;">FEP Development</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">1.</td>
+                                    <td>Spesifikasi produk</td>
+                                    <td>{{ productDevelopment.fepArtworkFileDate ? productDevelopment.fepArtworkFileDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">2.</td>
+                                    <td>Acuan cetak (drawdown + kromalin)</td>
+                                    <td>{{ productDevelopment.fepCustomerReviewDate ? productDevelopment.fepCustomerReviewDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">3.</td>
+                                    <td>File untuk pembuatan plat</td>
+                                    <td>{{ productDevelopment.fepSubconDiecutDate ? productDevelopment.fepSubconDiecutDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">4.</td>
+                                    <td>Film milar</td>
+                                    <td>{{ productDevelopment.fepDielineDevelopmentDate ? productDevelopment.fepDielineDevelopmentDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">5.</td>
+                                    <td>Pisau</td>
+                                    <td>{{ productDevelopment.fepImageDeliveryProductionDate ? productDevelopment.fepImageDeliveryProductionDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">6.</td>
+                                    <td>Contoh text</td>
+                                    <td>{{ productDevelopment.fepDiecutDeliveryProductionDate ? productDevelopment.fepDiecutDeliveryProductionDate|date('d M Y') : '' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="detail" style="{% if 'ps' not in productDevelopment.developmentTypeList %}display:none{% endif %}">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%">No.</th>
+                                    <th colspan="2">Progress</th>
+                                    <th style="width: 15%">Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="9" style="font-weight: bold; text-align: center; vertical-align: top">III.</td>
+                                    <td colspan="2" style="font-weight: bold; text-align: center;">PP / PS Development</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">1.</td>
+                                    <td>Spesifikasi produk</td>
+                                    <td>{{ productDevelopment.psArtworkFileDate ? productDevelopment.psArtworkFileDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">2.</td>
+                                    <td>Acuan cetak (drawdown + kromalin)</td>
+                                    <td>{{ productDevelopment.psCustomerReviewDate ? productDevelopment.psCustomerReviewDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">3.</td>
+                                    <td>File untuk pembuatan plat</td>
+                                    <td>{{ productDevelopment.psSubconDiecutDate ? productDevelopment.psSubconDiecutDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">4.</td>
+                                    <td>Film milar</td>
+                                    <td>{{ productDevelopment.psDielineDevelopmentDate ? productDevelopment.psDielineDevelopmentDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">5.</td>
+                                    <td>Pisau</td>
+                                    <td>{{ productDevelopment.psImageDeliveryProductionDate ? productDevelopment.psImageDeliveryProductionDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%; text-align: center">6.</td>
+                                    <td>Contoh text</td>
+                                    <td>{{ productDevelopment.psDiecutDeliveryProductionDate ? productDevelopment.psDiecutDeliveryProductionDate|date('d M Y') : '' }}</td>
+                                </tr>
+                                {#<tr>
+                                    <td style="width: 5%; text-align: center">7.</td>
+                                    <td>Penyerahan gambar / film dieline ke produksi</td>
+                                    <td>{{ productDevelopment.psDielineDeliveryProductionDate ? productDevelopment.psDielineDeliveryProductionDate|date('d M Y') : '' }}</td>
+                                </tr>#}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+{% endblock %}
+
+{% block javascripts %}{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('memo') }}
+    <style>
+        .col:nth-child(1) { width: 50% }
+        .col:nth-child(2) { width: 50% }
+        
+        .col:nth-child(1) .label { width: 35% }
+        .col:nth-child(1) .value { width: 65% }
+        .col:nth-child(2) .label { width: 35% }
+        .col:nth-child(2) .value { width: 65% }
+        
+        .sig:nth-child(1) { width: 50% }
+        .sig:nth-child(2) { width: 50% }
+    </style>
+{% endblock %}

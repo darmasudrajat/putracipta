@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add Pengembangan Produk' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_product_development_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('production/product_development/_form.html.twig') }}
+{% endblock %}

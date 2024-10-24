@@ -1,0 +1,65 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>Laporan Pengeluaran Kas/Bank</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Pengeluaran #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kode Account</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Nama Account</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+        </tr>
+        <tr>
+            <th></th>
+            <th style="text-align: center"><strong>Kode Account</strong></th>
+            <th style="text-align: center"><strong>Nama Account</strong></th>
+            <th style="text-align: center"><strong>Description</strong></th>
+            <th style="text-align: center"><strong>Amount</strong></th>
+            <th style="text-align: center"><strong>Memo</strong></th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for expenseHeader in expenseHeaders %}
+            <tr>
+                <td style="text-align: left">{{ expenseHeader.codeNumber|default }}</td>
+                <td style="text-align: left">{{ expenseHeader.transactionDate|default ? expenseHeader.transactionDate|date('j M Y') }}</td>
+                <td style="text-align: left">{{ expenseHeader.account.code|default }}</td>
+                <td style="text-align: left">{{ expenseHeader.account.name|default }}</td>
+                <td style="text-align: left">{{ expenseHeader.note|default }}</td>
+            </tr>
+            {% for expenseDetail in expenseHeader.expenseDetails %}
+                <tr>
+                    <td style="text-align: left"></td>
+                    <td style="text-align: left">{{ expenseDetail.account.code|default }}</td>
+                    <td style="text-align: left">{{ expenseDetail.account.name|default }}</td>
+                    <td style="text-align: left">{{ expenseDetail.description|default }}</td>
+                    <td style="text-align: right">{{ expenseDetail.amount|default }}</td>
+                    <td style="text-align: left">{{ expenseDetail.memo|default }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td style="text-align: right" colspan="4"><strong>Total Amount</strong></td>
+                <td style="text-align: right"><strong>{{ expenseHeader.totalAmount|default }}</strong></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

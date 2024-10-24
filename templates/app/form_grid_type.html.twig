@@ -1,0 +1,75 @@
+{% block filter_row %}
+    <div class="dropdown d-inline">
+        <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            Filter
+        </button>
+        <div class="dropdown-menu" style="min-width: 512px" data-controller="filter-panel" data-filter-panel-form-target-value="form[name={{ form.parent.vars.name }}]" data-filter-panel-value-count-reference-value="{{ operator_value_counts|json_encode }}">
+            <div class="m-3">
+                {{ form_widget(form, {'attr': {'data-action': 'filter-panel:clear->filter-panel#clear:self filter-panel:sync->filter-panel#sync:self'}}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block sort_row %}
+    <div class="dropdown d-inline">
+        <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            Sort
+        </button>
+        <div class="dropdown-menu" style="min-width: 256px" data-controller="sort-panel" data-sort-panel-form-target-value="form[name={{ form.parent.vars.name }}]">
+            <div class="m-3">
+                <div id="{{ form.vars.id }}" data-action="sort-panel:clear->sort-panel#clear:self sort-panel:sync->sort-panel#sync:self">
+                    {% for childForm in form.children %}
+                        <div>
+                            {{ field_label_list[childForm.vars.name] is not defined ? form_label(childForm) : field_label_list[childForm.vars.name] }}
+                        </div>
+                        <div>
+                            {{ form_widget(childForm, {'attr': {'class': 'form-select-sm', 'data-action': 'sort-panel#normalize', 'data-sort-panel-target': 'widget', 'data-widget-index': 0, 'data-widget-field-name': childForm.vars.name}}) }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pagination_row %}
+    <div class="dropdown d-inline">
+        <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            Pagination
+        </button>
+        <div class="dropdown-menu" style="min-width: 128px" data-controller="pagination-panel" data-pagination-panel-form-target-value="form[name={{ form.parent.vars.name }}]">
+            <div class="m-3">
+                <div id="{{ form.vars.id }}" data-action="pagination-panel:sync->pagination-panel#sync:self">
+                    <div>
+                        {{ form_label(form.size) }}
+                    </div>
+                    <div>
+                        {{ form_widget(form.size, {'attr': {'class': 'form-select-sm form-control-sm mb-3', 'data-pagination-panel-target': 'size'}}) }}
+                    </div>
+                    <div>
+                        {{ form_label(form.number) }}
+                    </div>
+                    <div>
+                        {{ form_widget(form.number, {'attr': {'class': 'form-control-sm mb-3', 'data-pagination-panel-target': 'number'}}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block filter_expression_row %}
+    <div>
+        {{ field_label is null ? form_label(form) : field_label }}
+    </div>
+    <div>
+        {% for index, childForm in form.children %}
+            {% set attr = {'style': 'display: inline', 'class': 'w-25 form-select-sm form-control-sm', 'data-filter-panel-target': 'widget', 'data-widget-index': childForm.vars.name, 'data-widget-field-name': form.vars.name} %}
+            {% if index == 0 %}
+                {% set attr = attr|merge({'data-action': 'filter-panel#normalize'}) %}
+            {% endif %}
+            {{ form_widget(childForm, {'attr': attr}) }}
+        {% endfor %}
+    </div>
+{% endblock %}

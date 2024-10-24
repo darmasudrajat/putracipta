@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Memo' %}
+
+{% block body %}
+    {% if constant == 'all' %}
+        {% set types = masterOrderHeader.masterOrderCheckSheetDetails|map(masterOrderCheckSheetDetail => masterOrderCheckSheetDetail.workOrderCheckSheet.memoConstantName) %}
+        {% for type in types %}
+            {% if type != '' %}
+                {{ include('production/master_order_header/_memo_check_sheet_' ~ type ~ '.html.twig') }}
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {{ include('production/master_order_header/_memo_check_sheet_' ~ constant ~ '.html.twig') }}
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('memo') }}
+    <style>
+        @media print {
+            {% if constant == 'printing_inspection' %}@page { size: landscape; }{% endif %}
+            div.memo { page-break-after: always }
+        }
+
+        /*
+        .col:nth-child(1) { width: 20% }
+        .col:nth-child(2) { width: 60% }
+        .col:nth-child(3) { width: 20% }*/
+        
+        .col:nth-child(1) .label { width: 35% }
+        .col:nth-child(1) .value { width: 65% }
+        .col:nth-child(2) .label { width: 35% }
+        .col:nth-child(2) .value { width: 65% }
+        
+        /*.sig:nth-child(1) { width: 50% }
+        .sig:nth-child(2) { width: 50% }*/
+    </style>
+{% endblock %}

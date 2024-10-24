@@ -1,0 +1,9 @@
+<form method="post" action="{{ path('app_purchase_purchase_request_header_approve', {'id': purchaseRequestHeader.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ purchaseRequestHeader.id) }}">
+    <button class="btn btn-primary btn-sm"
+            data-controller="dom-element"
+            data-action="dom-element#confirm"
+            data-dom-element-confirm-message-param="Are you sure you want to approve this transaction?">
+        Approve
+    </button>
+</form>

@@ -1,0 +1,68 @@
+<div class="row">
+    <div class="col">
+        <div class="row">
+            {#<div class="col border border-secondary rounded">
+                <table class="table table-sm table-bordered table-striped" id="work-order-process-table" data-controller="data-table">
+                    <tbody>
+                        {% for workOrderProcess in workOrderProcesses %}
+                            <tr role="button" data-action="click->data-table#select" data-data-table-values-param="{{ {'workOrderProcessId': workOrderProcess.id, 'workOrderProcessName': workOrderProcess.name}|json_encode }}">
+                                <td>{{ workOrderProcess.name }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>#}
+            <div class="col border border-secondary rounded">
+                <table class="table table-bordered"
+                    data-controller="form-collection"
+                    data-form-collection-start-index-value="{{ form.masterOrderProcessDetails|length > 0 ? form.masterOrderProcessDetails|last.vars.name + 1 : 0 }}"
+                    data-form-collection-prototype-value="{{ _self.collection_item(0, form.masterOrderProcessDetails.vars.prototype)|e('html_attr') }}"
+                    data-action="form-collection:collection-item-removed->json-loader#load:self">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th style="max-width: 10px">No.</th>
+                            <th class="d-none">Design Code Process Detail Id</th>
+                            <th class="d-none">Work Order Process Id</th>
+                            <th>Nama</th>
+                            <th style="max-width: 10px">Sub Con</th>
+                            {#<th style="max-width: 10px"></th>#}
+                        </tr>
+                    </thead>
+                    <tbody data-form-collection-target="items" data-action="design-code-table:data-table:select@document->form-collection#clearCollectionItems design-code-table:data-table:select@document->form-collection#addCollectionItems"
+                           data-form-collection-add-items-source-field-path-param="designCodeProcessDetailsData">
+                        {% macro collection_item(ordinal, detailForm) %}
+                            <tr data-form-collection-target="item" data-item-identifier-name="workOrderProcessId" data-item-identifier-value="{{ detailForm.vars.value.workOrderProcess.id|default }}" {% if (detailForm.vars.value.isCanceled) %}class="bg-secondary"{% endif %}>
+                                <td data-form-collection-target="ordinal">{{ ordinal + 1 }}</td>
+                                <td class="d-none">{{ form_widget(detailForm.designCodeProcessDetail, {'attr': {'data-item-field-name': 'designCodeProcessDetailId'}}) }}</td>
+                                <td class="d-none">{{ form_widget(detailForm.workOrderProcess, {'attr': {'data-item-field-name': 'workOrderProcessId'}}) }}</td>
+                                <td data-item-field-name="workOrderProcessName">{{ detailForm.vars.value.workOrderProcess.name|default }}</td>
+                                <td class="d-flex justify-content-center">{{ form_row(detailForm.isSubcon, {'label': false}) }}</td>
+                                {#<td>
+                                    {% if (detailForm.vars.value.id == null) %}
+                                        <button type="button" class="btn btn-outline-dark btn-sm" data-action="form-collection#removeCollectionItem"><i class="bi-x-lg"></i></button>
+                                    {% endif %}
+                                    <div {% if (detailForm.vars.value.id == null) %}class="d-none"{% endif %}>
+                                        {{ form_row(detailForm.isCanceled, {
+                                            'label': 'X',
+                                            'attr': {
+                                                'data-controller': 'dom-element',
+                                                'data-action': 'dom-element#bind change->json-loader#load',
+                                                'data-dom-element-bind-specifications-param': [
+                                                    {'destinationsTarget': "table tr[data-item-identifier-value=\"#{detailForm.vars.value.workOrderProcess.id|default}\"]", 'action': 'removeClass', 'descriptor': {'name': 'bg-secondary'}, 'condition': '!$element.checked'},
+                                                    {'destinationsTarget': "table tr[data-item-identifier-value=\"#{detailForm.vars.value.workOrderProcess.id|default}\"]", 'action': 'addClass', 'descriptor': {'name': 'bg-secondary'}, 'condition': '$element.checked'},
+                                                ]|json_encode,
+                                            },
+                                        }) }}
+                                    </div>
+                                </td>#}
+                            </tr>
+                        {% endmacro %}
+                        {% for detailForm in form.masterOrderProcessDetails %}
+                            {{ _self.collection_item(loop.index0, detailForm) }}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

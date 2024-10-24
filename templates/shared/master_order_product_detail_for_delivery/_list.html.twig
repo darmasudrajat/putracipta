@@ -1,0 +1,55 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, masterOrderProductDetails) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="master-order-product-detail-for-delivery-table" 
+           data-controller="data-table"
+           data-data-table-selected-identifiers-target-value="#paper-table-identifiers"
+           data-data-table-selected-class="table-primary"
+           data-data-table-active-class="table-active">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 150px">Master Order #</th>
+                <th style="min-width: 150px">Code</th>
+                <th style="min-width: 150px">Name</th>
+                <th style="min-width: 150px">Quantity</th>
+                <th style="min-width: 150px">Satuan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderProductDetail in masterOrderProductDetails %}
+                <tr data-data-table-target="selectable" data-selected-identifier="{{ saleOrderDetailData.id }}" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'saleOrderHeaderReferenceNumber': saleOrderHeaderData.referenceNumber|default,
+                    'saleOrderDetailId': saleOrderDetailData.id|default,
+                    'saleOrderDetailProduct': saleOrderDetailData.product|default,
+                    'saleOrderDetailLinePo': saleOrderDetailData.linePo|default,
+                    'saleOrderDetailQuantity': saleOrderDetailData.quantity|default,
+                    'saleOrderDetailRemainingDelivery': saleOrderDetailData.remainingDelivery|default,
+                    'saleOrderDetailUnitName': saleOrderDetailData.unitName|default,
+                    'masterOrderHeaderCodeNumber': masterOrderProductDetail.masterOrderHeader.codeNumber|default,
+                    'masterOrderProductDetailId': masterOrderProductDetail.id,
+                    'productCode': masterOrderProductDetail.product.code|default,
+                    'productName': masterOrderProductDetail.product.name|default,
+                    'productId': masterOrderProductDetail.product.id|default,
+                    'masterOrderProductDetailLotNumber': masterOrderProductDetail.deliveryLotNumber|default,
+                    'inventoryStockQuantity': stockQuantityList[masterOrderProductDetail.product.id] is defined ? stockQuantityList[masterOrderProductDetail.product.id]|number_format(0) : 0,
+                    'masterOrderProductDetailRemainingStockDelivery': masterOrderProductDetail.remainingStockDelivery|default|number_format(0)}|json_encode }}">
+                    <td>{{ masterOrderProductDetail.masterOrderHeader.codeNumber|default }}</td>
+                    <td>{{ masterOrderProductDetail.product.code|default }}</td>
+                    <td>{{ masterOrderProductDetail.product.name|default }}</td>
+                    <td>{{ masterOrderProductDetail.remainingStockDelivery|default|number_format(0) }}</td>
+                    <td>{{ masterOrderProductDetail.saleOrderDetail.unit.name|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, masterOrderProductDetails) }}

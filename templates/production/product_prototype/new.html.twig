@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add Formulir Produk Baru' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_product_prototype_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('production/product_prototype/_form.html.twig') }}
+{% endblock %}

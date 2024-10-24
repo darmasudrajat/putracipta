@@ -1,0 +1,88 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Penyesuaian Stok Finished Goods' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_stock_adjustment_stock_finished_goods_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_ADJUSTMENT_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_stock_adjustment_stock_finished_goods_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Penyesuaian #</th>
+                <td>{{ adjustmentStockHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ adjustmentStockHeader.transactionDate ? adjustmentStockHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Gudang</th>
+                <td>{{ adjustmentStockHeader.warehouse.name }}</td>
+            </tr>
+            <tr>
+                <th>Jenis</th>
+                <td>{{ adjustmentStockHeader.adjustmentMode }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ adjustmentStockHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ adjustmentStockHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ adjustmentStockHeader.createdTransactionDateTime ? adjustmentStockHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ adjustmentStockHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ adjustmentStockHeader.modifiedTransactionDateTime ? adjustmentStockHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ adjustmentStockHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Kode</th>
+                <th>Nama Produk</th>
+                <th>Qty Stok</th>
+                <th>Qty Penyesuaian</th>
+                <th>Qty Selisih</th>
+                <th>Satuan</th>
+                <th>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for adjustmentStockProductDetail in adjustmentStockHeader.adjustmentStockProductDetails %}
+                {% if adjustmentStockProductDetail.isCanceled == false %}
+                    <tr>
+                        <td>{{ adjustmentStockProductDetail.product.code|default }}</td>
+                        <td>{{ adjustmentStockProductDetail.product.name|default }}</td>
+                        <td>{{ adjustmentStockProductDetail.quantityCurrent|default|number_format(2) }}</td>
+                        <td>{{ adjustmentStockProductDetail.quantityAdjustment|default|number_format(2) }}</td>
+                        <td>{{ adjustmentStockProductDetail.quantityDifference|default|number_format(2) }}</td>
+                        <td>{{ adjustmentStockProductDetail.product.unit.name|default }}</td>
+                        <td>{{ adjustmentStockProductDetail.memo|default }}</td>
+                    </tr>
+                {% endif %} 
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {# {{ include('stock/adjustment_stock_header/_delete_form.html.twig') }}#}
+{% endblock %}

@@ -1,0 +1,122 @@
+<div class="table-responsive">
+    <table class="table table-bordered"
+       data-controller="form-collection"
+       data-form-collection-start-index-value="{{ form.deliveryDetails|length > 0 ? form.deliveryDetails|last.vars.name + 1 : 0 }}"
+       data-form-collection-prototype-value="{{ _self.collection_item(form.deliveryDetails.vars.prototype, form)|e('html_attr') }}"
+       data-action="form-collection:collection-item-removed->json-loader#load:self">
+        <thead class="table-secondary">
+            <tr>
+                <th class="d-none">Sale Order Detail Id</th>
+                <th class="d-none">Master Order Product Detail Id</th>
+                <th style="min-width: 150px">Kode</th>
+                <th style="min-width: 350px">Nama Barang</th>
+                <th style="min-width: 150px">FSC Code</th>
+                <th style="min-width: 150px">WO #</th>
+                <th style="min-width: 100px">Lot #</th>
+                <th style="min-width: 200px">PO #</th>
+                <th style="min-width: 80px">Line PO</th>
+                <th style="min-width: 100px">Qty Order</th>
+                <th style="min-width: 50px">OS PO</th>
+                <th style="min-width: 100px">Qty MO</th>
+                <th style="min-width: 120px">Stok Gudang</th>
+                <th style="min-width: 150px">Qty Kirim</th>
+                <th style="min-width: 100px">Satuan</th>
+                <th style="min-width: 250px">Kemasan</th>
+                <th style="min-width: 0"></th>
+            </tr>
+        </thead>
+        <tbody data-form-collection-target="items" data-action="customer-table:data-table:select@document->form-collection#clearCollectionItems master-order-product-detail-for-delivery-table:data-table:select@document->form-collection#addCollectionItem master-order-product-detail-table:data-table:select@document->json-loader#load">
+            {% macro collection_item(detailForm, form) %}
+                <tr data-form-collection-target="item" data-item-identifier-name="masterOrderProductDetailId" data-item-identifier-value="{{ detailForm.vars.value.masterOrderProductDetail.id|default }}" {% if detailForm.isCanceled.vars.data %}class="d-none"{% endif %}>
+                    <td class="d-none">{{ form_widget(detailForm.saleOrderDetail, {'attr': {'data-item-field-name': 'saleOrderDetailId'}}) }}</td>
+                    <td class="d-none">{{ form_widget(detailForm.masterOrderProductDetail, {'attr': {'data-item-field-name': 'masterOrderProductDetailId'}}) }}</td>
+                    <td class="d-none" data-item-field-name="saleOrderHeaderIsUsingFscPaper">{{ detailForm.vars.value.saleOrderDetail.saleOrderHeader.isUsingFscPaper|default ? 'Yes' : 'No' }}</td>
+                    <td data-item-field-name="productCode">{{ detailForm.vars.value.saleOrderDetail.product.code|default }}</td>
+                    <td data-item-field-name="productName">{{ detailForm.vars.value.saleOrderDetail.product.name|default }}</td>
+                    <td>
+                        {{ form_row(detailForm.fscCode, {'label': false, 'attr': {
+                            'readonly': not detailForm.vars.value.saleOrderDetail.saleOrderHeader.isUsingFscPaper|default,
+                            'data-item-field-action': '
+                                const hasFscCode = $row.querySelector("[data-item-field-name=saleOrderHeaderIsUsingFscPaper]").textContent;
+                                if (hasFscCode === "No") {
+                                    $element.setAttribute("readonly", "readonly");
+                                } else {
+                                    $element.removeAttribute("readonly");
+                                }
+                            ',
+                        }}) }}
+                    </td>
+                    <td data-item-field-name="masterOrderHeaderCodeNumber">{{ detailForm.vars.value.masterOrderProductDetail.masterOrderHeader.codeNumber|default }}</td>
+                    <td>
+                        {{ form_row(detailForm.lotNumber, {'label': false, 'attr': {
+                            'size': 3, 
+                            'data-item-field-name': 'masterOrderProductDetailLotNumber',
+                            'readonly': not detailForm.vars.value.saleOrderDetail.saleOrderHeader.isUsingFscPaper|default,
+                            'data-item-field-action': '
+                                const hasFscCode = $row.querySelector("[data-item-field-name=saleOrderHeaderIsUsingFscPaper]").textContent;
+                                if (hasFscCode === "No") {
+                                    $element.setAttribute("readonly", "readonly");
+                                } else {
+                                    $element.removeAttribute("readonly");
+                                }
+                            ',
+                        }}) }}
+                    </td>
+                    <td data-item-field-name="saleOrderHeaderReferenceNumber">{{ detailForm.vars.value.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                    <td data-item-field-name="saleOrderDetailLinePo">{{ detailForm.vars.value.linePo|default }}</td>
+                    <td class="text-center" data-item-field-name="saleOrderDetailQuantity">{{ detailForm.vars.value.saleOrderDetail.quantity|default|number_format(0) }}</td>
+                    <td class="text-center" data-item-field-name="saleOrderDetailRemainingDelivery">{{ detailForm.vars.value.saleOrderDetail.remainingDelivery|default|number_format(0) }}</td>
+                    <td class="text-center" data-item-field-name="masterOrderProductDetailRemainingStockDelivery">
+                        {{ detailForm.vars.value.quantityCurrent|default|number_format(0) }}
+                    </td>
+                    <td class="text-center" data-item-field-name="inventoryStockQuantity">
+                        {{ detailForm.vars.value.quantityStockInventory|default|number_format(0) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.quantity, {'label': false, 'attr': {
+                            'size': 3,
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 0)'}}
+                            ]|json_encode,
+                        }}) }}
+                    </td>
+                    <td data-item-field-name="saleOrderDetailUnitName">{{ detailForm.vars.value.saleOrderDetail.unit.name|default }}</td>
+                    <td>{{ form_row(detailForm.packaging, {'label': false}) }}</td>
+                    <td>
+                        {% if (detailForm.vars.value.id == null) %}
+                            <button type="button" class="btn btn-outline-dark" data-action="form-collection#removeCollectionItem"><i class="bi-x-lg"></i></button>
+                        {% else %}
+                            <button type="button" class="btn btn-danger"
+                                    data-controller="dom-element"
+                                    data-action="dom-element#bind json-loader#load"
+                                    data-dom-element-bind-specifications-param="{{ [
+                                        {'destinationsTarget': '#' ~ detailForm.isCanceled.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'checked', 'value': 'true'}},
+                                        {'destinations': '[$element.closest("tr")]', 'action': 'addClass', 'descriptor': {'name': 'd-none'}},
+                                    ]|json_encode }}">
+                                <i class="bi-x-lg"></i>
+                            </button>
+                        {% endif %}
+                        <div class="d-none">
+                            {{ form_row(detailForm.isCanceled) }}
+                        </div>
+                    </td>
+                </tr>
+            {% endmacro %}
+            {% for detailForm in form.deliveryDetails %}
+                {{ _self.collection_item(detailForm, form) }}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-end" colspan="11">Total Quantity</td>
+                <td class="text-center" data-json-loader-target="placeholder"
+                    data-property-path="totalQuantity">
+                    {{ deliveryHeader.totalQuantity|default|number_format(0) }}
+                </td>
+                <td colspan="3"></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

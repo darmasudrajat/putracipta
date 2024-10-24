@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit HasilCetak{% endblock %}
+
+{% block body %}
+    <h1>Edit HasilCetak</h1>
+
+    {{ include('hasil_cetak/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_hasil_cetak_index') }}">back to list</a>
+
+    {{ include('hasil_cetak/_delete_form.html.twig') }}
+{% endblock %}

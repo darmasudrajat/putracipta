@@ -1,0 +1,112 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Diecut Knife' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_diecut_knife_index') }}">Manage</a>
+    {% if is_granted('ROLE_DIECUT_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_master_diecut_knife_edit', {'id': diecutKnife.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_DIECUT_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_master_diecut_knife_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Customer</th>
+                <td>{{ diecutKnife.customer.company }}</td>
+            </tr>
+            <tr>
+                <th>Kode Pisau</th>
+                <td>{{ diecutKnife.codeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Nama Pisau</th>
+                <td>{{ diecutKnife.name }}</td>
+            </tr>
+            <tr>
+                <th>Up/s Pisau</th>
+                <td>{{ diecutKnife.upPerSecondKnife }}</td>
+            </tr>
+            <tr>
+                <th>Up/s Cetak</th>
+                <td>{{ diecutKnife.upPerSecondPrint }}</td>
+            </tr>
+            <tr>
+                <th>Uk. Cetak</th>
+                <td>{{ diecutKnife.printingSize }}</td>
+            </tr>
+            <tr>
+                <th>Lokasi</th>
+                <td>{{ diecutKnife.location }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ diecutKnife.note }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Pembuatan</th>
+                <td>{{ diecutKnife.date ? diecutKnife.date|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Inactive ?</th>
+                <td>{{ diecutKnife.isInactive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr />
+    
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan="3" class="text-center bg-info">Product</th>
+            </tr>
+            <tr>
+                <th>Item Code</th>
+                <th>Item Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for diecutKnifeDetail in diecutKnife.diecutKnifeDetails %}
+                {% if not diecutKnifeDetail.isIsInactive %}
+                    <tr>
+                        <td>{{ diecutKnifeDetail.product.code|default }}</td>
+                        <td>{{ diecutKnifeDetail.product.name|default }}</td>
+                        <td>{{ diecutKnifeDetail.product.productLengthWidthHeightCombination|default }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+        
+    <hr />
+    
+    <legend class="float-none w-auto text-dark px-1">Pisau Diecut List</legend>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class=" bg-info">
+                <th>Code</th>
+                <th>Name</th>
+                <th>MO #</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderHeader in diecutKnife.masterOrderHeaders %}
+                {% for masterOrderProductDetail in masterOrderHeader.masterOrderProductDetails %}
+                    <tr>
+                        <td>{{ masterOrderProductDetail.product.code|default }}</td>
+                        <td>{{ masterOrderProductDetail.product.name|default }}</td>
+                        <td>{{ masterOrderProductDetail.codeNumber|default }}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {#{{ include('master/diecut_knife/_delete_form.html.twig') }}#}
+{% endblock %}

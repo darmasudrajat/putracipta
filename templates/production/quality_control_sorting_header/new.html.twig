@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add QC Sorting' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_quality_control_sorting_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('production/quality_control_sorting_header/_form.html.twig') }}
+{% endblock %}

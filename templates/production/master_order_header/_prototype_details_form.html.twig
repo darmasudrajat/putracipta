@@ -1,0 +1,66 @@
+<div class="table-responsive">
+    <table class="table table-bordered"
+       data-controller="form-collection"
+       data-form-collection-start-index-value="{{ form.masterOrderPrototypeDetails|length > 0 ? form.masterOrderPrototypeDetails|last.vars.name + 1 : 0 }}"
+       data-form-collection-prototype-value="{{ _self.collection_item(form.masterOrderPrototypeDetails.vars.prototype, form)|e('html_attr') }}"
+       data-action="form-collection:collection-item-removed->json-loader#load:self">
+        <thead class="table-secondary">
+            <tr>
+                <th class="d-none">Product Prototype Detail Id</th>
+                <th class="d-none">Product Id</th>
+                <th style="min-width: 200px">Kode Produk</th>
+                <th style="min-width: 300px">Nama Produk</th>
+                <th style="min-width: 80px">Ukuran Jadi</th>
+                <th style="min-width: 100px">Qty Order</th>
+                <th style="min-width: 150px">Stock</th>
+                <th style="min-width: 100px">Kekurangan</th>
+                <th style="min-width: 0"></th>
+            </tr>
+        </thead>
+        <tbody data-form-collection-target="items" data-action="{{ form.transactionMode.vars.id }}:data-choice:select@document->form-collection#clearCollectionItems product-prototype-detail-table:data-table:select@document->form-collection#addCollectionItem product-prototype-detail-table:data-table:select@document->json-loader#load">
+            {% macro collection_item(detailForm, form) %}
+                <tr data-form-collection-target="item" data-item-identifier-name="productPrototypeDetailId" data-item-identifier-value="{{ detailForm.vars.value.productPrototypeDetail.id|default }}" {% if detailForm.isCanceled.vars.data %}class="d-none"{% endif %}>
+                    <td class="d-none">{{ form_widget(detailForm.productPrototypeDetail, {'attr': {'data-item-field-name': 'productPrototypeDetailId'}}) }}</td>
+                    <td class="d-none">{{ form_widget(detailForm.product, {'attr': {'data-item-field-name': 'productId'}}) }}</td>
+                    <td data-item-field-name="productCode">{{ detailForm.vars.value.productPrototypeDetail.product.code|default }}</td>
+                    <td data-item-field-name="productName" class="font-size-1">{{ detailForm.vars.value.productPrototypeDetail.product.name|default }}</td>
+                    <td class="text-center" data-item-field-name="productLength">{{ detailForm.vars.value.productPrototypeDetail.product.productLengthWidthHeightCombination|default|number_format(0) }}</td>
+                    <td class="text-center">
+                        {{ form_row(detailForm.quantityOrder, {'label': false, 'attr': {
+                            'data-action': 'change->json-loader#load',
+                        }}) }}
+                    </td>
+                    <td class="text-center">
+                        {{ form_row(detailForm.quantityStock, {'label': false, 'attr': {
+                            'data-action': 'change->json-loader#load',
+                            'data-item-field-name': 'inventoryStockQuantity',
+                        }}) }}
+                    </td>
+                    <td class="text-center" data-json-loader-target="placeholder"
+                        data-property-path="masterOrderPrototypeDetails.{{ detailForm.vars.name }}.quantityShortage">{{ detailForm.vars.value.quantityShortage|default|number_format(0) }}</td>
+                    <td>
+                        {% if (detailForm.vars.value.id == null) %}
+                            <button type="button" class="btn btn-outline-dark" data-action="form-collection#removeCollectionItem"><i class="bi-x-lg"></i></button>
+                        {% endif %}
+                        <div {% if (detailForm.vars.value.id == null) %}class="d-none"{% endif %}>
+                            {{ form_row(detailForm.isCanceled, {
+                                'label': 'X',
+                                'attr': {
+                                    'data-controller': 'dom-element',
+                                    'data-action': 'dom-element#bind change->json-loader#load',
+                                    'data-dom-element-bind-specifications-param': [
+                                        {'destinationsTarget': "table tr[data-item-identifier-value=\"#{detailForm.vars.value.productPrototypeDetail.id|default}\"]", 'action': 'removeClass', 'descriptor': {'name': 'bg-secondary'}, 'condition': '!$element.checked'},
+                                        {'destinationsTarget': "table tr[data-item-identifier-value=\"#{detailForm.vars.value.productPrototypeDetail.id|default}\"]", 'action': 'addClass', 'descriptor': {'name': 'bg-secondary'}, 'condition': '$element.checked'},
+                                    ]|json_encode,
+                                },
+                            }) }}
+                        </div>
+                    </td>
+                </tr>
+            {% endmacro %}
+            {% for detailForm in form.masterOrderPrototypeDetails %}
+                {{ _self.collection_item(detailForm, form) }}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

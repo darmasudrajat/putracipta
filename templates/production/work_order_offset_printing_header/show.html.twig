@@ -1,0 +1,125 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Work Order Offset Printing Header' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_work_order_offset_printing_header_index') }}">Manage</a>
+    <a class="btn btn-warning btn-sm" href="{{ path('app_production_work_order_offset_printing_header_edit', {'id': workOrderOffsetPrintingHeader.id}) }}">Edit</a>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Printing Quality</th>
+                <td>{{ workOrderOffsetPrintingHeader.printingQuality }}</td>
+            </tr>
+            <tr>
+                <th>Speed Per Hour</th>
+                <td>{{ workOrderOffsetPrintingHeader.speedPerHour }}</td>
+            </tr>
+            <tr>
+                <th>Water Level</th>
+                <td>{{ workOrderOffsetPrintingHeader.waterLevel }}</td>
+            </tr>
+            <tr>
+                <th>Alcohol Level</th>
+                <td>{{ workOrderOffsetPrintingHeader.alcoholLevel }}</td>
+            </tr>
+            <tr>
+                <th>Fountain Level</th>
+                <td>{{ workOrderOffsetPrintingHeader.fountainLevel }}</td>
+            </tr>
+            <tr>
+                <th>Wb Level</th>
+                <td>{{ workOrderOffsetPrintingHeader.wbLevel }}</td>
+            </tr>
+            <tr>
+                <th>Cyan Printing Quantity</th>
+                <td>{{ workOrderOffsetPrintingHeader.cyanPrintingQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Cyan Ink Quantity</th>
+                <td>{{ workOrderOffsetPrintingHeader.cyanInkQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Cyan Plate Quantity</th>
+                <td>{{ workOrderOffsetPrintingHeader.cyanPlateQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Magenta Printing Quantity</th>
+                <td>{{ workOrderOffsetPrintingHeader.magentaPrintingQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Magenta Ink Quantity</th>
+                <td>{{ workOrderOffsetPrintingHeader.magentaInkQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Magenta Plate Quantity</th>
+                <td>{{ workOrderOffsetPrintingHeader.magentaPlateQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Yellow Printing Quantity</th>
+                <td>{{ workOrderOffsetPrintingHeader.yellowPrintingQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Yellow Ink Quantity</th>
+                <td>{{ workOrderOffsetPrintingHeader.yellowInkQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Yellow Plate Quantity</th>
+                <td>{{ workOrderOffsetPrintingHeader.yellowPlateQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Black Printing Quantity</th>
+                <td>{{ workOrderOffsetPrintingHeader.blackPrintingQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Black Ink Quantity</th>
+                <td>{{ workOrderOffsetPrintingHeader.blackInkQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Black Plate Quantity</th>
+                <td>{{ workOrderOffsetPrintingHeader.blackPlateQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Is Canceled</th>
+                <td>{{ workOrderOffsetPrintingHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Is Read</th>
+                <td>{{ workOrderOffsetPrintingHeader.isRead ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Ordinal</th>
+                <td>{{ workOrderOffsetPrintingHeader.codeNumberOrdinal }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Month</th>
+                <td>{{ workOrderOffsetPrintingHeader.codeNumberMonth }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Year</th>
+                <td>{{ workOrderOffsetPrintingHeader.codeNumberYear }}</td>
+            </tr>
+            <tr>
+                <th>Created Production Date Time</th>
+                <td>{{ workOrderOffsetPrintingHeader.createdProductionDateTime ? workOrderOffsetPrintingHeader.createdProductionDateTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Modified Production Date Time</th>
+                <td>{{ workOrderOffsetPrintingHeader.modifiedProductionDateTime ? workOrderOffsetPrintingHeader.modifiedProductionDateTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Production Date</th>
+                <td>{{ workOrderOffsetPrintingHeader.transactionDate ? workOrderOffsetPrintingHeader.transactionDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ workOrderOffsetPrintingHeader.note }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{ include('production/work_order_offset_printing_header/_delete_form.html.twig') }}
+{% endblock %}

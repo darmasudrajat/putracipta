@@ -1,0 +1,411 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Master Order' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_master_order_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_MASTER_ORDER_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_production_master_order_header_edit', {'id': masterOrderHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_MASTER_ORDER_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_production_master_order_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan='4' class='text-center bg-info'>HEADER</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Master Order #</th>
+                <td>{{ masterOrderHeader.getCodeNumber }}</td>
+                <th>Customer</th>
+                <td>{{ masterOrderHeader.customer.company|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ masterOrderHeader.transactionDate ? masterOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+                <th>Material Kertas</th>
+                <td>{{ masterOrderHeader.paper.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Mesin Cetak</th>
+                <td>{{ masterOrderHeader.machinePrinting.name|default }}</td>
+                <th>Hot Stamping</th>
+                <td>{{ masterOrderHeader.hotStamping }}</td>
+            </tr>
+            <tr>
+                <th>Jenis MO</th>
+                <td>{{ masterOrderHeader.orderType }}</td>
+                <th>Pisau Die Cut</th>
+                <td>{{ masterOrderHeader.dieCutBlade }}</td>
+            </tr>
+            <tr>
+                <th>Status Cetakan</th>
+                <td>{{ masterOrderHeader.printingStatus ? masterOrderHeader.printingStatus|join(', ') : '' }}</td>
+                <th>No. Pisau Die Cut</th>
+                <td>{{ masterOrderHeader.diecutKnife.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Pengembangan Produk Baru</th>
+                <td>{{ masterOrderHeader.productDevelopment.codeNumber|default }}</td>
+                <th>No. Film Dieline</th>
+                <td>{{ masterOrderHeader.dielineMillar.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Jenis Pengembangan</th>
+                <td>{{ masterOrderHeader.productDevelopment.developmentTypeList|default ? masterOrderHeader.productDevelopment.developmentTypeList|join(', ') : '' }}</td>
+                <th>Design Code</th>
+                <td>{{ masterOrderHeader.designCode.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Warna/Pantone</th>
+                <td>{{ masterOrderHeader.color }} / {{ masterOrderHeader.pantone }} + {{ masterOrderHeader.colorPantoneAdditional }}</td>
+                <th>Berat per pcs</th>
+                <td>{{ masterOrderHeader.weightPerPiece|default|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Glossiness</th>
+                <td>{{ masterOrderHeader.glossiness }}</td>
+                <th>Ukuran Mountage / Kris (cm)</th>
+                <td>{{ masterOrderHeader.mountageSize|default|number_format(0) }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ masterOrderHeader.createdTransactionUser.username|default }}</td>
+                <th>Created Date</th>
+                <td>{{ masterOrderHeader.createdTransactionDateTime ? masterOrderHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ masterOrderHeader.modifiedTransactionUser.username|default }}</td>
+                <th>Edited Date</th>
+                <td>{{ masterOrderHeader.modifiedTransactionDateTime ? masterOrderHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ masterOrderHeader.isCanceled ? 'Yes' : 'No' }}</td>
+                <th></th>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+        
+    <div class="table-responsive"> 
+        {% if (masterOrderHeader.transactionMode == 'sale_order') %} 
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th colspan='12' class='text-center bg-info'>CUSTOMER ORDER DETAILS</th>
+                    </tr>
+                    <tr>
+                        <th style="min-width: 150px">PO#</th>
+                        <th style="min-width: 200px">Kode Produk</th>
+                        <th style="min-width: 300px">Nama Produk</th>
+                        <th style="min-width: 80px" class="text-center">P (mm)</th>
+                        <th style="min-width: 80px" class="text-center">L (mm)</th>
+                        <th style="min-width: 80px" class="text-center">T (mm)</th>
+                        <th style="min-width: 150px" class="text-center">Tanggal Kirim</th>
+                        <th style="min-width: 100px" class="text-center">Up Cetak</th>
+                        <th style="min-width: 100px" class="text-center">Qty Order</th>
+                        <th style="min-width: 150px" class="text-center">Qty Produksi</th>
+                        <th style="min-width: 100px" class="text-center">Stock</th>
+                        <th style="min-width: 100px" class="text-center">Kekurangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for masterOrderProductDetail in masterOrderHeader.masterOrderProductDetails %}
+                        {% if masterOrderProductDetail.isCanceled == false %}
+                            <tr>
+                                <td>{{ masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                                <td>{{ masterOrderProductDetail.product.code|default }}</td>
+                                <td>{{ masterOrderProductDetail.product.name|default }}</td>
+                                <td class="text-center">{{ masterOrderProductDetail.saleOrderDetail.product.length|default|number_format(0) }}</td>
+                                <td class="text-center">{{ masterOrderProductDetail.saleOrderDetail.product.width|default|number_format(0) }}</td>
+                                <td class="text-center">{{ masterOrderProductDetail.saleOrderDetail.product.height|default|number_format(0) }}</td>
+                                <td>{{ masterOrderProductDetail.saleOrderDetail.deliveryDate ? masterOrderProductDetail.saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                                <td class="text-center">{{ masterOrderProductDetail.quantityPrinting|default|number_format(0) }}</td>
+                                <td class="text-center">{{ masterOrderProductDetail.quantityOrder|default|number_format(0) }}</td>
+                                <td class="text-center">{{ masterOrderProductDetail.quantityProduction|default|number_format(0) }}</td>
+                                <td class="text-center">{{ masterOrderProductDetail.quantityStock|default|number_format(0) }}</td>
+                                <td class="text-center">{{ masterOrderProductDetail.quantityShortage|default|number_format(0) }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7" class="text-end">Total</td>
+                        <td class="text-center">{{ masterOrderHeader.quantityPrinting|default|number_format(0) }}</td>
+                        <td class="text-center">{{ masterOrderHeader.totalQuantityOrder|default|number_format(0) }}</td>
+                        <td class="text-center">{{ masterOrderHeader.totalQuantityProduction|default|number_format(0) }}</td>
+                        <td class="text-center">{{ masterOrderHeader.totalQuantityStock|default|number_format(0) }}</td>
+                        <td class="text-center">{{ masterOrderHeader.totalQuantityShortage|default|number_format(0) }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        {% else %}
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th colspan='11' class='text-center bg-info'>PRODUK BARU DETAILS</th>
+                    </tr>
+                    <tr>
+                        <th style="min-width: 200px">Kode Produk</th>
+                        <th style="min-width: 300px">Nama Produk</th>
+                        <th style="min-width: 80px" class="text-center">Ukuran Jadi</th>
+                        <th style="min-width: 100px" class="text-center">Qty Order</th>
+                        <th style="min-width: 100px" class="text-center">Stock</th>
+                        <th style="min-width: 100px" class="text-center">Kekurangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for masterOrderPrototypeDetail in masterOrderHeader.masterOrderPrototypeDetails %}
+                        <tr>
+                            <td>{{ masterOrderPrototypeDetail.product.code|default }}</td>
+                            <td>{{ masterOrderPrototypeDetail.product.name|default }}</td>
+                            <td class="text-center">{{ masterOrderPrototypeDetail.product.productLengthWidthHeightCombination|default }}</td>
+                            <td class="text-center">{{ masterOrderPrototypeDetail.quantityOrder|default|number_format(0) }}</td>
+                            <td class="text-center">{{ masterOrderPrototypeDetail.quantityStock|default|number_format(0) }}</td>
+                            <td class="text-center">{{ masterOrderPrototypeDetail.quantityShortage|default|number_format(0) }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5" class="text-end">Total</td>
+                        <td class="text-center">{{ masterOrderHeader.totalQuantityShortage|default|number_format(0) }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        {% endif %}
+    </div>
+    
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan='4' class='text-center bg-info'>KEBUTUHAN MATERIAL KERTAS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>% Insit Cetak</th>
+                <td>{{ masterOrderHeader.insitPrintingPercentage|default|number_format(2) }}</td>
+                <th>Insit Cetak (dreek)</th>
+                <td>{{ masterOrderHeader.insitPrintingQuantity|default|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>% Insit Sortir</th>
+                <td>{{ masterOrderHeader.insitSortingPercentage|default|number_format(2) }}</td>
+                <th>Insit Sortir (dreek)</th>
+                <td>{{ masterOrderHeader.insitSortingQuantity|default|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Quantity Kertas (rim)</th>
+                <td>{{ masterOrderHeader.quantityPaper|default|number_format(2) }}</td>
+                <th>Kebutuhan (dreek)</th>
+                <td>{{ masterOrderHeader.paperRequirement|default|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Mountage Kertas (up)</th>
+                <td>{{ masterOrderHeader.paperMountage|default }}</td>
+                <th>Total Kertas (dreek)</th>
+                <td>{{ masterOrderHeader.paperTotal|default|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Uk Kertas (cm)</th>
+                <td>{{ masterOrderHeader.paperPlanoLength|default|number_format(2) }} x {{ masterOrderHeader.paperPlanoWidth|default|number_format(2) }}</td>
+                <th>PO Kertas #</th>
+                <td>{{ masterOrderHeader.purchaseOrderPaperHeader.getCodeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Uk Potong 1 (cm)</th>
+                <td>{{ masterOrderHeader.cuttingLengthSize1|default|number_format(2) }} x {{ masterOrderHeader.cuttingWidthSize1|default|number_format(2) }}</td>
+                <th>Tanggal</th>
+                <td>{{ masterOrderHeader.purchaseOrderPaperHeader.transactionDate|default ? masterOrderHeader.purchaseOrderPaperHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Uk Potong 2 (cm)</th>
+                <td>{{ masterOrderHeader.cuttingLengthSize2|default|number_format(2) }} x {{ masterOrderHeader.cuttingWidthSize2|default|number_format(2) }}</td>
+                <th>Supplier</th>
+                <td>{{ masterOrderHeader.purchaseOrderPaperHeader.supplier.company|default }}</td>
+            </tr>
+        </tbody>
+    </table>
+         
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan='4' class='text-center bg-info'>ESTIMASI TINTA / CHEMICAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Cyan</th>
+                <td>{{ masterOrderHeader.inkCyanPercentage|default|number_format(2) }}% = {{ masterOrderHeader.inkCyanWeight|default|number_format(2) }} kg</td>
+                <th>Khusus-1</th>
+                <td>{{ masterOrderHeader.inkK1Color|default }} : {{ masterOrderHeader.inkK1Percentage|default|number_format(2) }}% = {{ masterOrderHeader.inkK1Weight|default|number_format(2) }} kg</td>
+            </tr>
+            <tr>
+                <th>Magenta</th>
+                <td>{{ masterOrderHeader.inkMagentaPercentage|number_format(2) }}% = {{ masterOrderHeader.inkMagentaWeight|default|number_format(2) }} kg</td>
+                <th>Khusus-2</th>
+                <td>{{ masterOrderHeader.inkK2Color }} : {{ masterOrderHeader.inkK2Percentage|number_format(2) }}% = {{ masterOrderHeader.inkK2Weight|default|number_format(2) }} kg</td>
+            </tr>
+            <tr>
+                <th>Yellow</th>
+                <td>{{ masterOrderHeader.inkYellowPercentage|number_format(2) }}% = {{ masterOrderHeader.inkYellowWeight|default|number_format(2) }} kg</td>
+                <th>Khusus-3</th>
+                <td>{{ masterOrderHeader.inkK3Color }} : {{ masterOrderHeader.inkK3Percentage|number_format(2) }}% = {{ masterOrderHeader.inkK3Weight|default|number_format(2) }} kg</td>
+            </tr>
+            <tr>
+                <th>Black</th>
+                <td>{{ masterOrderHeader.inkBlackPercentage|number_format(2) }}% = {{ masterOrderHeader.inkBlackWeight|default|number_format(2) }} kg</td>
+                <th>Khusus-4</th>
+                <td>{{ masterOrderHeader.inkK4Color }} : {{ masterOrderHeader.inkK4Percentage|number_format(2) }}% = {{ masterOrderHeader.inkK4Weight|default|number_format(2) }} kg</td>
+            </tr>
+            <tr>
+                <th>OPV/WB/UV</th>
+                <td>{{ masterOrderHeader.inkOpvPercentage|number_format(2) }}% = {{ masterOrderHeader.inkOpvWeight|default|number_format(2) }} KG</td>
+                <th>Laminating</th>
+                <td>{{ masterOrderHeader.inkLaminatingSize|number_format(2) }} cm = {{ masterOrderHeader.inkLaminatingQuantity|default|number_format(0) }} roll</td>
+            </tr>
+            <tr>
+                <th>Hot Stamping</th>
+                <td>{{ masterOrderHeader.inkHotStampingSize|number_format(2) }} cm = {{ masterOrderHeader.inkHotStampingQuantity|default|number_format(0) }} roll</td>
+            </tr>
+        </tbody>
+    </table>
+         
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan='4' class='text-center bg-info'>ESTIMASI PACKAGING</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Lem</th>
+                <td>{{ masterOrderHeader.packagingGlueQuantity|number_format(2) }} cm/pcs = {{ masterOrderHeader.packagingGlueWeight|number_format(2) }} kg</td>
+                <th>Lakban >besar</th>
+                <td>{{ masterOrderHeader.packagingTapeLargeQuantity|number_format(2) }} cm/pak (dus) = {{ masterOrderHeader.packagingTapeLargeSize|number_format(2) }} roll</td>
+            </tr>
+            <tr>
+                <th>Karet</th>
+                <td>{{ masterOrderHeader.packagingRubberQuantity|number_format(2) }} pcs/ikat = {{ masterOrderHeader.packagingRubberWeight|number_format(2) }} pcs</td>
+                <th>Lakban >kecil</th>
+                <td>{{ masterOrderHeader.packagingTapeSmallQuantity|number_format(2) }} cm/pak (dus) = {{ masterOrderHeader.packagingTapeSmallSize|number_format(2) }} roll</td>
+            </tr>
+            <tr>
+                <th>Kertas Packing</th>
+                <td>{{ masterOrderHeader.packagingPaperQuantity|number_format(2) }} pcs/pak = {{ masterOrderHeader.packagingPaperWeight|number_format(2) }} lbr</td>
+                <th>Plastik</th>
+                <td>{{ masterOrderHeader.packagingPlasticQuantity|number_format(2) }} cm2/pack = {{ masterOrderHeader.packagingPlasticSize|number_format(2) }} m2</td>
+            </tr>
+            <tr>
+                <th>Dus</th>
+                <td>{{ masterOrderHeader.packagingBoxQuantity|number_format(2) }} pcs/dus = {{ masterOrderHeader.packagingBoxWeight|number_format(2) }} pcs</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+         
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan="3" class="text-center bg-info">Urutan Proses</th>
+            </tr>
+            <tr>
+                <th>No</th>
+                <th>Proses</th>
+                <th>Subcon</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderProcessDetail in masterOrderHeader.masterOrderProcessDetails %}
+                <tr>
+                    <td style="text-align: center; width: 5%">{{ loop.index }}</td>
+                    <td>{{ masterOrderProcessDetail.workOrderProcess.name|default }}</td>
+                    <td style="text-align: center">{{ masterOrderProcessDetail.isSubcon ? 'Yes' : 'No' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan="3" class="text-center bg-info">Distribusi WO</th>
+            </tr>
+            <tr>
+                <th>WO</th>
+                <th>Subcon</th>
+                <th class="text-center">
+                    <a target="_blank" class="btn btn-outline-dark btn-sm" href="{{ path('app_production_master_order_header_memo_distribution', {'id': masterOrderHeader.id, 'constant': 'all'}) }}">Print All</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderDistributionDetail in masterOrderHeader.masterOrderDistributionDetails %}
+                <tr>
+                    <td>{{ masterOrderDistributionDetail.workOrderDistribution.name|default }}</td>
+                    <td style="text-align: center">{{ masterOrderDistributionDetail.isSubcon ? 'Yes' : 'No' }}</td>
+                    <td class="text-center">
+                        {% if masterOrderDistributionDetail.workOrderDistribution.memoConstantName != '' %}
+                            <a target="_blank" class="btn btn-dark btn-sm distribution-detail-print-button" href="{{ path('app_production_master_order_header_memo_distribution', {'id': masterOrderHeader.id, 'constant': masterOrderDistributionDetail.workOrderDistribution.memoConstantName}) }}">Print</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th colspan="3" class="text-center bg-info">Check Sheet</th>
+            </tr>
+            <tr>
+                <th>Check Sheet</th>
+                <th>Subcon</th>
+                <th class="text-center">
+                    <a target="_blank" class="btn btn-outline-dark btn-sm" href="{{ path('app_production_master_order_header_memo_check_sheet', {'id': masterOrderHeader.id, 'constant': 'all'}) }}">Print All</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderCheckSheetDetail in masterOrderHeader.masterOrderCheckSheetDetails %}
+                <tr>
+                    <td>{{ masterOrderCheckSheetDetail.workOrderCheckSheet.name|default }}</td>
+                    <td style="text-align: center">{{ masterOrderCheckSheetDetail.isSubcon ? 'Yes' : 'No' }}</td>
+                    <td class="text-center">
+                        {% if masterOrderCheckSheetDetail.workOrderCheckSheet.memoConstantName != '' %}
+                            <a target="_blank" class="btn btn-dark btn-sm check-sheet-print-button" href="{{ path('app_production_master_order_header_memo_check_sheet', {'id': masterOrderHeader.id, 'constant': masterOrderCheckSheetDetail.workOrderCheckSheet.memoConstantName}) }}">Print</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {#{{ include('production/master_order_header/_delete_form.html.twig') }}#}
+    <br />
+    <div class="d-inline-block">
+        <a target="_blank" class="btn btn-outline-dark btn-sm" href="{{ path('app_production_master_order_header_memo_master_order', {'id': masterOrderHeader.id}) }}">Print Master Order</a>
+        <a target="_blank" class="btn btn-outline-dark btn-sm" href="{{ path('app_production_master_order_header_memo_work_order', {'id': masterOrderHeader.id}) }}">Print SPK</a>
+        {#<a target="_blank" class="btn btn-info btn-sm" href="{{ path('app_production_master_order_header_memo_work_order_color_mixing', {'id': masterOrderHeader.id}) }}">Print WO Color Mixing</a>#}
+    </div>
+    
+    <div class="text-center">
+        {% if masterOrderHeader.layoutModelFileExtension == 'pdf' %}
+            <a target="_blank" href="{{ asset('uploads/master-order/' ~ masterOrderHeader.fileName) }}">Layout PDF File</a>
+        {% elseif masterOrderHeader.layoutModelFileExtension == 'jpg' or masterOrderHeader.layoutModelFileExtension == 'jpeg' or masterOrderHeader.layoutModelFileExtension == 'png' %}
+            <img width="750px" src="{{ asset('uploads/master-order/' ~ masterOrderHeader.fileName) }}" alt="Layout Model Image" />
+        {% endif %}
+    </div>
+{% endblock %}

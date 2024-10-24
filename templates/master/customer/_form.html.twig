@@ -1,0 +1,409 @@
+{{ form_start(form) }}
+    {% set hasMarketingRole = is_granted('ROLE_SALE_ORDER_ADD') or is_granted('ROLE_SALE_ORDER_EDIT') %}
+    {% set hasFinanceRole = is_granted('ROLE_SALE_INVOICE_ADD') or is_granted('ROLE_SALE_INVOICE_EDIT') %}
+    {% set isMarketingInputDisabled = not hasMarketingRole and hasFinanceRole %}
+    {% set isFinanceInputDisabled = not hasFinanceRole and hasMarketingRole %}
+    <fieldset class="border border-secondary rounded mb-3 p-3">
+        <legend class="float-none w-auto text-dark px-1">MARKETING</legend>
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.code, {
+                    'attr': {
+                        'readonly': isMarketingInputDisabled,
+                        'data-controller': 'dom-element',
+                        'data-action': 'dom-element#bind',
+                        'data-dom-element-bind-specifications-param': [
+                            {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$element.value.toUpperCase()'}},
+                        ]|json_encode,
+                    },
+                }) }}
+                {{ form_row(form.company, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                {{ form_row(form.phone, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                {{ form_row(form.email, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                {{ form_row(form.paymentTerm, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                {{ form_row(form.minimumTolerancePercentage, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                {{ form_row(form.maximumTolerancePercentage, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                {{ form_row(form.note, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                <div class="{{ isMarketingInputDisabled ? 'd-none' : '' }}">
+                    {{ form_row(form.isInactive) }}
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <span id="address-delivery-counter" class="d-none">
+                        {% if customer.addressDelivery15 != '' %}
+                            15
+                        {% elseif customer.addressDelivery14 != '' %}
+                            14
+                        {% elseif customer.addressDelivery13 != '' %}
+                            13
+                        {% elseif customer.addressDelivery12 != '' %}
+                            12
+                        {% elseif customer.addressDelivery11 != '' %}
+                            11
+                        {% elseif customer.addressDelivery10 != '' %}
+                            10
+                        {% elseif customer.addressDelivery9 != '' %}
+                            9
+                        {% elseif customer.addressDelivery8 != '' %}
+                            8
+                        {% elseif customer.addressDelivery7 != '' %}
+                            7
+                        {% elseif customer.addressDelivery6 != '' %}
+                            6
+                        {% elseif customer.addressDelivery5 != '' %}
+                            5
+                        {% elseif customer.addressDelivery4 != '' %}
+                            4
+                        {% elseif customer.addressDelivery3 != '' %}
+                            3
+                        {% elseif customer.addressDelivery2 != '' %}
+                            2
+                        {% else %}
+                            1
+                        {% endif %}
+                    </span>
+                    <div class="{{ isMarketingInputDisabled ? 'd-none' : '' }}">
+                        <button type="button" class="btn btn-sm btn-outline-dark"
+                                data-controller="dom-element"
+                                data-action="dom-element#bind"
+                                data-dom-element-bind-specifications-param="{{ [
+                                    {'destinationsTarget': '#address-delivery-counter', 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': 'parseInt($destinations[0].textContent) + 1'}, 'condition': 'parseInt($destination.textContent) < 15'},
+                                    {'destinationsTarget': '#address-delivery-2-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 2'},
+                                    {'destinationsTarget': '#address-delivery-3-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 3'},
+                                    {'destinationsTarget': '#address-delivery-4-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 4'},
+                                    {'destinationsTarget': '#address-delivery-5-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 5'},
+                                    {'destinationsTarget': '#address-delivery-6-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 6'},
+                                    {'destinationsTarget': '#address-delivery-7-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 7'},
+                                    {'destinationsTarget': '#address-delivery-8-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 8'},
+                                    {'destinationsTarget': '#address-delivery-9-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 9'},
+                                    {'destinationsTarget': '#address-delivery-10-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 10'},
+                                    {'destinationsTarget': '#address-delivery-11-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 11'},
+                                    {'destinationsTarget': '#address-delivery-12-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 12'},
+                                    {'destinationsTarget': '#address-delivery-13-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 13'},
+                                    {'destinationsTarget': '#address-delivery-14-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 14'},
+                                    {'destinationsTarget': '#address-delivery-15-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 15'},
+                                ]|json_encode }}">Add Address</button>
+                        <button type="button" class="btn btn-sm btn-outline-dark"
+                                data-controller="dom-element"
+                                data-action="dom-element#bind"
+                                data-dom-element-bind-specifications-param="{{ [
+                                    {'destinationsTarget': '#' ~ form.addressDelivery15.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 15'},
+                                    {'destinationsTarget': '#address-delivery-15-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 15'},
+                                    {'destinationsTarget': '#' ~ form.addressDelivery14.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 14'},
+                                    {'destinationsTarget': '#address-delivery-14-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 14'},
+                                    {'destinationsTarget': '#' ~ form.addressDelivery13.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 13'},
+                                    {'destinationsTarget': '#address-delivery-13-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 13'},
+                                    {'destinationsTarget': '#' ~ form.addressDelivery12.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 12'},
+                                    {'destinationsTarget': '#address-delivery-12-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 12'},
+                                    {'destinationsTarget': '#' ~ form.addressDelivery11.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 11'},
+                                    {'destinationsTarget': '#address-delivery-11-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 11'},
+                                    {'destinationsTarget': '#' ~ form.addressDelivery10.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 10'},
+                                    {'destinationsTarget': '#address-delivery-10-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 10'},
+                                    {'destinationsTarget': '#' ~ form.addressDelivery9.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 9'},
+                                    {'destinationsTarget': '#address-delivery-9-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 9'},
+                                    {'destinationsTarget': '#' ~ form.addressDelivery8.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 8'},
+                                    {'destinationsTarget': '#address-delivery-8-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 8'},
+                                    {'destinationsTarget': '#' ~ form.addressDelivery7.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 7'},
+                                    {'destinationsTarget': '#address-delivery-7-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 7'},
+                                    {'destinationsTarget': '#' ~ form.addressDelivery6.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 6'},
+                                    {'destinationsTarget': '#address-delivery-6-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 6'},
+                                    {'destinationsTarget': '#' ~ form.addressDelivery5.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 5'},
+                                    {'destinationsTarget': '#address-delivery-5-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 5'},
+                                    {'destinationsTarget': '#' ~ form.addressDelivery4.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 4'},
+                                    {'destinationsTarget': '#address-delivery-4-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 4'},
+                                    {'destinationsTarget': '#' ~ form.addressDelivery3.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 3'},
+                                    {'destinationsTarget': '#address-delivery-3-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 3'},
+                                    {'destinationsTarget': '#' ~ form.addressDelivery2.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 2'},
+                                    {'destinationsTarget': '#address-delivery-2-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-delivery-counter").textContent) === 2'},
+                                    {'destinationsTarget': '#address-delivery-counter', 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': 'parseInt($destinations[0].textContent) - 1'}, 'condition': 'parseInt($destination.textContent) > 1'},
+                                ]|json_encode }}">Remove Address</button>
+                        <span>&nbsp;(** Maksimum 15 alamat)</span>
+                    </div>
+                </div>
+                <div id="address-delivery-1-container">
+                    {{ form_row(form.addressDelivery1, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-2-container" {% if customer.addressDelivery2 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery2, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-3-container" {% if customer.addressDelivery3 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery3, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-4-container" {% if customer.addressDelivery4 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery4, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-5-container" {% if customer.addressDelivery5 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery5, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-6-container" {% if customer.addressDelivery6 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery6, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-7-container" {% if customer.addressDelivery7 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery7, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-8-container" {% if customer.addressDelivery8 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery8, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-9-container" {% if customer.addressDelivery9 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery9, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-10-container" {% if customer.addressDelivery10 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery10, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-11-container" {% if customer.addressDelivery11 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery11, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-12-container" {% if customer.addressDelivery12 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery12, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-13-container" {% if customer.addressDelivery13 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery13, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-14-container" {% if customer.addressDelivery14 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery14, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                <div id="address-delivery-15-container" {% if customer.addressDelivery15 == '' %}class="d-none"{% endif %}>
+                    {{ form_row(form.addressDelivery15, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                </div>
+                
+                <hr />
+                    
+                <div class="row">
+                    <div class="mb-3">
+                        <span id="name-counter" class="d-none">
+                            {% if customer.name15 != '' %}
+                                15
+                            {% elseif customer.name14 != '' %}
+                                14
+                            {% elseif customer.name13 != '' %}
+                                13
+                            {% elseif customer.name12 != '' %}
+                                12
+                            {% elseif customer.name11 != '' %}
+                                11
+                            {% elseif customer.name10 != '' %}
+                                10
+                            {% elseif customer.name9 != '' %}
+                                9
+                            {% elseif customer.name8 != '' %}
+                                8
+                            {% elseif customer.name7 != '' %}
+                                7
+                            {% elseif customer.name6 != '' %}
+                                6
+                            {% elseif customer.name5 != '' %}
+                                5
+                            {% elseif customer.name4 != '' %}
+                                4
+                            {% elseif customer.name3 != '' %}
+                                3
+                            {% elseif customer.name2 != '' %}
+                                2
+                            {% else %}
+                                1
+                            {% endif %}
+                        </span>
+                        <div class="{{ isMarketingInputDisabled ? 'd-none' : '' }}">
+                            <button type="button" class="btn btn-sm btn-outline-dark"
+                                    data-controller="dom-element"
+                                    data-action="dom-element#bind"
+                                    data-dom-element-bind-specifications-param="{{ [
+                                        {'destinationsTarget': '#name-counter', 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': 'parseInt($destinations[0].textContent) + 1'}, 'condition': 'parseInt($destination.textContent) < 15'},
+                                        {'destinationsTarget': '#name-2-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 2'},
+                                        {'destinationsTarget': '#name-3-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 3'},
+                                        {'destinationsTarget': '#name-4-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 4'},
+                                        {'destinationsTarget': '#name-5-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 5'},
+                                        {'destinationsTarget': '#name-6-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 6'},
+                                        {'destinationsTarget': '#name-7-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 7'},
+                                        {'destinationsTarget': '#name-8-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 8'},
+                                        {'destinationsTarget': '#name-9-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 9'},
+                                        {'destinationsTarget': '#name-10-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 10'},
+                                        {'destinationsTarget': '#name-11-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 11'},
+                                        {'destinationsTarget': '#name-12-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 12'},
+                                        {'destinationsTarget': '#name-13-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 13'},
+                                        {'destinationsTarget': '#name-14-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 14'},
+                                        {'destinationsTarget': '#name-15-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 15'},
+                                    ]|json_encode }}">Add PIC</button>
+                            <button type="button" class="btn btn-sm btn-outline-dark"
+                                    data-controller="dom-element"
+                                    data-action="dom-element#bind"
+                                    data-dom-element-bind-specifications-param="{{ [
+                                        {'destinationsTarget': '#' ~ form.name15.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 15'},
+                                        {'destinationsTarget': '#name-15-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 15'},
+                                        {'destinationsTarget': '#' ~ form.name14.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 14'},
+                                        {'destinationsTarget': '#name-14-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 14'},
+                                        {'destinationsTarget': '#' ~ form.name13.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 13'},
+                                        {'destinationsTarget': '#name-13-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 13'},
+                                        {'destinationsTarget': '#' ~ form.name12.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 12'},
+                                        {'destinationsTarget': '#name-12-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 12'},
+                                        {'destinationsTarget': '#' ~ form.name11.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 11'},
+                                        {'destinationsTarget': '#name-11-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 11'},
+                                        {'destinationsTarget': '#' ~ form.name10.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 10'},
+                                        {'destinationsTarget': '#name-10-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 10'},
+                                        {'destinationsTarget': '#' ~ form.name9.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 9'},
+                                        {'destinationsTarget': '#name-9-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 9'},
+                                        {'destinationsTarget': '#' ~ form.name8.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 8'},
+                                        {'destinationsTarget': '#name-8-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 8'},
+                                        {'destinationsTarget': '#' ~ form.name7.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 7'},
+                                        {'destinationsTarget': '#name-7-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 7'},
+                                        {'destinationsTarget': '#' ~ form.name6.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 6'},
+                                        {'destinationsTarget': '#name-6-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 6'},
+                                        {'destinationsTarget': '#' ~ form.name5.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 5'},
+                                        {'destinationsTarget': '#name-5-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 5'},
+                                        {'destinationsTarget': '#' ~ form.name4.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 4'},
+                                        {'destinationsTarget': '#name-4-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 4'},
+                                        {'destinationsTarget': '#' ~ form.name3.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 3'},
+                                        {'destinationsTarget': '#name-3-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 3'},
+                                        {'destinationsTarget': '#' ~ form.name2.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 2'},
+                                        {'destinationsTarget': '#name-2-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#name-counter").textContent) === 2'},
+                                        {'destinationsTarget': '#name-counter', 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': 'parseInt($destinations[0].textContent) - 1'}, 'condition': 'parseInt($destination.textContent) > 1'},
+                                    ]|json_encode }}">Remove PIC</button>
+                            <span>&nbsp;(** Maksimum 15 PIC)</span>
+                        </div>
+                    </div>
+                    <div id="name-1-container">
+                        {{ form_row(form.name, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-2-container" {% if customer.name2 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name2, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-3-container" {% if customer.name3 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name3, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-4-container" {% if customer.name4 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name4, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-5-container" {% if customer.name5 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name5, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-6-container" {% if customer.name6 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name6, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-7-container" {% if customer.name7 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name7, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-8-container" {% if customer.name8 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name8, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-9-container" {% if customer.name9 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name9, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-10-container" {% if customer.name10 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name10, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-11-container" {% if customer.name11 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name11, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-12-container" {% if customer.name12 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name12, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-13-container" {% if customer.name13 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name13, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-14-container" {% if customer.name14 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name14, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                    <div id="name-15-container" {% if customer.name15 == '' %}class="d-none"{% endif %}>
+                        {{ form_row(form.name15, {'attr': {'readonly': isMarketingInputDisabled}}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+        
+    <div class="{{ customer.id == null ? 'd-none' : '' }}">
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">FINANCE</legend>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.taxNumber, {'attr': {'readonly': isFinanceInputDisabled}}) }}
+                    {{ form_row(form.addressInvoice, {'attr': {'readonly': isFinanceInputDisabled}}) }}
+                    {{ form_row(form.isBondedZone) }}
+                </div>
+
+                <div class="col">
+                    <div class="row">
+                        <div class="mb-3">
+                            <span id="address-tax-counter" class="d-none">
+                                {% if customer.addressTax5 != '' %}
+                                    5
+                                {% elseif customer.addressTax4 != '' %}
+                                    4
+                                {% elseif customer.addressTax3 != '' %}
+                                    3
+                                {% elseif customer.addressTax2 != '' %}
+                                    2
+                                {% else %}
+                                    1
+                                {% endif %}
+                            </span>
+                            <div class="{{ isFinanceInputDisabled ? 'd-none' : '' }}">
+                                <button type="button" class="btn btn-sm btn-outline-dark"
+                                        data-controller="dom-element"
+                                        data-action="dom-element#bind"
+                                        data-dom-element-bind-specifications-param="{{ [
+                                            {'destinationsTarget': '#address-tax-counter', 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': 'parseInt($destinations[0].textContent) + 1'}, 'condition': 'parseInt($destination.textContent) < 5'},
+                                            {'destinationsTarget': '#address-tax-2-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-tax-counter").textContent) === 2'},
+                                            {'destinationsTarget': '#address-tax-3-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-tax-counter").textContent) === 3'},
+                                            {'destinationsTarget': '#address-tax-4-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-tax-counter").textContent) === 4'},
+                                            {'destinationsTarget': '#address-tax-5-container', 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-tax-counter").textContent) === 5'},
+                                        ]|json_encode }}">Add Address</button>
+                                <button type="button" class="btn btn-sm btn-outline-dark"
+                                        data-controller="dom-element"
+                                        data-action="dom-element#bind"
+                                        data-dom-element-bind-specifications-param="{{ [
+                                            {'destinationsTarget': '#' ~ form.addressTax5.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-tax-counter").textContent) === 5'},
+                                            {'destinationsTarget': '#address-tax-5-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-tax-counter").textContent) === 5'},
+                                            {'destinationsTarget': '#' ~ form.addressTax4.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-tax-counter").textContent) === 4'},
+                                            {'destinationsTarget': '#address-tax-4-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-tax-counter").textContent) === 4'},
+                                            {'destinationsTarget': '#' ~ form.addressTax3.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-tax-counter").textContent) === 3'},
+                                            {'destinationsTarget': '#address-tax-3-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-tax-counter").textContent) === 3'},
+                                            {'destinationsTarget': '#' ~ form.addressTax2.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '""'}, 'condition': 'parseInt(document.querySelector("#address-tax-counter").textContent) === 2'},
+                                            {'destinationsTarget': '#address-tax-2-container', 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': 'parseInt(document.querySelector("#address-tax-counter").textContent) === 2'},
+                                            {'destinationsTarget': '#address-tax-counter', 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': 'parseInt($destinations[0].textContent) - 1'}, 'condition': 'parseInt($destination.textContent) > 1'},
+                                        ]|json_encode }}">Remove Address</button>
+                                <span>&nbsp;(** Maksimum 5 alamat)</span>
+                            </div>
+                        </div>
+                        <div id="address-tax-1-container">
+                            {{ form_row(form.addressTax1, {'attr': {'readonly': isFinanceInputDisabled}}) }}
+                        </div>
+                        <div id="address-tax-2-container" {% if customer.addressTax2 == '' %}class="d-none"{% endif %}>
+                            {{ form_row(form.addressTax2, {'attr': {'readonly': isFinanceInputDisabled}}) }}
+                        </div>
+                        <div id="address-tax-3-container" {% if customer.addressTax3 == '' %}class="d-none"{% endif %}>
+                            {{ form_row(form.addressTax3, {'attr': {'readonly': isFinanceInputDisabled}}) }}
+                        </div>
+                        <div id="address-tax-4-container" {% if customer.addressTax4 == '' %}class="d-none"{% endif %}>
+                            {{ form_row(form.addressTax4, {'attr': {'readonly': isFinanceInputDisabled}}) }}
+                        </div>
+                        <div id="address-tax-5-container" {% if customer.addressTax5 == '' %}class="d-none"{% endif %}>
+                            {{ form_row(form.addressTax5, {'attr': {'readonly': isFinanceInputDisabled}}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+                
+    <div class="d-grid">
+        <div class="row">
+            <div class="col text-center">
+                <a class="btn btn-danger" href="{{ path('app_master_customer_index') }}"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                    Cancel
+                </a>
+                <button class="btn btn-success"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                    Save
+                </button>
+            </div>
+        </div>
+        <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+    </div>
+{{ form_end(form) }}

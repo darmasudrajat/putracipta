@@ -1,0 +1,141 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Delivery' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_sale_delivery_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_DELIVERY_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_sale_delivery_header_edit', {'id': deliveryHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_DELIVERY_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_sale_delivery_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Pengiriman #</th>
+                <td>{{ deliveryHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ deliveryHeader.transactionDate ? deliveryHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Customer</th>
+                <td>{{ deliveryHeader.customer.company|default}}</td>
+            </tr>
+            <tr>
+                <th>PIC</th>
+                <td>{{ deliveryHeader.customerName|default}}</td>
+            </tr>
+            <tr>
+                <th>Alamat Kirim</th>
+                <td>{{ attribute(deliveryHeader.customer, 'addressDelivery' ~ deliveryHeader.deliveryAddressOrdinal)|default|nl2br }}</td>
+            </tr>
+            <tr>
+                <th>Using FSC Paper?</th>
+                <td>{{ deliveryHeader.isUsingFscPaper ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Gudang</th>
+                <td>{{ deliveryHeader.warehouse.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Driver</th>
+                <td>{{ deliveryHeader.employee.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Kendaraan</th>
+                <td>{{ deliveryHeader.transportation.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Nopol</th>
+                <td>{{ deliveryHeader.transportation.plateNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ deliveryHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>Retur Transaksi</th>
+                <td>{{ deliveryHeader.hasReturnTransaction ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ deliveryHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ deliveryHeader.createdTransactionDateTime ? deliveryHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ deliveryHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ deliveryHeader.modifiedTransactionDateTime ? deliveryHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ deliveryHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>PO #</th>
+                <th>Kode</th>
+                <th>Nama Barang</th>
+                <th>FSC Code</th>
+                <th>WO #</th>
+                <th>Lot #</th>
+                <th>Line PO</th>
+                <th>Tgl Produksi</th>
+                <th>Qty Kirim</th>
+                <th>Qty Order</th>
+                <th>Total Terkirim</th>
+                <th>OS PO</th>
+                <th>Satuan</th>
+                <th>Kemasan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deliveryDetail in deliveryHeader.deliveryDetails %}
+                {% if deliveryDetail.isCanceled == false and deliveryDetail.quantity > 0 %}
+                    <tr>
+                        <td>{{ deliveryDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                        <td>{{ deliveryDetail.product.code|default }}</td>
+                        <td>{{ deliveryDetail.product.name|default }}</td>
+                        <td>{{ deliveryDetail.fscCode|default }}</td>
+                        <td>{{ deliveryDetail.masterOrderProductDetail.masterOrderHeader.codeNumber|default }}</td>
+                        <td>{{ deliveryDetail.lotNumber|default }}</td>
+                        <td>{{ deliveryDetail.linePo|default }}</td>
+                        <td>{{ deliveryDetail.masterOrderProductDetail.masterOrderHeader.transactionDate|default ? deliveryDetail.masterOrderProductDetail.masterOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+                        <td style="text-align: center">{{ deliveryDetail.quantity|default|number_format(0) }}</td>
+                        <td style="text-align: center">{{ deliveryDetail.saleOrderDetail.quantity|default|number_format(0) }}</td>
+                        <td style="text-align: center">{{ deliveryDetail.deliveredQuantity|default|number_format(0) }}</td>
+                        <td style="text-align: center">{{ deliveryDetail.remainingQuantity|default|number_format(0) }}</td>
+                        <td>{{ deliveryDetail.unit.name|default }}</td>
+                        <td>{{ deliveryDetail.packaging|default }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="8" style="text-align: right"><strong>Total</strong></td>
+                <td style="text-align: center"><strong>{{ deliveryHeader.totalQuantity|default|number_format(0) }}</strong></td>
+                <td colspan="5"></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    {#<div class="d-inline-block">{{ include('sale/delivery_header/_delete_form.html.twig') }}</div>#}
+    <div class="d-inline-block"><a target="_blank" class="btn btn-info btn-sm" href="{{ path('app_sale_delivery_header_memo', {'id': deliveryHeader.id}) }}">Print SJ</a></div>
+{% endblock %}

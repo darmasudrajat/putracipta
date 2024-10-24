@@ -1,0 +1,64 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, transportations) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    Name {{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th role="button" {{ grid.sort_link_item(form, 'plateNumber') }}>
+                    Plate Number {{ grid.sort_char(form.sort.plateNumber.vars.value) }}
+                </th>
+                <th role="button" {{ grid.sort_link_item(form, 'isInactive') }}>
+                    Status {{ grid.sort_char(form.sort.isInactive.vars.value) }}
+                </th>
+                <th></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'plateNumber') }} value="{{ form.filter.plateNumber.1.vars.value }}" />
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'isInactive') }}>
+                        <option value="" {% if form.filter.isInactive.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.isInactive.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.isInactive.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transportation in transportations %}
+                <tr>
+                    <td>{{ transportation.name }}</td>
+                    <td>{{ transportation.plateNumber }}</td>
+                    <td>{{ transportation.isInactive ? 'Inactive' : 'Active' }}</td>
+                    <td>
+                        {% if is_granted('ROLE_TRANSPORTATION_VIEW') or is_granted('ROLE_TRANSPORTATION_EDIT') or is_granted('ROLE_TRANSPORTATION_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_master_transportation_show', {'id': transportation.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_TRANSPORTATION_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_master_transportation_edit', {'id': transportation.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, transportations) }}

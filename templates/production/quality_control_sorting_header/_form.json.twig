@@ -1,0 +1,14 @@
+{
+    "qualityControlSortingDetails": {
+        {%- for qualityControlSortingDetailForm in form.qualityControlSortingDetails -%}
+            {%- set qualityControlSortingDetail = qualityControlSortingDetailForm.vars.data -%}
+            "{{ qualityControlSortingDetailForm.vars.name }}": {
+                "quantityOrder": "{{ qualityControlSortingDetail.quantityOrder|default|number_format(2) }}",
+                "totalQuantitySorting": "{{ qualityControlSortingDetail.totalQuantitySorting|default|number_format(2) }}",
+                "totalQuantityReject": "{{ qualityControlSortingDetail.totalQuantityReject|default|number_format(2) }}",
+                "quantityRemaining": "{{ qualityControlSortingDetail.quantityRemaining|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

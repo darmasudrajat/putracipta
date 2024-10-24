@@ -1,0 +1,216 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Work Order Prepress' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_work_order_prepress_index') }}">Manage</a>
+    <a class="btn btn-warning btn-sm" href="{{ path('app_production_work_order_prepress_edit', {'id': workOrderPrepress.id}) }}">Edit</a>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>WO #</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal WO</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.transactionDate|default ? workOrderPrepress.workOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Kirim</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.deliveryDate|default ? workOrderPrepress.workOrderHeader.masterOrderHeader.deliveryDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Master Order #</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Mesin</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.printingMachine|default }}</td>
+            </tr>
+            <tr>
+                <th>Customer</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.customer.company|default }}</td>
+            </tr>
+            <tr>
+                <th>Kode Produk</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.product.code|default }}</td>
+            </tr>
+            <tr>
+                <th>Nama Produk</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.product.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Kode Design</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.designCode|default }}</td>
+            </tr>
+            <tr>
+                <th>Status Cetakan</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.printingStatus|default }}</td>
+            </tr>
+            <tr>
+                <th>Quantity Order</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.quantityOrder|default }}</td>
+            </tr>
+            <tr>
+                <th>Stock / Kekurangan</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.quantityStock|default }}</td>
+            </tr>
+            <tr>
+                <th>Warna / Pantone</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.color|default }}</td>
+            </tr>
+            <tr>
+                <th>Ukuran Jadi (mm)</th>
+                <td>{{ workOrderPrepress.workOrderHeader.masterOrderHeader.dimensionLength|default }}</td>
+                <td>{{ workOrderPrepress.workOrderHeader.masterOrderHeader.dimensionWidth|default }}</td>
+                <td>{{ workOrderPrepress.workOrderHeader.masterOrderHeader.dimensionHeight|default }}</td>
+            </tr>
+            <tr>
+                <th>Ukuran Mountage</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.paperMountage|default }}</td>
+            </tr>
+            <tr>
+                <th>Jumlah Dreek</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.paperTotal|default }}</td>
+            </tr>
+            <tr>
+                <th>Finishing</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.masterOrderHeader.finishing|default }}</td>
+            </tr>
+            <tr>
+                <th>Up/s (Mata)</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderHeader.orderUp|default }}</td>
+            </tr>
+            <tr>
+                <th>Plate Baru</th>
+                <td colspan="3">{{ workOrderPrepress.quantityPlateNew }}</td>
+            </tr>
+            <tr>
+                <th>Plate Lama</th>
+                <td colspan="3">{{ workOrderPrepress.quantityPlateOld }}</td>
+            </tr>
+            <tr>
+                <th>Plate Bekas</th>
+                <td colspan="3">{{ workOrderPrepress.quantityPlateUsed }}</td>
+            </tr>
+            <tr>
+                <th>Plate Merk</th>
+                <td colspan="3">{{ workOrderPrepress.plateBrand }}</td>
+            </tr>
+            <tr>
+                <th>Plate Diserahkan kepada</th>
+                <td colspan="3">{{ workOrderPrepress.employeeIdPlateRelease.name }}</td>
+            </tr>
+            <tr>
+                <th>WO dikembalikan oleh</th>
+                <td colspan="3">{{ workOrderPrepress.employeeIdWorkOrderReturn.name }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Pengembalian WO</th>
+                <td colspan="3">{{ workOrderPrepress.workOrderReturnDate ? workOrderPrepress.workOrderReturnDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Catatan</th>
+                <td colspan="3">{{ workOrderPrepress.note }}</td>
+            </tr>
+        </tbody>
+    </table>
+            
+    <table class="table table-bordered">
+        <thead class="table-secondary">
+            <tr>
+                <th rowspan="2">&nbsp;</th>
+                <th rowspan="2" class="text-center">Warna</th>
+                <th colspan="2" class="text-center">Output Awal</th>
+                <th colspan="2" class="text-center">Tambahan / Revisi</th>
+                <th colspan="3" class="text-center">Downtime</th>
+            </tr>
+            <tr>
+                <th class="text-center">Mulai</th>
+                <th class="text-center">Selesai</th>
+                <th class="text-center">Mulai</th>
+                <th class="text-center">Selesai</th>
+                <th class="text-center">Mulai</th>
+                <th class="text-center">Selesai</th>
+                <th class="text-center">Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="4">CTcP</td>
+                <td class="text-center">C</td>
+                <td>{{ workOrderPrepress.internalCyanBeginningOutputStartDate ? workOrderPrepress.internalCyanBeginningOutputStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalCyanBeginningOutputEndDate ? workOrderPrepress.internalCyanBeginningOutputEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalCyanRevisionStartDate ? workOrderPrepress.internalCyanRevisionStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalCyanRevisionEndDate ? workOrderPrepress.internalCyanRevisionEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalCyanDowntimeStartDate ? workOrderPrepress.internalCyanDowntimeStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalCyanDowntimeEndDate ? workOrderPrepress.internalCyanDowntimeEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalCyanDowntimeMemo }}</td>
+            </tr>
+            <tr>
+                <td class="text-center">M</td>
+                <td>{{ workOrderPrepress.internalMagentaBeginningOutputStartDate ? workOrderPrepress.internalMagentaBeginningOutputStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalMagentaBeginningOutputEndDate ? workOrderPrepress.internalMagentaBeginningOutputEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalMagentaRevisionStartDate ? workOrderPrepress.internalMagentaRevisionStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalMagentaRevisionEndDate ? workOrderPrepress.internalMagentaRevisionEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalMagentaDowntimeStartDate ? workOrderPrepress.internalMagentaDowntimeStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalMagentaDowntimeEndDate ? workOrderPrepress.internalMagentaDowntimeEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalMagentaDowntimeMemo }}</td>
+            </tr>
+            <tr>
+                <td class="text-center">Y</td>
+                <td>{{ workOrderPrepress.internalYellowBeginningOutputStartDate ? workOrderPrepress.internalYellowBeginningOutputStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalYellowBeginningOutputEndDate ? workOrderPrepress.internalYellowBeginningOutputEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalYellowRevisionStartDate ? workOrderPrepress.internalYellowRevisionStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalYellowRevisionEndDate ? workOrderPrepress.internalYellowRevisionEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalYellowDowntimeStartDate ? workOrderPrepress.internalYellowDowntimeStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalYellowDowntimeEndDate ? workOrderPrepress.internalYellowDowntimeEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalYellowDowntimeMemo }}</td>
+            </tr>
+            <tr>
+                <td class="text-center">B</td>
+                <td>{{ workOrderPrepress.internalBlackBeginningOutputStartDate ? workOrderPrepress.internalYellowBeginningOutputStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalBlackBeginningOutputEndDate ? workOrderPrepress.internalYellowBeginningOutputEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalBlackRevisionStartDate ? workOrderPrepress.internalYellowRevisionStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalBlackRevisionEndDate ? workOrderPrepress.internalYellowRevisionEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalBlackDowntimeStartDate ? workOrderPrepress.internalYellowDowntimeStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalBlackDowntimeEndDate ? workOrderPrepress.internalYellowDowntimeEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.internalBlackDowntimeMemo }}</td>
+            </tr>
+            <tr>
+                <td rowspan="4">Plate Subcon</td>
+                <td class="text-center">C</td>
+                <td>{{ workOrderPrepress.subconCyanBeginningOutputStartDate ? workOrderPrepress.subconCyanBeginningOutputStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.subconCyanBeginningOutputEndDate ? workOrderPrepress.subconCyanBeginningOutputEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.subconCyanRevisionStartDate ? workOrderPrepress.subconCyanRevisionStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.subconCyanRevisionEndDate ? workOrderPrepress.subconCyanRevisionEndDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <td class="text-center">M</td>
+                <td>{{ workOrderPrepress.subconMagentaBeginningOutputStartDate ? workOrderPrepress.subconMagentaBeginningOutputStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.subconMagentaBeginningOutputEndDate ? workOrderPrepress.subconMagentaBeginningOutputEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.subconMagentaRevisionStartDate ? workOrderPrepress.subconMagentaRevisionStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.subconMagentaRevisionEndDate ? workOrderPrepress.subconMagentaRevisionEndDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <td class="text-center">Y</td>
+                <td>{{ workOrderPrepress.subconYellowBeginningOutputStartDate ? workOrderPrepress.subconYellowBeginningOutputStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.subconYellowBeginningOutputEndDate ? workOrderPrepress.subconYellowBeginningOutputEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.subconYellowRevisionStartDate ? workOrderPrepress.subconYellowRevisionStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.subconYellowRevisionEndDate ? workOrderPrepress.subconYellowRevisionEndDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <td class="text-center">B</td>
+                <td>{{ workOrderPrepress.subconBlackBeginningOutputStartDate ? workOrderPrepress.subconBlackBeginningOutputStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.subconBlackBeginningOutputEndDate ? workOrderPrepress.subconBlackBeginningOutputEndDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.subconBlackRevisionStartDate ? workOrderPrepress.subconBlackRevisionStartDate|date('d M Y') : '' }}</td>
+                <td>{{ workOrderPrepress.subconBlackRevisionEndDate ? workOrderPrepress.subconBlackRevisionEndDate|date('d M Y') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {#{{ include('production/work_order_prepress/_delete_form.html.twig') }}#}
+{% endblock %}

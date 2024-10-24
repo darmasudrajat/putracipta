@@ -1,0 +1,254 @@
+<div class="row">
+    <div class="col">
+        {{ form_row(form.machinePrinting, {'label': 'Mesin Cetak'}) }}
+        <div class="mb-3">
+            <label for="{{ form.paper.vars.id }}-text" class="form-label">Material Kertas</label>
+            {{ form_row(form.paper, {
+                'attr': {
+                    'data-controller': 'dom-element',
+                    'data-action': 'design-code-table:data-table:select@document->dom-element#bind paper-table:data-table:select@document->dom-element#bind paper-table:data-table:select@document->json-loader#load', 
+                    'data-dom-element-bind-specifications-param': [
+                        {'eventTypes': ['design-code-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.paperId'}},
+                        {'eventTypes': ['paper-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.paperId'}},
+                    ]|json_encode,
+                },
+            }) }}
+            <input type="text" class="form-control readonly-form-input" value="{{ masterOrderHeader.paper.name|default }}" readonly="readonly"
+                   data-bs-toggle="modal" data-bs-target="#paper-dialog"
+                   data-controller="dom-element"
+                   data-action="design-code-table:data-table:select@document->dom-element#bind paper-table:data-table:select@document->dom-element#bind"
+                   data-dom-element-bind-specifications-param="{{ [
+                       {'eventTypes': ['design-code-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.paperName'}},
+                       {'eventTypes': ['paper-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.paperName'}},
+                   ]|json_encode }}" />
+            {{ form_errors(form.paper) }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Kode Kertas</label>
+            <input type="text" class="form-control" value="{{ masterOrderHeader.paper.codeNumber|default }}" readonly="readonly"
+                   data-controller="dom-element"
+                   data-action="design-code-table:data-table:select@document->dom-element#bind paper-table:data-table:select@document->dom-element#bind"
+                   data-dom-element-bind-specifications-param="{{ [
+                       {'eventTypes': ['design-code-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.paperCodeNumber'}},
+                       {'eventTypes': ['paper-table:data-table:select'], 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.paperCode'}},
+                   ]|json_encode }}" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Stock Kertas</label>
+            {{ form_widget(form.quantityStockPaper, {
+                'attr': {
+                    'readonly': true,
+                    'data-json-loader-target': 'placeholder',
+                    'data-property-path': 'quantityStockPaper',
+                },
+            }) }}
+            {{ form_errors(form.quantityStockPaper) }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Ukuran Mountage / Kris</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.mountageSize, {
+                            'attr': {
+                                'readonly': true,
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodePrintingKrisSize'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.mountageSize) }}
+                        <span class="input-group-text">cm</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.productDevelopment.vars.id }}-text" class="form-label">Pengembangan Produk Baru</label>
+            {{ form_row(form.productDevelopment, {
+                'attr': {
+                    'data-controller': 'dom-element',
+                    'data-action': 'product-development-table:data-table:select@document->dom-element#bind',
+                    'data-dom-element-bind-specifications-param': [
+                        {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.productDevelopmentId'}},
+                    ]|json_encode,
+                },
+            }) }}
+            <input type="text" id="{{ form.productDevelopment.vars.id }}-text" class="form-control readonly-form-input {% if not form.productDevelopment.vars.valid %}is-invalid{% endif %}" value="{{ masterOrderHeader.productDevelopment.codeNumber|default }}" readonly="readonly"
+                   data-bs-toggle="modal" data-bs-target="#product-development-dialog"
+                   data-controller="dom-element"
+                   data-action="product-development-table:data-table:select@document->dom-element#bind"
+                   data-dom-element-bind-specifications-param="{{ [
+                       {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.productDevelopmentCodeNumber'}},
+                   ]|json_encode }}" />
+            {{ form_errors(form.productDevelopment) }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Tanggal Development</label>
+            <input type="text" class="form-control" value="{{ masterOrderHeader.productDevelopment.transactionDate|default ? masterOrderHeader.productDevelopment.transactionDate|date('d M Y') : '' }}" readonly="readonly"
+                   data-controller="dom-element"
+                   data-action="product-development-table:data-table:select@document->dom-element#bind"
+                   data-dom-element-bind-specifications-param="{{ [
+                       {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.productDevelopmentDate'}},
+                   ]|json_encode }}" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Jenis Development</label>
+            <input type="text" class="form-control" value="{{ masterOrderHeader.productDevelopment.developmentTypeList|default ? masterOrderHeader.productDevelopment.developmentTypeList|join(', ') : '' }}" readonly="readonly"
+                   data-controller="dom-element"
+                   data-action="product-development-table:data-table:select@document->dom-element#bind"
+                   data-dom-element-bind-specifications-param="{{ [
+                       {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.productDevelopmentTypeList'}},
+                   ]|json_encode }}" />
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="mb-3">
+            <div class="row">
+                <label class="form-label">Hot Stamping</label>
+                {{ form_widget(form.hotStamping, {
+                    'attr': {
+                        'readonly': true,
+                        'data-controller': 'dom-element',
+                        'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                        'data-dom-element-bind-specifications-param': [
+                            {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeHotStamping'}},
+                        ]|json_encode,
+                    },
+                }) }}
+                {{ form_errors(form.hotStamping) }}
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="row">
+                <label class="form-label">Glossiness (%)</label>
+                {{ form_widget(form.glossiness, {
+                    'attr': {
+                        'readonly': true,
+                        'data-controller': 'dom-element',
+                        'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                        'data-dom-element-bind-specifications-param': [
+                            {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeGlossiness'}},
+                        ]|json_encode,
+                    },
+                }) }}
+                {{ form_errors(form.glossiness) }}
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="row">
+                <label class="form-label">Coating</label>
+                {{ form_widget(form.finishing, {
+                    'attr': {
+                        'readonly': true,
+                        'data-controller': 'dom-element',
+                        'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                        'data-dom-element-bind-specifications-param': [
+                            {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeCoating'}},
+                        ]|json_encode,
+                    },
+                }) }}
+                {{ form_errors(form.finishing) }}
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Warna / Pantone</label>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.color, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeColor'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.color) }}
+                        <span class="input-group-text">/</span>
+                        {{ form_widget(form.pantone, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodePantone'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        {{ form_errors(form.pantone) }}
+                        <span class="input-group-text">+</span>
+                        <input type="text" class="form-control" value="{{ masterOrderHeader.colorPantoneAdditional|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="design-code-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeColorPantoneAdditional'}},
+                               ]|json_encode }}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <label class="form-label">Total Up Cetak</label>
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.quantityPrinting, {'label': false}) }}
+            </div>
+        </div>
+        <label class="form-label">Pisau Die Cut</label>
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.dieCutBlade, {'label': false}) }}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Pisau Diecut #</label>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.diecutKnife, {
+                        'attr': {
+                            'data-controller': 'dom-element',
+                            'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeDiecutKnifeId'}},
+                            ]|json_encode,
+                        },
+                    }) }}
+                    <input type="text" class="form-control" value="{{ masterOrderHeader.diecutKnife.codeNumber|default }}" readonly="readonly"
+                           data-controller="dom-element"
+                           data-action="design-code-table:data-table:select@document->dom-element#bind"
+                           data-dom-element-bind-specifications-param="{{ [
+                               {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeDiecutKnifeCodeNumber'}},
+                           ]|json_encode }}" />
+                    {{ form_errors(form.diecutKnife) }}
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">No. Film Dieline Diecut (Millar)</label>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.dielineMillar, {
+                        'attr': {
+                            'data-controller': 'dom-element',
+                            'data-action': 'design-code-table:data-table:select@document->dom-element#bind',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeDielineMillarId'}},
+                            ]|json_encode,
+                        },
+                    }) }}
+                    <input type="text" class="form-control" value="{{ masterOrderHeader.dielineMillar.codeNumber|default }}" readonly="readonly"
+                           data-controller="dom-element"
+                           data-action="design-code-table:data-table:select@document->dom-element#bind"
+                           data-dom-element-bind-specifications-param="{{ [
+                               {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.designCodeData.designCodeDielineMillarCodeNumber'}},
+                           ]|json_encode }}" />
+                    {{ form_errors(form.diecutKnife) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

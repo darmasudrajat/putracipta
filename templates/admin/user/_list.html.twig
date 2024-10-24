@@ -1,0 +1,41 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, users) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button" {{ grid.sort_link_item(form, 'username') }}>
+                    Username {{ grid.sort_char(form.sort.username.vars.value) }}
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'username') }} value="{{ form.filter.username.1.vars.value }}" />
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>
+                        <a class="btn btn-info btn-sm" href="{{ path('app_admin_user_show', {'id': user.id}) }}"><i class="bi-search"></i></a>
+                        <a class="btn btn-warning btn-sm" href="{{ path('app_admin_user_edit', {'id': user.id}) }}"><i class="bi-pencil"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, users) }}

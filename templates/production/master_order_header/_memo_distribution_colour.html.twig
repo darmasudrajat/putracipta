@@ -1,0 +1,446 @@
+<div class="memo">
+    <div class="header" style="font-size: 10px; text-align: left">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label"><img id="logo" alt="logo" max-height="300px" src="{{ asset('images/Logo.jpg') }}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label" style="font-size: 14px; text-align: center">FORMULIR</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label" style="font-size: 18px; text-align: center">WORK ORDER COLOR MIXING</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">No Dokumen</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">F/PCK/PPIC/8.1-3</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Revisi</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">0</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Tanggal</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label"></div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Halaman</div>
+                        <div class="cell label">:</div>
+                        <div class="cell label">1 dari 1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="note">
+        <div class="table full">
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">Mesin Cetak</div>
+                        <div class="cell value">: {{ masterOrderHeader.machinePrinting.name|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Nama Customer</div>
+                        <div class="cell value">: {{ masterOrderHeader.customer.company|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Kode Design</div>
+                        <div class="cell value">: {{ masterOrderHeader.designCode.codeNumber|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Warna / Pantone</div>
+                        <div class="cell value">: {{ masterOrderHeader.color }} / {{ masterOrderHeader.pantone }} + {{ masterOrderHeader.colorPantoneAdditional }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Finishing</div>
+                        <div class="cell value">: {{ masterOrderHeader.finishing|default }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cell col">
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">No MO</div>
+                        <div class="cell value">: {{ masterOrderHeader.getCodeNumber|default }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Tanggal MO</div>
+                        <div class="cell value">: {{ masterOrderHeader.transactionDate ? masterOrderHeader.transactionDate|date('d M Y') : '' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Status Cetakan</div>
+                        <div class="cell value">: {{ masterOrderHeader.printingStatus ? masterOrderHeader.printingStatus|join(', ') : '' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Ukuran Mountage/Kris</div>
+                        <div class="cell value">: {{ masterOrderHeader.mountageSize }} cm</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Material Kertas</div>
+                        <div class="cell value">: {{ masterOrderHeader.paper.name|default }} Gram</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <table class="detail">
+            <thead>
+                <tr>
+                    <th>PO#</th>
+                    <th>Tanggal</th>
+                    <th>Kode</th>
+                    <th>Nama Produk</th>
+                    <th>Ukuran Jadi</th>
+                    <th>Tanggal Kirim</th>
+                    <th>Qty Order</th>
+                    <th>Qty Produksi</th>
+                    <th>Stock</th>
+                    <th>Kekurangan</th>
+                    <th>Up/s (Mata)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for masterOrderProductDetail in masterOrderHeader.masterOrderProductDetails %}
+                    <tr>
+                        <td>{{ masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                        <td>{{ masterOrderProductDetail.saleOrderDetail.saleOrderHeader.transactionDate ? masterOrderProductDetail.saleOrderDetail.saleOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+                        <td>{{ masterOrderProductDetail.saleOrderDetail.product.code|default }}</td>
+                        <td>{{ masterOrderProductDetail.saleOrderDetail.product.name|default }}</td>
+                        <td>
+                            {{ masterOrderProductDetail.saleOrderDetail.product.length|default|number_format(2) }} x 
+                            {{ masterOrderProductDetail.saleOrderDetail.product.width|default|number_format(2) }} x 
+                            {{ masterOrderProductDetail.saleOrderDetail.product.height|default|number_format(2) }}
+                        </td>
+                        <td>{{ masterOrderProductDetail.saleOrderDetail.deliveryDate ? masterOrderProductDetail.saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                        <td style="text-align:right">{{ masterOrderProductDetail.quantityOrder|default|number_format(0) }}</td>
+                        <td style="text-align:right">{{ masterOrderProductDetail.quantityProduction|default|number_format(0) }}</td>
+                        <td style="text-align:right">{{ masterOrderProductDetail.quantityStock|default|number_format(0) }}</td>
+                        <td style="text-align:right">{{ masterOrderProductDetail.quantityShortage|default|number_format(0) }}</td>
+                        <td style="text-align:center">{{ masterOrderProductDetail.quantityPrinting|default|number_format(0) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td style="text-align:right; font-weight: bold" colspan="6">TOTAL</td>
+                    <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityOrder|default|number_format(0) }}</td>
+                    <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityStock|default|number_format(0) }}</td>
+                    <td style="text-align:right; font-weight: bold">{{ masterOrderHeader.totalQuantityShortage|default|number_format(0) }}</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="table full">
+            <div class="cell col">
+                <h4><u>Kebutuhan Material Kertas</u></h4>
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">Uk Plano Kertas</div>
+                        <div class="cell value">: {{ masterOrderHeader.paperPlanoLength|number_format(2) }} x {{ masterOrderHeader.paperPlanoWidth|number_format(2) }} cm</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Uk Potong 1</div>
+                        <div class="cell value">: {{ masterOrderHeader.cuttingLengthSize1|number_format(2) }} x {{ masterOrderHeader.cuttingWidthSize1|number_format(2) }} cm</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Uk Potong 2</div>
+                        <div class="cell value">: {{ masterOrderHeader.cuttingLengthSize2|number_format(2) }} x {{ masterOrderHeader.cuttingWidthSize2|number_format(2) }} cm</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Kebutuhan</div>
+                        <div class="cell value">: {{ masterOrderHeader.paperRequirement|default|number_format(2) }} dreek</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Insit Cetak</div>
+                        <div class="cell value">: {{ masterOrderHeader.insitPrintingQuantity|default|number_format(2) }} dreek</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Total Kertas</div>
+                        <div class="cell value">: {{ masterOrderHeader.paperTotal|default|number_format(2) }} dreek</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cell col">
+                <h4><u>Realisasi Pemakaian Inseet Kertas</u></h4>
+                <div class="table full">
+                    <div class="row">
+                        <div class="cell label">Kertas Bekas</div>
+                        <div class="cell value">: _______________________ dreek</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell label">Kertas Baru</div>
+                        <div class="cell value">: _______________________ dreek</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4><u>Estimasi Tinta / Chemical</u></h4>
+        <div class="table full">
+            <table class="detail">
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Estimasi</th>
+                        <th>Realisasi</th>
+                        <th>&nbsp;</th>
+                        <th>Estimasi</th>
+                        <th>Realisasi</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <td class="w-25" style="font-weight: bold">Cyan</td>
+                        <td>{{ masterOrderHeader.inkCyanPercentage|number_format(2) }}% = {{ masterOrderHeader.inkCyanWeight|number_format(2) }} kg</td>
+                        <td class="w-25">&nbsp;</td>
+                        <td class="w-25" style="font-weight: bold">K-1</td>
+                        <td>
+                            {% if (masterOrderHeader.inkK1Percentage > 0) %}
+                                {{ masterOrderHeader.inkK1Color }} : {{ masterOrderHeader.inkK1Percentage|number_format(2) }}% = {{ masterOrderHeader.inkK1Weight|number_format(2) }} kg _______________
+                            {% endif %}
+                        </td>
+                        <td class="w-25">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold">Magenta</td>
+                        <td>{{ masterOrderHeader.inkMagentaPercentage|number_format(2) }}% = {{ masterOrderHeader.inkMagentaWeight|number_format(2) }} kg</td>
+                        <td class="w-25">&nbsp;</td>
+                        <td style="font-weight: bold">K-2</td>
+                        <td>
+                            {% if (masterOrderHeader.inkK2Percentage > 0) %}
+                                {{ masterOrderHeader.inkK2Color }} : {{ masterOrderHeader.inkK2Percentage|number_format(2) }}% = {{ masterOrderHeader.inkK2Weight|number_format(2) }} kg _______________
+                            {% endif %}
+                        </td>
+                        <td class="w-25">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold">Yellow</td>
+                        <td>{{ masterOrderHeader.inkYellowPercentage|number_format(2) }}% = {{ masterOrderHeader.inkYellowWeight|number_format(2) }} kg</td>
+                        <td class="w-25">&nbsp;</td>
+                        <td style="font-weight: bold">K-3</td>
+                        <td>
+                            {% if (masterOrderHeader.inkK3Percentage > 0) %}
+                                {{ masterOrderHeader.inkK3Color }} : {{ masterOrderHeader.inkK3Percentage|number_format(2) }}% = {{ masterOrderHeader.inkK3Weight|number_format(2) }} kg _______________
+                            {% endif %}
+                        </td>
+                        <td class="w-25">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold">Black</td>
+                        <td>{{ masterOrderHeader.inkBlackPercentage|number_format(2) }}% = {{ masterOrderHeader.inkBlackWeight|number_format(2) }} kg</td>
+                        <td class="w-25">&nbsp;</td>
+                        <td style="font-weight: bold">K-4</td>
+                        <td>
+                            {% if (masterOrderHeader.inkK4Percentage > 0) %}
+                                {{ masterOrderHeader.inkK4Color }} : {{ masterOrderHeader.inkK4Percentage|number_format(2) }}% = {{ masterOrderHeader.inkK4Weight|number_format(2) }} kg _______________
+                            {% endif %}
+                        </td>
+                        <td class="w-25">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold">OPV/WB/UV</td>
+                        <td>{{ masterOrderHeader.inkOpvPercentage|number_format(2) }}% = {{ masterOrderHeader.inkOpvWeight|number_format(2) }} kg</td>
+                        <td class="w-25">&nbsp;</td>
+                        <td style="font-weight: bold">Laminating</td>
+                        <td>{{ masterOrderHeader.inkLaminatingSize|number_format(2) }} cm = {{ masterOrderHeader.inkLaminatingQuantity|number_format(2) }} roll</td>
+                        <td class="w-25">&nbsp;</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <br />
+
+        <fieldset>
+            <div class="note">
+                <div class="table full">
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <table class="detail">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Warna Khusus - 1</th>
+                                            <th class="text-center">Mix Warna</th>
+                                            <th class="text-center">Jumlah (gr)</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <td rowspan="4"></td>
+                                            <td>1.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>3.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>4.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:center" colspan="2">Total</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <table class="detail">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Warna Khusus - 2</th>
+                                            <th class="text-center">Mix Warna</th>
+                                            <th class="text-center">Jumlah (gr)</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <td rowspan="4"></td>
+                                            <td>1.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>3.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>4.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:center" colspan="2">Total</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cell col">
+                        <div class="table full">
+                            <div class="row">
+                                <table class="detail">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Warna Khusus - 3</th>
+                                            <th class="text-center">Mix Warna</th>
+                                            <th class="text-center">Jumlah (gr)</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <td rowspan="4"></td>
+                                            <td>1.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>3.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>4.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:center" colspan="2">Total</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <table class="detail">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Warna Khusus - 4</th>
+                                            <th class="text-center">Mix Warna</th>
+                                            <th class="text-center">Jumlah (gr)</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <td rowspan="4"></td>
+                                            <td>1.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>3.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>4.</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:center" colspan="2">Total</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <br />
+
+    <div class="signature">
+        <div class="table full">
+            <div class="cell sig">
+                <div>Dikerjakan oleh,</div>
+                <div class="blank">&nbsp;</div>
+                <div class="blank">Color Matching</div>
+            </div>
+            <div class="cell sig">
+                <div>Dibuat oleh,</div>
+                <div class="blank">&nbsp;</div>
+                <div>PPIC</div>
+            </div>
+        </div>
+    </div>
+</div>

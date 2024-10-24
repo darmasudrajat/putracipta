@@ -1,0 +1,19 @@
+{
+    "totalQuantity": "{{ saleOrderHeader.totalQuantity|default|number_format(0) }}",
+    "subTotal": "{{ saleOrderHeader.subTotal|default|number_format(2) }}",
+    "discountNominal": "{{ saleOrderHeader.discountNominal|default|number_format(2) }}",
+    "taxNominal": "{{ saleOrderHeader.taxNominal|default|number_format(2) }}",
+    "shippingFee": "{{ saleOrderHeader.shippingFee|default|number_format(2) }}",
+    "grandTotal": "{{ saleOrderHeader.grandTotal|default|number_format(2) }}",
+    "saleOrderDetails": {
+        {%- for saleOrderDetailForm in form.saleOrderDetails -%}
+            {%- set saleOrderDetail = saleOrderDetailForm.vars.data -%}
+            "{{ saleOrderDetailForm.vars.name }}": {
+                "unitPriceBeforeTax": "{{ saleOrderDetail.unitPriceBeforeTax|default|number_format(6) }}",
+                "total": "{{ saleOrderDetail.total|default|number_format(2) }}",
+                "quantityStock": "{{ saleOrderDetail.quantityStock|default|number_format(0) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

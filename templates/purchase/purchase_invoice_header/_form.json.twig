@@ -1,0 +1,37 @@
+{%- set discountInfo -%}
+    Discount
+    {% if purchaseInvoiceHeader.discountValueType == constant('DISCOUNT_VALUE_TYPE_PERCENTAGE', purchaseInvoiceHeader) %}
+        {{ purchaseInvoiceHeader.discountValue|default }}%
+    {% endif %}
+{%- endset -%}
+{%- set taxInfo -%}
+    {% if purchaseInvoiceHeader.taxMode == constant('TAX_MODE_NON_TAX', purchaseInvoiceHeader) %}
+        Non Tax 0%
+    {% elseif purchaseInvoiceHeader.taxMode == constant('TAX_MODE_TAX_EXCLUSION', purchaseInvoiceHeader) %}
+        Exclude Tax {{ purchaseInvoiceHeader.taxPercentage }}%
+    {% elseif purchaseInvoiceHeader.taxMode == constant('TAX_MODE_TAX_INCLUSION', purchaseInvoiceHeader) %}
+        Include Tax {{ purchaseInvoiceHeader.taxPercentage }}%
+    {% endif %}
+{%- endset -%}
+{
+    "dueDate": "{{ purchaseInvoiceHeader.dueDate ? purchaseInvoiceHeader.dueDate|date('d M Y') : '' }}",
+    "subTotal": "{{ purchaseInvoiceHeader.subTotal|default|number_format(2) }}",
+    "discountInfo": "{{ discountInfo|trim|replace({'\n': ''}) }}",
+    "discountNominal": "{{ purchaseInvoiceHeader.discountNominal|default|number_format(2) }}",
+    "taxInfo": "{{ taxInfo|trim|replace({'\n': ''}) }}",
+    "taxNominal": "{{ purchaseInvoiceHeader.taxNominal|default|number_format(2) }}",
+    "shippingFee": "{{ purchaseInvoiceHeader.shippingFee|default|number_format(2) }}",
+    "grandTotal": "{{ purchaseInvoiceHeader.grandTotal|default|number_format(2) }}",
+    "purchaseInvoiceDetails": {
+        {%- for purchaseInvoiceDetailForm in form.purchaseInvoiceDetails -%}
+            {%- set purchaseInvoiceDetail = purchaseInvoiceDetailForm.vars.data -%}
+            "{{ purchaseInvoiceDetailForm.vars.name }}": {
+                "quantity": "{{ purchaseInvoiceDetail.quantity|default|number_format(2) }}",
+                "unitPrice": "{{ purchaseInvoiceDetail.unitPrice|default|number_format(2) }}",
+                "discount": "{{ purchaseInvoiceDetail.discount|default|number_format(2) }}",
+                "total": "{{ purchaseInvoiceDetail.total|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

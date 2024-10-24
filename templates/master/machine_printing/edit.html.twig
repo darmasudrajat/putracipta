@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Machine Printing' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_machine_printing_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_master_machine_printing_show', {'id': machinePrinting.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/machine_printing/_form.html.twig') }}
+{% endblock %}

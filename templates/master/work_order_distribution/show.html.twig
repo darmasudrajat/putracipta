@@ -1,0 +1,30 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Work Order Distribution' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_work_order_distribution_index') }}">Manage</a>
+    {% if is_granted('ROLE_DISTRIBUTION_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_master_work_order_distribution_edit', {'id': workOrderDistribution.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_DISTRIBUTION_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_master_work_order_distribution_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{ workOrderDistribution.name }}</td>
+            </tr>
+            <tr>
+                <th>Is Inactive</th>
+                <td>{{ workOrderDistribution.isInactive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {#{{ include('master/work_order_distribution/_delete_form.html.twig') }}#}
+{% endblock %}

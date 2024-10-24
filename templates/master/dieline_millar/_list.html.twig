@@ -1,0 +1,92 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, dielineMillars) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'customer:company') }}>
+                    Customer {{ grid.sort_char(form.sort['customer:company'].vars.value) }}
+                </th>
+                <th style="min-width: 270px" role="button" {{ grid.sort_link_item(form, 'code') }}>
+                    Code {{ grid.sort_char(form.sort.code.vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    Milar {{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'printingLayout') }}>
+                    Kris Cetak {{ grid.sort_char(form.sort.printingLayout.vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'note') }}>
+                    Note {{ grid.sort_char(form.sort.note.vars.value) }}
+                </th>
+                <th style="min-width: 150px">Tanggal Buat</th>
+                <th style="min-width: 90px" role="button" {{ grid.sort_link_item(form, 'isInactive') }}>
+                    Status {{ grid.sort_char(form.sort.isInactive.vars.value) }}
+                </th>
+                <th style="min-width: 150px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'customer:company') }} value="{{ form.filter['customer:company'].1.vars.value }}" />
+                </th>
+                <th>
+                    M<input style="width: 100px" type="text" {{ grid.filter_link_item(form, 'code') }} value="{{ form.filter.code.1.vars.value }}" />-
+                    R<input style="width: 100px" type="text" {{ grid.filter_link_item(form, 'version') }} value="{{ form.filter.version.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" size="10" {{ grid.filter_link_item(form, 'printingLayout') }} value="{{ form.filter.printingLayout.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'note') }} value="{{ form.filter.note.1.vars.value }}" />
+                </th>
+                <th></th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'isInactive') }}>
+                        <option value="" {% if form.filter.isInactive.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.isInactive.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.isInactive.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dielineMillar in dielineMillars %}
+                <tr>
+                    <td>{{ dielineMillar.customer.company }}</td>
+                    <td>{{ dielineMillar.codeNumber }}</td>
+                    <td>{{ dielineMillar.name }}</td>
+                    <td>{{ dielineMillar.printingLayout }}</td>
+                    <td>{{ dielineMillar.note }}</td>
+                    <td>{{ dielineMillar.date ? dielineMillar.date|date('d M Y') : '' }}</td>
+                    <td>{{ dielineMillar.isInactive ? 'InActive' : 'Active' }}</td>
+                    <td>
+                        {% if is_granted('ROLE_MILLAR_VIEW') or is_granted('ROLE_MILLAR_EDIT') or is_granted('ROLE_MILLAR_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_master_dieline_millar_show', {'id': dielineMillar.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_MILLAR_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_master_dieline_millar_edit', {'id': dielineMillar.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_MILLAR_ADD') %}
+                            <a class="btn btn-success btn-sm" href="{{ path('app_master_dieline_millar_new_repeat', {'source_id': dielineMillar.id}) }}"><i class="bi-c-square"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, dielineMillars) }}

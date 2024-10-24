@@ -1,0 +1,14 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Outstanding Delivery' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_sale_sale_invoice_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    <div data-controller="html-loader"
+         data-html-loader-url-value="{{ path('app_sale_sale_invoice_header__list_outstanding_delivery_header') }}"
+         data-html-loader-auto-load-value="true">
+    </div>
+{% endblock %}

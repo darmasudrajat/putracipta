@@ -1,0 +1,123 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="30"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="30"><strong>Laporan Kode Design</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="30">
+                <strong>
+                    {% set startDate = form.vars.value.filter.createdTransactionDateTime.1|default %}
+                    {% set endDate = form.vars.value.filter.createdTransactionDateTime.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Kode Design #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Nama</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Customer</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Status</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Jumlah Warna</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Separasi Warna</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Warna Khusus 1</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Warna Khusus 2</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Warna Khusus 3</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Warna Khusus 4</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Coating</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Hot Stamping</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Uk. Kris Cetak (cm)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Glossiness</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Jumlah Mata (up/s)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Emboss</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Pisau Diecut</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Millar</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kode Kertas</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Material Kertas</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Uk. Plano Kertas (cm)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Mountage Kertas (lbr/plano)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Uk. Potong Kertas (cm)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Cyan (%)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Magenta (%)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Yellow (%)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Black (%)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Khusus 1 (%)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Khusus 2 (%)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Khusus 3 (%)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Khusus 4 (%)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>OPV/WB/UV (%)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Lem (cm/pcs)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kertas Packing (pcs/pack)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Karet (pcs/ikat)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Dus (pcs/dus)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Lakban Besar (cm/pack)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Lakban Kecil (cm/pack)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Plastik (cm2/pack)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kode Produk</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Nama Produk</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Description</strong></th>
+        </tr>
+        <tr>
+            <th colspan="30"></th>
+        </tr>
+    </thead>
+    <tbody>
+            {% for designCode in designCodes %}
+                {% for designCodeProductDetail in designCode.designCodeProductDetails %}
+            <tr>
+                <td style="text-align: left">{{ designCode.codeNumber|default }}</td>
+                <td style="text-align: left">{{ designCode.name|default }}</td>
+                <td style="text-align: left">{{ designCode.transactionDate|default ? designCode.transactionDate|date('j M Y') }}</td>
+                <td style="text-align: left">{{ designCode.customer.company|default }}</td>
+                <td style="text-align: left">{{ designCode.status|default }}</td>
+                <td style="text-align: left">{{ designCode.color|default }}</td>
+                <td style="text-align: left">{{ designCode.pantone|default }}</td>
+                <td style="text-align: left">{{ designCode.colorSpecial1|default }}</td>
+                <td style="text-align: left">{{ designCode.colorSpecial2|default }}</td>
+                <td style="text-align: left">{{ designCode.colorSpecial3|default }}</td>
+                <td style="text-align: left">{{ designCode.colorSpecial4|default }}</td>
+                <td style="text-align: left">{{ designCode.coating|default }}</td>
+                <td style="text-align: left">{{ designCode.hotstamping|default }}</td>
+                <td style="text-align: left">{{ designCode.printingKrisSize|default }}</td>
+                <td style="text-align: left">{{ designCode.glossiness|default }}</td>
+                <td style="text-align: left">{{ designCode.printingUpQuantity|default }}</td>
+                <td style="text-align: left">{{ designCode.emboss|default }}</td>
+                <td style="text-align: left">{{ designCode.diecutKnife.codeNumber|default }}</td>
+                <td style="text-align: left">{{ designCode.dielineMillar.codeNumber|default }}</td>
+                <td style="text-align: left">{{ designCode.paper.codeNumber|default }}</td>
+                <td style="text-align: left">{{ designCode.paper.name|default }}</td>
+                <td style="text-align: left">{{ designCode.paperPlanoLength|default }} x {{ designCode.paperPlanoWidth|default }}</td>
+                <td style="text-align: left">{{ designCode.paperMountage|default }}</td>
+                <td style="text-align: left">{{ designCode.paperCuttingLength|default }} x {{ designCode.paperCuttingWidth|default }}</td>
+                <td style="text-align: left">{{ designCode.inkCyanPercentage|default }}</td>
+                <td style="text-align: left">{{ designCode.inkMagentaPercentage|default }}</td>
+                <td style="text-align: left">{{ designCode.inkYellowPercentage|default }}</td>
+                <td style="text-align: left">{{ designCode.inkBlackPercentage|default }}</td>
+                <td style="text-align: left">{{ designCode.inkK1Percentage|default }}</td>
+                <td style="text-align: left">{{ designCode.inkK2Percentage|default }}</td>
+                <td style="text-align: left">{{ designCode.inkK3Percentage|default }}</td>
+                <td style="text-align: left">{{ designCode.inkK4Percentage|default }}</td>
+                <td style="text-align: left">{{ designCode.inkOpvPercentage|default }}</td>
+                <td style="text-align: left">{{ designCode.packagingGlueQuantity|default }}</td>
+                <td style="text-align: left">{{ designCode.packagingPaperQuantity|default }}</td>
+                <td style="text-align: left">{{ designCode.packagingRubberQuantity|default }}</td>
+                <td style="text-align: left">{{ designCode.packagingBoxQuantity|default }}</td>
+                <td style="text-align: left">{{ designCode.packagingTapeLargeQuantity|default }}</td>
+                <td style="text-align: left">{{ designCode.packagingTapeSmallQuantity|default }}</td>
+                <td style="text-align: left">{{ designCode.packagingPlasticQuantity|default }}</td>
+                <td style="text-align: left">{{ designCode.note|default }}</td>
+                <td style="text-align: left">{{ designCodeProductDetail.product.code|default }}</td>
+                <td style="text-align: left">{{ designCodeProductDetail.product.name|default }}</td>
+                <td style="text-align: left">{{ designCodeProductDetail.productLengthWidthHeightCombination|default }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,191 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Sale Invoice' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_sale_sale_invoice_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_SALE_INVOICE_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_sale_sale_invoice_header_edit', {'id': saleInvoiceHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_SALE_INVOICE_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_sale_sale_invoice_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Invoice #</th>
+                <td>{{ saleInvoiceHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Invoice</th>
+                <td>{{ saleInvoiceHeader.transactionDate ? saleInvoiceHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Customer</th>
+                <td>{{ saleInvoiceHeader.customer.company }}</td>
+            </tr>
+            <tr>
+                <th>Using FSC Paper?</th>
+                <td>{{ saleInvoiceHeader.isUsingFscPaper ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>NPWP Customer</th>
+                <td>{{ saleInvoiceHeader.customerTaxNumber }}</td>
+            </tr>
+            <tr>
+                <th>Alamat NPWP</th>
+                <td>{{ attribute(saleInvoiceHeader.customer, 'addressTax' ~ saleInvoiceHeader.customerAddressTaxOrdinal)|default|nl2br }}</td>
+            </tr>
+            <tr>
+                <th>Faktur Pajak #</th>
+                <td>{{ saleInvoiceHeader.invoiceTaxCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Faktur Pajak</th>
+                <td>{{ saleInvoiceHeader.invoiceTaxDate ? saleInvoiceHeader.invoiceTaxDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Jatuh Tempo</th>
+                <td>{{ saleInvoiceHeader.dueDate ? saleInvoiceHeader.dueDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Kawasan Berikat / Bebas</th>
+                <td>{{ saleInvoiceHeader.customer.bondedZoneLiteral }}</td>
+            </tr>
+            <tr>
+                <th>TOP (days)</th>
+                <td>{{ saleInvoiceHeader.customer.paymentTerm }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ saleInvoiceHeader.transactionStatus }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ saleInvoiceHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ saleInvoiceHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ saleInvoiceHeader.createdTransactionDateTime ? saleInvoiceHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ saleInvoiceHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ saleInvoiceHeader.modifiedTransactionDateTime ? saleInvoiceHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ saleInvoiceHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>PO #</th>
+                <th>SJ #</th>
+                <th>Kode</th>
+                <th>Nama Barang</th>
+                <th>Quantity</th>
+                <th>Satuan</th>
+                <th>Harga</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for saleInvoiceDetail in saleInvoiceHeader.saleInvoiceDetails %}
+                {% if saleInvoiceDetail.isCanceled == false and saleInvoiceDetail.quantity > 0 %}
+                    <tr>
+                        <td>{{ saleInvoiceDetail.deliveryDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                        <td>{{ saleInvoiceDetail.deliveryDetail.deliveryHeader.codeNumber|default }}</td>
+                        <td>{{ saleInvoiceDetail.product.code|default }}</td>
+                        <td>{{ saleInvoiceDetail.product.name|default }}</td>
+                        <td style="text-align: right">{{ saleInvoiceDetail.quantity|default|number_format(0) }}</td>
+                        <td>{{ saleInvoiceDetail.unit.name|default }}</td>
+                        <td style="text-align: right">{{ saleInvoiceDetail.unitPrice|default|number_format(6) }}</td>
+                        <td style="text-align: right">{{ saleInvoiceDetail.total|default|number_format(2) }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7" style="text-align: right"><strong>Sub Total</strong></td>
+                <td style="text-align: right"><strong>{{ saleInvoiceHeader.subTotal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="7" style="text-align: right"><strong>Disc {{ saleInvoiceHeader.discountValue|default }}%</strong></td>
+                <td style="text-align: right"><strong>{{ saleInvoiceHeader.discountNominal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="7" style="text-align: right">
+                    <strong>
+                        {% if saleInvoiceHeader.taxMode == constant('TAX_MODE_NON_TAX', saleInvoiceHeader) %}
+                            Non PPn 0%
+                        {% elseif saleInvoiceHeader.taxMode == constant('TAX_MODE_TAX_EXCLUSION', saleInvoiceHeader) %}
+                            PPn {{ saleInvoiceHeader.taxPercentage }}%
+                        {% endif %}
+                    </strong>
+                </td>
+                <td style="text-align: right"><strong>{{ saleInvoiceHeader.taxNominal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="7" style="text-align: right"><strong>Grand Total</strong></td>
+                <td style="text-align: right"><strong>{{ saleInvoiceHeader.grandTotal|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="7" style="text-align: right"><strong>Total Retur</strong></td>
+                <td style="text-align: right"><strong>{{ saleInvoiceHeader.totalReturn|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="7" style="text-align: right"><strong>Total Payment</strong></td>
+                <td style="text-align: right"><strong>{{ saleInvoiceHeader.totalPayment|default|number_format(2) }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="7" style="text-align: right"><strong>Remaining Payment</strong></td>
+                <td style="text-align: right"><strong>{{ saleInvoiceHeader.remainingPayment|default|number_format(2) }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <legend class="float-none w-auto text-dark px-1">Data Pelunasan</legend>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-warning">
+                <th>Pembayaran #</th>
+                <th>Tanggal</th>
+                <th>Cek/Giro #</th>
+                <th>Tanggal Cek/Giro</th>
+                <th>Memo</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for salePaymentDetail in saleInvoiceHeader.salePaymentDetails %}
+                <tr>
+                    <td>{{ salePaymentDetail.salePaymentHeader.codeNumber|default }}</td>
+                    <td>{{ salePaymentDetail.salePaymentHeader.transactionDate ? salePaymentDetail.salePaymentHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ salePaymentDetail.salePaymentHeader.referenceNumber|default }}</td>
+                    <td>{{ salePaymentDetail.salePaymentHeader.referenceDate ? salePaymentDetail.salePaymentHeader.referenceDate|date('d M Y') : '' }}</td>
+                    <td>{{ salePaymentDetail.memo|default }}</td>
+                    <td style="text-align: right">{{ salePaymentDetail.amount|default|number_format(2) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {#<div class="d-inline-block">{{ include('sale/sale_invoice_header/_delete_form.html.twig') }}</div>#}
+    <div class="d-inline-block">{{ include('sale/sale_invoice_header/_complete_form.html.twig') }}</div>
+    <div class="d-inline-block"><a target="_blank" class="btn btn-info btn-sm" href="{{ path('app_sale_sale_invoice_header_memo', {'id': saleInvoiceHeader.id}) }}">Print Invoice</a></div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Outstanding Permintaan Produksi' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_stock_inventory_release_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    <div data-controller="html-loader"
+         data-html-loader-url-value="{{ path('app_stock_inventory_release_header__list_outstanding_inventory_request') }}"
+         data-html-loader-auto-load-value="true">
+    </div>
+{% endblock %}

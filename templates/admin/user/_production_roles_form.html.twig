@@ -1,0 +1,116 @@
+{% import 'app/role_form_input.html.twig' as input %}
+
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <td class="bg-success text-light">
+                <div class="d-flex justify-content-center"><strong>{{ input.check(indexes, form, 'ROLE_PRODUCTION', 'PRODUKSI') }}</strong></div>
+            </td>
+            <td class="text-center bg-primary text-light" style="width: 10%"><strong>New</strong></td>
+            <td class="text-center bg-primary text-light" style="width: 10%"><strong>Edit</strong></td>
+            <td class="text-center bg-primary text-light" style="width: 10%"><strong>View</strong></td>
+        </tr>
+        <tr>
+            <td>Formulir Produk Baru</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_NEW_PRODUCT_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_NEW_PRODUCT_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_NEW_PRODUCT_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Development Produk</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_DEVELOPMENT_PRODUCT_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_DEVELOPMENT_PRODUCT_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_DEVELOPMENT_PRODUCT_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Master Order</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_MASTER_ORDER_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_MASTER_ORDER_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_MASTER_ORDER_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Permintaan Produksi</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_MATERIAL_REQUEST_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_MATERIAL_REQUEST_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_MATERIAL_REQUEST_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>QC Sortir</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_QUALITY_CONTROL_SORTING_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_QUALITY_CONTROL_SORTING_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_QUALITY_CONTROL_SORTING_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td class="bg-success text-light">
+                <div class="d-flex justify-content-center"><strong>{{ input.check(indexes, form, 'ROLE_INVENTORY', 'GUDANG MATERIAL/KERTAS') }}</strong></div>
+            </td>
+            <td colspan="3" class="bg-primary text-light"></td>
+        </tr>
+        <tr>
+            <td>Permintaan Pembelian Material</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_REQUEST_MATERIAL_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_REQUEST_MATERIAL_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_REQUEST_MATERIAL_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Permintaan Pembelian Kertas</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_REQUEST_PAPER_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_REQUEST_PAPER_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_REQUEST_PAPER_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Penerimaan Material</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_RECEIVE_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_RECEIVE_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_RECEIVE_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Retur Pembelian</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_RETURN_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_RETURN_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_RETURN_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Penyesuaian Stok</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_ADJUSTMENT_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_ADJUSTMENT_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_ADJUSTMENT_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Pengeluaran Material</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_MATERIAL_RELEASE_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_MATERIAL_RELEASE_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_MATERIAL_RELEASE_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Transfer Stok Antar Gudang</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_TRANSFER_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_TRANSFER_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_TRANSFER_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td class="bg-success text-light">
+                <div class="d-flex justify-content-center"><strong>GUDANG FINISHED GOODS</strong></div>
+            </td>
+            <td colspan="3" class="bg-primary text-light"></td>
+        </tr>
+        <tr>
+            <td>Pengiriman Barang</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_DELIVERY_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_DELIVERY_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_DELIVERY_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Retur Penjualan</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_SALE_RETURN_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_SALE_RETURN_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_SALE_RETURN_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Penerimaan Produksi Finished Goods</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_FINISHED_GOODS_RECEIVE_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_FINISHED_GOODS_RECEIVE_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_FINISHED_GOODS_RECEIVE_VIEW') }}</div></td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,82 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>Laporan Purchase Return</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Retur #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Penerimaan #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Supplier</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Gudang</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+        </tr>
+        <tr>
+            <th></th>
+            <th style="text-align: center;"><strong>Kode</strong></th>
+            <th style="text-align: center;"><strong>Nama Item</strong></th>
+            <th style="text-align: center;"><strong>Qty Terima</strong></th>
+            <th style="text-align: center;"><strong>Qty Retur</strong></th>
+            <th style="text-align: center;"><strong>Satuan</strong></th>
+            <th style="text-align: center;"><strong>Harga</strong></th>
+            <th style="text-align: center;"><strong>Total</strong></th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for purchaseReturnHeader in purchaseReturnHeaders %}
+            <tr>
+                <td style="text-align: left;">{{ purchaseReturnHeader.codeNumber|default }}</td>
+                <td style="text-align: left;">{{ purchaseReturnHeader.transactionDate|default ? purchaseReturnHeader.transactionDate|date('j M Y') }}</td>
+                <td style="text-align: left;">{{ purchaseReturnHeader.receiveHeader.codeNumber|default }}</td>
+                <td style="text-align: left;">{{ purchaseReturnHeader.supplier.company|default }}</td>
+                <td style="text-align: left;">{{ purchaseReturnHeader.warehouse.name|default }}</td>
+                <td style="text-align: left;">{{ purchaseReturnHeader.note|default }}</td>
+            </tr>
+            {% for purchaseReturnDetail in purchaseReturnHeader.purchaseReturnDetails %}
+                <tr>
+                    <td style="text-align: left"></td>
+                    <td style="text-align: left;">{{ purchaseReturnDetail.material is null ? purchaseReturnDetail.paper.codeNumber|default : purchaseReturnDetail.material.code|default }}</td>
+                    <td style="text-align: left;">{{ purchaseReturnDetail.material is null ? purchaseReturnDetail.paper.paperNameSizeCombination|default : purchaseReturnDetail.material.name|default }}</td>
+                    <td style="text-align: center;">{{ purchaseReturnDetail.receiveDetail.receivedQuantity|default }}</td>
+                    <td style="text-align: center;">{{ purchaseReturnDetail.quantity|default }}</td>
+                    <td style="text-align: left;">{{ purchaseReturnDetail.unit.name|default }}</td>
+                    <td style="text-align: right;">{{ purchaseReturnDetail.unitPrice|default }}</td>
+                    <td style="text-align: right;">{{ purchaseReturnDetail.total|default }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td style="text-align: right;" colspan="7"><strong>Sub Total</strong></td>
+                <td style="text-align: right;"><strong>{{ purchaseReturnHeader.subTotal|default }}</strong></td>
+            </tr>
+            <tr>
+                <td style="text-align: right;" colspan="7"><strong>PPn {{ purchaseReturnHeader.taxPercentage|default }}%</strong></td>
+                <td style="text-align: right;"><strong>{{ purchaseReturnHeader.taxNominal|default }}</strong></td>
+            </tr>
+            <tr>
+                <td style="text-align: right;" colspan="7"><strong>Grand Total</strong></td>
+                <td style="text-align: right;"><strong>{{ purchaseReturnHeader.grandTotal|default }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="7"></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

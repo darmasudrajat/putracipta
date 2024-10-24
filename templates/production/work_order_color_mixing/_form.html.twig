@@ -1,0 +1,861 @@
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id'}|json_encode }}"
+     data-json-loader-url-value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}"
+     data-json-loader-method-value="POST"
+     data-json-loader-form-target-value="{{ "form[name=#{form.vars.name}]" }}">
+
+    {{ form_start(form) }}
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Header</legend>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.transactionDate, {'label': 'Tanggal Produksi', 'attr': {'data-controller': 'flatpickr-element', 'class': 'readonly-form-input'}}) }}
+                    <div class="mb-3">
+                        <label class="form-label">Mesin Cetak</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.printingMachine|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderPrintingMachine'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Customer</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.customer.company|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.customerCompany'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kode Design</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.designCode|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderDesignCode'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kode Produk</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.product.code|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.productCode'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nama Produk</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.product.name|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.productName'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantity Order</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.quantityOrder|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderQuantityOrder'}},
+                               ]|json_encode }}" />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Stock / Kekurangan (pcs)</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.quantityStock|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderQuantityStock'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">/</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.quantityProduction|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderQuantityProduction'}},
+                                       ]|json_encode }}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <div class="mb-3">
+                        <label class="form-label">Ukuran Jadi (mm)</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <span class="input-group-text">P</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.dimensionLength|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderDimensionLength'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">L</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.dimensionWidth|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderDimensionWidth'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">T</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.dimensionHeight|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderDimensionHeight'}},
+                                       ]|json_encode }}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                            
+                    <div class="mb-3">
+                        <label class="form-label">Warna / Pantone</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.color|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderColor'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">/</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.pantone|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderPantone'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">+</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.colorPantoneAdditional|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderColorPantoneAdditional'}},
+                                       ]|json_encode }}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="{{ form.masterOrderHeader.vars.id }}-text" class="form-label">Master Order #</label>
+                        {{ form_row(form.masterOrderHeader, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'master-order-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderId'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        <input type="text" id="{{ form.masterOrderHeader.vars.id }}-text" class="form-control readonly-form-input {% if not form.masterOrderHeader.vars.valid %}is-invalid{% endif %}" value="{{ workOrderColorMixing.masterOrderHeader.codeNumber|default }}" readonly="readonly"
+                               data-bs-toggle="modal" data-bs-target="#master-order-dialog"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCodeNumber'}},
+                               ]|json_encode }}" />
+                        {{ form_errors(form.masterOrderHeader) }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">No. PO</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.saleOrderDetail.saleOrderHeader.referenceNumber|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.saleOrderHeaderReferenceNumber'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal MO</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.transactionDate|default ? workOrderColorMixing.masterOrderHeader.transactionDate|date('d M Y') : '' }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderDate'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal PO</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.saleOrderDetail.saleOrderHeader.transactionDate|default ? workOrderColorMixing.masterOrderHeader.saleOrderDetail.saleOrderHeader.transactionDate|date('d M Y') : '' }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.saleOrderHeaderTransactionDate'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal Kirim</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.deliveryDate|default ? workOrderColorMixing.masterOrderHeader.deliveryDate|date('d M Y') : '' }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderDeliveryDate'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Status Cetakan</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.printingStatus|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderPrintingStatus'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Finishing</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.finishing|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderFinishing'}},
+                               ]|json_encode }}" />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Material Kertas</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.paperFep|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderPaper'}},
+                               ]|json_encode }}" />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Jumlah Up Cetak</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.quantityPrinting|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderQuantityPrinting'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">&</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.quantityPrinting2|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderQuantityPrinting2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">Up/S</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                
+                    <div class="mb-3">
+                        <label class="form-label">Ukuran Mountage/Kris</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.mountageSizeLength|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderMountageSizeLength'}},
+                               ]|json_encode }}" />
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Kebutuhan Material Kertas</legend>
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <label class="form-label">Uk. Plano Kertas</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.paperPlanoLength|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderPaperPlanoLength'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">x</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.paperPlanoWidth|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderPaperPlanoWidth'}},
+                                       ]|json_encode }}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Uk. Potong 1</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.cuttingLengthSize1|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize1'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">x</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.cuttingWidthSize1|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingWidthSize1'}},
+                                       ]|json_encode }}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Uk. Potong 2</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.cuttingLengthSize2|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">x</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.cuttingWidthSize2|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingWidthSize2'}},
+                                       ]|json_encode }}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label class="form-label">Kebutuhan (dreek)</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.paperRequirement|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderPaperRequeirement'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Insit Cetak (dreek)</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.printingInsit|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderPrintingInsit'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Total Kertas (dreek)</label>
+                        <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.paperTotal|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="master-order-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderPaperTotal'}},
+                               ]|json_encode }}" />
+                    </div>
+                </div>
+            </div>
+            <legend class="float-none w-auto text-dark px-1">Realisasi Pemakaian Inseet Kertas</legend>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.paperInseetUsedUsage, {'label': 'Kertas Bekas (Dreek)'}) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form.paperInseetNewUsage, {'label': 'Kertas Baru (Dreek)'}) }}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Estimasi Tinta / Chemical</legend>
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <label class="form-label">Cyan</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkCyanPercentage|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">%</span>
+                                    <span class="input-group-text">=</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkCyanWeight|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingWidthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Magenta</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkMagentaPercentage|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">%</span>
+                                    <span class="input-group-text">=</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkMagentaWeight|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingWidthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Yellow</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkYellowPercentage|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">%</span>
+                                    <span class="input-group-text">=</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkYellowWeight|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingWidthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Black</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkBlackPercentage|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">%</span>
+                                    <span class="input-group-text">=</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkBlackWeight|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingWidthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">OPV / WB / UV</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkOpvPercentage|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">%</span>
+                                    <span class="input-group-text">=</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkOpvWeight|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingWidthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label class="form-label">K-1</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkK1Color|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">:</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkK1Percentage|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">%</span>
+                                    <span class="input-group-text">=</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkK1Weight|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingWidthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">K-2</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkK2Color|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">:</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkK2Percentage|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">%</span>
+                                    <span class="input-group-text">=</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkK2Weight|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingWidthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">K-3</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkK3Color|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">:</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkK3Percentage|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">%</span>
+                                    <span class="input-group-text">=</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkK3Weight|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingWidthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">K-4</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkK4Color|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">:</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkK4Percentage|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">%</span>
+                                    <span class="input-group-text">=</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkK4Weight|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingWidthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Laminating</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkLaminatingSize|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingLengthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">cm</span>
+                                    <span class="input-group-text">=</span>
+                                    <input type="text" class="form-control" value="{{ workOrderColorMixing.masterOrderHeader.inkLaminatingQuantity|default }}" readonly="readonly"
+                                       data-controller="dom-element"
+                                       data-action="master-order-table:data-table:select@document->dom-element#bind"
+                                       data-dom-element-bind-specifications-param="{{ [
+                                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.masterOrderHeaderCuttingWidthSize2'}},
+                                       ]|json_encode }}" />
+                                    <span class="input-group-text">roll</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+                
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Aduk Warna Tinta Khusus</legend>
+            <div class="row">
+                <div class="col">
+                    <table class="table table-bordered">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>Mix Warna Khusus - 1</th>
+                                <th>Jumlah (gram)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1.</td>
+                                <td>{{ form_row(form.specialColorMixFirstOneName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixFirstOneWeight, {'label': false}) }}</td>
+                            </tr>
+                            <tr>
+                                <td>2.</td>
+                                <td>{{ form_row(form.specialColorMixFirstTwoName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixFirstTwoWeight, {'label': false}) }}</td>
+                            </tr>
+                            <tr>
+                                <td>3.</td>
+                                <td>{{ form_row(form.specialColorMixFirstThreeName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixFirstThreeWeight, {'label': false}) }}</td>
+                            </tr>
+                            <tr>
+                                <td>4.</td>
+                                <td>{{ form_row(form.specialColorMixFirstFourName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixFirstFourWeight, {'label': false}) }}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" class="text-center font-weight-bold">Total</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                    
+                <div class="col">
+                    <table class="table table-bordered">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>Mix Warna Khusus - 2</th>
+                                <th>Jumlah (gram)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1.</td>
+                                <td>{{ form_row(form.specialColorMixSecondOneName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixSecondOneWeight, {'label': false}) }}</td>
+                            </tr>
+                            <tr>
+                                <td>2.</td>
+                                <td>{{ form_row(form.specialColorMixSecondTwoName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixSecondTwoWeight, {'label': false}) }}</td>
+                            </tr>
+                            <tr>
+                                <td>3.</td>
+                                <td>{{ form_row(form.specialColorMixSecondThreeName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixSecondThreeWeight, {'label': false}) }}</td>
+                            </tr>
+                            <tr>
+                                <td>4.</td>
+                                <td>{{ form_row(form.specialColorMixSecondFourName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixSecondFourWeight, {'label': false}) }}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" class="text-center font-weight-bold">Total</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+                    
+            <div class="row">
+                <div class="col">
+                    <table class="table table-bordered">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>Mix Warna Khusus - 3</th>
+                                <th>Jumlah (gram)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1.</td>
+                                <td>{{ form_row(form.specialColorMixThirdOneName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixThirdOneWeight, {'label': false}) }}</td>
+                            </tr>
+                            <tr>
+                                <td>2.</td>
+                                <td>{{ form_row(form.specialColorMixThirdTwoName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixThirdTwoWeight, {'label': false}) }}</td>
+                            </tr>
+                            <tr>
+                                <td>3.</td>
+                                <td>{{ form_row(form.specialColorMixThirdThreeName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixThirdThreeWeight, {'label': false}) }}</td>
+                            </tr>
+                            <tr>
+                                <td>4.</td>
+                                <td>{{ form_row(form.specialColorMixThirdFourName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixThirdFourWeight, {'label': false}) }}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" class="text-center font-weight-bold">Total</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                    
+                <div class="col">
+                    <table class="table table-bordered">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>Mix Warna Khusus - 4</th>
+                                <th>Jumlah (gram)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1.</td>
+                                <td>{{ form_row(form.specialColorMixFourthOneName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixFourthOneWeight, {'label': false}) }}</td>
+                            </tr>
+                            <tr>
+                                <td>2.</td>
+                                <td>{{ form_row(form.specialColorMixFourthTwoName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixFourthTwoWeight, {'label': false}) }}</td>
+                            </tr>
+                            <tr>
+                                <td>3.</td>
+                                <td>{{ form_row(form.specialColorMixFourthThreeName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixFourthThreeWeight, {'label': false}) }}</td>
+                            </tr>
+                            <tr>
+                                <td>4.</td>
+                                <td>{{ form_row(form.specialColorMixFourthFourName, {'label': false}) }}</td>
+                                <td>{{ form_row(form.specialColorMixFourthFourWeight, {'label': false}) }}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" class="text-center font-weight-bold">Total</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.note, {'label': 'Catatan'}) }}
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="d-grid">
+            <button class="btn btn-success"
+                    data-controller="dom-element"
+                    data-action="dom-element#confirm"
+                    data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                Save
+            </button>
+            <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+        </div>
+    {{ form_end(form) }}
+
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('master-order-header-dialog', 'Master Order List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_master_order_header__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+</div>

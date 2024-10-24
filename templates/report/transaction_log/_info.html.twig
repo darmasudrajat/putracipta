@@ -1,0 +1,12 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+<div style="font-family: Arial">
+    {% for key, value in newData %}
+        {% set names = key|split('.') %}
+        {% set count = names|length - 1 %}
+        {% set name = names[count] %}
+        <div style="margin-left: {{ count * 24 }}px">
+            <strong>{{ name }}</strong>:&nbsp;&nbsp;{{ value }}
+        </div>
+    {% endfor %}
+</div>

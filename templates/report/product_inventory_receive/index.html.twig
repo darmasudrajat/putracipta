@@ -1,0 +1,49 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Report Penerimaan Produksi per Produk' %}
+
+{% block content %}
+    <div data-controller="html-loader"
+         data-html-loader-url-value="{{ path('app_report_product_inventory_receive__list') }}"
+         data-html-loader-auto-load-value="true">
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+    {{ encore_entry_link_tags('report') }}
+    <link rel="stylesheet" href="{{ asset('../node_modules/bootstrap-icons/font/bootstrap-icons.css') }}">
+    <style>
+        table.report-data > thead > tr > th:nth-child(1),
+        table.report-data > tbody > tr > td:nth-child(1) { width: 15% }
+        table.report-data > thead > tr > th:nth-child(2),
+        table.report-data > tbody > tr > td:nth-child(2) { width: 25% }
+        table.report-data > thead > tr > th:nth-child(2),
+        table.report-data > tbody > tr > td:nth-child(2) { width: 35% }
+        table.report-data > thead > tr > th:nth-child(3),
+        table.report-data > tbody > tr > td:nth-child(3) { width: 20% }
+        
+        table.report-data > thead > tr > td > table > thead > tr > th:nth-child(1),
+        table.report-data > tbody > tr > td > table > tbody > tr > td:nth-child(1) { width: 10% }
+        table.report-data > thead > tr > td > table > thead > tr > th:nth-child(2),
+        table.report-data > tbody > tr > td > table > tbody > tr > td:nth-child(2) { width: 10% }
+        table.report-data > thead > tr > td > table > thead > tr > th:nth-child(3),
+        table.report-data > tbody > tr > td > table > tbody > tr > td:nth-child(3) { width: 10% }
+        table.report-data > thead > tr > td > table > thead > tr > th:nth-child(4),
+        table.report-data > tbody > tr > td > table > tbody > tr > td:nth-child(4) { width: 15% }
+        table.report-data > thead > tr > td > table > thead > tr > th:nth-child(5),
+        table.report-data > tbody > tr > td > table > tbody > tr > td:nth-child(5) { width: 10% }
+        table.report-data > thead > tr > td > table > thead > tr > th:nth-child(6),
+        table.report-data > tbody > tr > td > table > tbody > tr > td:nth-child(6) { width: 5% }
+        table.report-data > thead > tr > td > table > thead > tr > th:nth-child(7),
+        table.report-data > tbody > tr > td > table > tbody > tr > td:nth-child(7) { width: 5% }
+        table.report-data > thead > tr > td > table > thead > tr > th:nth-child(8),
+        table.report-data > tbody > tr > td > table > tbody > tr > td:nth-child(8) { width: 5% }
+        table.report-data > thead > tr > td > table > thead > tr > th:nth-child(9),
+        table.report-data > tbody > tr > td > table > tbody > tr > td:nth-child(9) { width: 5% }
+        table.report-data > thead > tr > td > table > thead > tr > th:nth-child(10),
+        table.report-data > tbody > tr > td > table > tbody > tr > td:nth-child(10) { width: 5% }
+        table.report-data > thead > tr > td > table > thead > tr > th:nth-child(11),
+        table.report-data > tbody > tr > td > table > tbody > tr > td:nth-child(11) { width: 20% }
+    </style>
+{% endblock %}

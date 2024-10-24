@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add Work Order Offset Printing Header' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_work_order_offset_printing_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('production/work_order_offset_printing_header/_form.html.twig') }}
+{% endblock %}

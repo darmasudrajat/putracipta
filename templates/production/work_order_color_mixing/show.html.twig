@@ -1,0 +1,229 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Work Order Color Mixing' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_work_order_color_mixing_index') }}">Manage</a>
+    <a class="btn btn-warning btn-sm" href="{{ path('app_production_work_order_color_mixing_edit', {'id': workOrderColorMixing.id}) }}">Edit</a>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Paper Inseet Used Usage</th>
+                <td>{{ workOrderColorMixing.paperInseetUsedUsage }}</td>
+            </tr>
+            <tr>
+                <th>Paper Inseet New Usage</th>
+                <td>{{ workOrderColorMixing.paperInseetNewUsage }}</td>
+            </tr>
+            <tr>
+                <th>Cyan Ink Usage</th>
+                <td>{{ workOrderColorMixing.cyanInkUsage }}</td>
+            </tr>
+            <tr>
+                <th>Magenta Ink Usage</th>
+                <td>{{ workOrderColorMixing.magentaInkUsage }}</td>
+            </tr>
+            <tr>
+                <th>Yellow Ink Usage</th>
+                <td>{{ workOrderColorMixing.yellowInkUsage }}</td>
+            </tr>
+            <tr>
+                <th>Black Ink Usage</th>
+                <td>{{ workOrderColorMixing.blackInkUsage }}</td>
+            </tr>
+            <tr>
+                <th>K1Ink Usage</th>
+                <td>{{ workOrderColorMixing.k1InkUsage }}</td>
+            </tr>
+            <tr>
+                <th>K2Ink Usage</th>
+                <td>{{ workOrderColorMixing.k2InkUsage }}</td>
+            </tr>
+            <tr>
+                <th>K3Ink Usage</th>
+                <td>{{ workOrderColorMixing.k3InkUsage }}</td>
+            </tr>
+            <tr>
+                <th>K4Ink Usage</th>
+                <td>{{ workOrderColorMixing.k4InkUsage }}</td>
+            </tr>
+            <tr>
+                <th>Opv Ink Usage</th>
+                <td>{{ workOrderColorMixing.opvInkUsage }}</td>
+            </tr>
+            <tr>
+                <th>Laminating Ink Usage</th>
+                <td>{{ workOrderColorMixing.laminatingInkUsage }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix First One Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixFirstOneName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix First One Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixFirstOneWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix First Two Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixFirstTwoName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix First Two Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixFirstTwoWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix First Three Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixFirstThreeName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix First Three Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixFirstThreeWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix First Four Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixFirstFourName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix First Four Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixFirstFourWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Second One Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixSecondOneName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Second One Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixSecondOneWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Second Two Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixSecondTwoName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Second Two Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixSecondTwoWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Second Three Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixSecondThreeName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Second Three Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixSecondThreeWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Second Four Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixSecondFourName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Second Four Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixSecondFourWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Third One Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixThirdOneName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Third One Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixThirdOneWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Third Two Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixThirdTwoName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Third Two Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixThirdTwoWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Third Three Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixThirdThreeName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Third Three Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixThirdThreeWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Third Four Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixThirdFourName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Third Four Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixThirdFourWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Fourth One Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixFourthOneName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Fourth One Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixFourthOneWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Fourth Two Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixFourthTwoName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Fourth Two Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixFourthTwoWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Fourth Three Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixFourthThreeName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Fourth Three Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixFourthThreeWeight }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Fourth Four Name</th>
+                <td>{{ workOrderColorMixing.specialColorMixFourthFourName }}</td>
+            </tr>
+            <tr>
+                <th>Special Color Mix Fourth Four Weight</th>
+                <td>{{ workOrderColorMixing.specialColorMixFourthFourWeight }}</td>
+            </tr>
+            <tr>
+                <th>Is Canceled</th>
+                <td>{{ workOrderColorMixing.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Is Read</th>
+                <td>{{ workOrderColorMixing.isRead ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Ordinal</th>
+                <td>{{ workOrderColorMixing.codeNumberOrdinal }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Month</th>
+                <td>{{ workOrderColorMixing.codeNumberMonth }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Year</th>
+                <td>{{ workOrderColorMixing.codeNumberYear }}</td>
+            </tr>
+            <tr>
+                <th>Created Production Date Time</th>
+                <td>{{ workOrderColorMixing.createdProductionDateTime ? workOrderColorMixing.createdProductionDateTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Modified Production Date Time</th>
+                <td>{{ workOrderColorMixing.modifiedProductionDateTime ? workOrderColorMixing.modifiedProductionDateTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Production Date</th>
+                <td>{{ workOrderColorMixing.transactionDate ? workOrderColorMixing.transactionDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ workOrderColorMixing.note }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{ include('production/work_order_color_mixing/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,12 @@
+{
+    "adjustmentStockProductDetails": {
+        {%- for adjustmentStockProductDetailForm in form.adjustmentStockProductDetails -%}
+            {%- set adjustmentStockProductDetail = adjustmentStockProductDetailForm.vars.data -%}
+            "{{ adjustmentStockProductDetailForm.vars.name }}": {
+                "quantityCurrent": "{{ adjustmentStockProductDetail.quantityCurrent|default|number_format(2) }}",
+                "quantityDifference": "{{ adjustmentStockProductDetail.quantityDifference|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

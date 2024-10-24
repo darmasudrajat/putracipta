@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Memo' %}
+
+{% block body %}
+    <div class="memo">
+        <div class="header">
+            <h1 class="title">PT. Putracipta Karindomas</h1>
+            <h3 class="title">Kawasan Industri Millenium</h3>
+            <h3 class="title">Jl. Millenium 15A Blok I2 no. 5, Tangerang</h3>
+            <br />
+            <h2 class="title">PURCHASE REQUEST KERTAS</h2>
+        </div>
+        
+        <br /><hr />
+        
+        <div class="note">
+            <div class="table full">
+                <div class="cell col">
+                    <div class="table full">
+                        <div class="row">
+                            <div class="cell label">Request #</div>
+                            <div class="cell value">{{ purchaseRequestPaperHeader.codeNumber|default }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Tanggal Request</div>
+                            <div class="cell value">{{ purchaseRequestPaperHeader.transactionDate|default ? purchaseRequestPaperHeader.transactionDate|date('d M Y') }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="cell label">Gudang</div>
+                            <div class="cell value">{{ purchaseRequestPaperHeader.warehouse.name|default }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <br />
+        
+        <table class="detail">
+            <thead>
+                <tr>
+                    <th class="center">Item code</th>
+                    <th class="center">Description</th>
+                    <th class="center">Qty</th>
+                    <th class="center">Unit</th>
+                    <th class="center">Tgl Pakai</th>
+                    <th class="center">Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set rowspan = 25 %}
+                {% for row in purchaseRequestPaperHeader.purchaseRequestPaperDetails|filter(purchaseRequestPaperDetail => not purchaseRequestPaperDetail.isCanceled and purchaseRequestPaperDetail.quantity > 0)|batch(rowspan, '') %}
+                    {% for purchaseRequestPaperDetail in row %}
+                        <tr>
+                            {% if purchaseRequestPaperDetail %}
+                                <td class="left">{{ purchaseRequestPaperDetail.paper.codeNumber|default }}</td>
+                                <td class="left">{{ purchaseRequestPaperDetail.paper.name|default }}</td>
+                                <td class="center">{{ purchaseRequestPaperDetail.quantity|default|number_format(2) }}</td>
+                                <td class="left">{{ purchaseRequestPaperDetail.unit.name|default }}</td>
+                                <td class="left">{{ purchaseRequestPaperDetail.usageDate|default ? purchaseRequestPaperDetail.usageDate|date('d M Y') }}</td>
+                                <td class="left">{{ purchaseRequestPaperDetail.memo|default }}</td>
+                            {% else %}
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" class="label right">Total</td>
+                    <td class="center">{{ purchaseRequestPaperHeader.totalQuantity|default|number_format(0) }}</td>
+                    <td colspan="3">&nbsp;</td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <br />
+        
+        <div class="note">
+            <div class="table">
+                <div class="cell label">Catatan:</div>
+                <div class="cell">&nbsp;&nbsp;</div>
+                <div class="cell">{{ purchaseRequestPaperHeader.note|default }}</div>
+            </div>
+        </div>
+        
+        <br />
+        
+        <div class="signature">
+            <div class="table full">
+                <div class="cell sig">
+                    <div>Request approved by: {{ purchaseRequestPaperHeader.approvedTransactionUser.name|default }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('memo') }}
+    <style>
+        .col:nth-child(1) { width: 50% }
+        .col:nth-child(2) { width: 50% }
+        
+        .col:nth-child(1) .label { width: 35% }
+        .col:nth-child(1) .value { width: 65% }
+        .col:nth-child(2) .label { width: 35% }
+        .col:nth-child(2) .value { width: 65% }
+        
+        .sig:nth-child(1) { width: 50% }
+        .sig:nth-child(2) { width: 50% }
+    </style>
+{% endblock %}

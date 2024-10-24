@@ -1,0 +1,73 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Work Order Varnish Spot Header' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_work_order_varnish_spot_header_index') }}">Manage</a>
+    <a class="btn btn-warning btn-sm" href="{{ path('app_production_work_order_varnish_spot_header_edit', {'id': workOrderVarnishSpotHeader.id}) }}">Edit</a>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Varnish Type</th>
+                <td>{{ workOrderVarnishSpotHeader.varnishType }}</td>
+            </tr>
+            <tr>
+                <th>Uv Oil Quantity</th>
+                <td>{{ workOrderVarnishSpotHeader.uvOilQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Alcohol Quantity</th>
+                <td>{{ workOrderVarnishSpotHeader.alcoholQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Wb Quantity</th>
+                <td>{{ workOrderVarnishSpotHeader.wbQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Work Order Return Date</th>
+                <td>{{ workOrderVarnishSpotHeader.workOrderReturnDate ? workOrderVarnishSpotHeader.workOrderReturnDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Is Canceled</th>
+                <td>{{ workOrderVarnishSpotHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Is Read</th>
+                <td>{{ workOrderVarnishSpotHeader.isRead ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Ordinal</th>
+                <td>{{ workOrderVarnishSpotHeader.codeNumberOrdinal }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Month</th>
+                <td>{{ workOrderVarnishSpotHeader.codeNumberMonth }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Year</th>
+                <td>{{ workOrderVarnishSpotHeader.codeNumberYear }}</td>
+            </tr>
+            <tr>
+                <th>Created Production Date Time</th>
+                <td>{{ workOrderVarnishSpotHeader.createdProductionDateTime ? workOrderVarnishSpotHeader.createdProductionDateTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Modified Production Date Time</th>
+                <td>{{ workOrderVarnishSpotHeader.modifiedProductionDateTime ? workOrderVarnishSpotHeader.modifiedProductionDateTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Production Date</th>
+                <td>{{ workOrderVarnishSpotHeader.transactionDate ? workOrderVarnishSpotHeader.transactionDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ workOrderVarnishSpotHeader.note }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{ include('production/work_order_varnish_spot_header/_delete_form.html.twig') }}
+{% endblock %}

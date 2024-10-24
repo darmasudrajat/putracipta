@@ -1,0 +1,124 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Supplier' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_supplier_index') }}">Manage</a>
+    {% if is_granted('ROLE_SUPPLIER_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_master_supplier_edit', {'id': supplier.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_SUPPLIER_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_master_supplier_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Company</th>
+                <td>{{ supplier.company }}</td>
+            </tr>
+            <tr>
+                <th>PIC 1</th>
+                <td>{{ supplier.name }}</td>
+            </tr>
+            {% if (supplier.name2 != '') %}
+                <tr>
+                    <th>PIC 2</th>
+                    <td>{{ supplier.name2 }}</td>
+                </tr>
+            {% endif %}
+            {% if (supplier.name3 != '') %}
+                <tr>
+                    <th>PIC 3</th>
+                    <td>{{ supplier.name3 }}</td>
+                </tr>
+            {% endif %}
+            {% if (supplier.name4 != '') %}
+                <tr>
+                    <th>PIC 4</th>
+                    <td>{{ supplier.name4 }}</td>
+                </tr>
+            {% endif %}
+            {% if (supplier.name5 != '') %}
+                <tr>
+                    <th>PIC 5</th>
+                    <td>{{ supplier.name5 }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>Address</th>
+                <td>{{ supplier.address }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ supplier.phone }}</td>
+            </tr>
+            <tr>
+                <th>Fax</th>
+                <td>{{ supplier.fax }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ supplier.email }}</td>
+            </tr>
+            <tr>
+                <th>NPWP</th>
+                <td>{{ supplier.taxNumber }}</td>
+            </tr>
+            <tr>
+                <th>TOP (hari)</th>
+                <td>{{ supplier.paymentTerm }}</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>{{ supplier.categoryList ? supplier.categoryList|join(', ') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Currency</th>
+                <td>{{ supplier.currency.name|default }}</td>
+            </tr>
+            <tr>
+                <th>account</th>
+                <td>{{ supplier.account.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ supplier.note }}</td>
+            </tr>
+            <tr>
+                <th>Is Inactive</th>
+                <td>{{ supplier.isInactive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr />
+    
+    <legend class="float-none w-auto text-dark px-1">Purchase List</legend>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>PO #</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseOrderHeader in purchaseOrderHeaders %}
+                {% for purchaseOrderDetail in purchaseOrderHeader.purchaseOrderDetails %}
+                    <tr>
+                        <td>{{ purchaseOrderDetail.material.code|default }}</td>
+                        <td>{{ purchaseOrderDetail.material.name|default }}</td>
+                        <td>{{ purchaseOrderHeader.codeNumber|default }}</td>
+                        <td>{{ purchaseOrderHeader.codeNumber|default }}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {#{{ include('master/supplier/_delete_form.html.twig') }}#}
+{% endblock %}

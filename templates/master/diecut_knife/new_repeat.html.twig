@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add Pisau Diecut' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_diecut_knife_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/diecut_knife/_form.html.twig') }}
+{% endblock %}

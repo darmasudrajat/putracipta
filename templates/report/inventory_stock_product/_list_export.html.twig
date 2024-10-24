@@ -1,0 +1,67 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="11"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="11"><strong>Laporan Mutasi Stok Finished Goods</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="11">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Kode</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Nama Item</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Customer</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Stok Awal</strong></th>
+            <th style="text-align: center"><strong>Transaction #</strong></th>
+            <th style="text-align: center"><strong>Tanggal</strong></th>
+            <th style="text-align: center"><strong>Gudang</strong></th>
+            <th style="text-align: center"><strong>Keterangan</strong></th>
+            <th style="text-align: center"><strong>Qty In</strong></th>
+            <th style="text-align: center"><strong>Qty Out</strong></th>
+            <th style="text-align: center"><strong>Stock</strong></th>
+            <th style="text-align: center"><strong>Satuan</strong></th>
+        </tr>
+        <tr>
+            <th colspan="11"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+            {% set beginningStock = beginningStockList[product.id]|default(0) %}
+            {% set currentStock = beginningStock %}
+            {% for inventory in inventories[product.id] %}
+                {% set currentStock = currentStock + inventory.quantityIn - inventory.quantityOut %}
+                {% if (inventory.quantityIn != 0 or inventory.quantityOut != 0) %}
+                    <tr>
+                        <td style="text-align: left">{{ product.code|default }}</td>
+                        <td style="text-align: left">{{ product.name|default }}</td>
+                        <td style="text-align: left">{{ product.customer.company|default }}</td>
+                        <td style="text-align: center">{{ beginningStock|default }}</td>
+                        <td style="text-align: left">{{ inventory.codeNumber|default }}</td>
+                        <td style="text-align: left">{{ inventory.transactionDate|default ? inventory.transactionDate|date('j M Y') }}</td>
+                        <td style="text-align: left">{{ inventory.warehouse.name|default }}</td>
+                        <td style="text-align: left">{{ inventory.transactionSubject|default }}</td>
+                        <td style="text-align: center">{{ inventory.quantityIn|default }}</td>
+                        <td style="text-align: center">{{ inventory.quantityOut|default }}</td>
+                        <td style="text-align: center">{{ currentStock|default }}</td>
+                        <td style="text-align: left">{{ inventory.product.unit.name|default }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            <tr>
+                <th colspan="12"></th>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

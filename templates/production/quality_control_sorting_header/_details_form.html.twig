@@ -1,0 +1,158 @@
+<div class="table-responsive">
+    <table class="table table-bordered"
+       data-controller="form-collection"
+       data-form-collection-start-index-value="{{ form.qualityControlSortingDetails|length > 0 ? form.qualityControlSortingDetails|last.vars.name + 1 : 0 }}"
+       data-form-collection-prototype-value="{{ _self.collection_item(form.qualityControlSortingDetails.vars.prototype)|e('html_attr') }}"
+       data-action="form-collection:collection-item-removed->json-loader#load:self">
+        <thead class="table-secondary">
+            <tr>
+                <th class="d-none">Master Order Product Detail Id</th>
+                <th class="d-none">Product Id</th>
+                <th style="min-width: 250px">Item Code</th>
+                <th style="min-width: 250px">Item Name</th>
+                <th style="min-width: 150px">Qty Order</th>
+                <th style="min-width: 150px">Qty Bagus</th>
+                <th style="min-width: 150px">Qty Rjc Cetak</th>
+                <th style="min-width: 100px">Qty Rjc Coating</th>
+                <th style="min-width: 150px">Qty Rjc Potong</th>
+                <th style="min-width: 150px">Qty Rjc Diecut</th>
+                <th style="min-width: 150px">Qty Rjc Lem</th>
+                <th style="min-width: 150px">Qty Rjc Finishing</th>
+                <th style="min-width: 150px">Qty Rjc Lain2</th>
+                <th style="min-width: 150px">Total Sortir</th>
+                <th style="min-width: 150px">Total Reject</th>
+                <th style="min-width: 150px">Sisa</th>
+                <th style="min-width: 250px">Memo</th>
+                <th style="width: 0"></th>
+            </tr>
+        </thead>
+        <tbody data-form-collection-target="items" data-action="master-order-header-table:data-table:select@document->form-collection#clearCollectionItems master-order-header-table:data-table:select@document->form-collection#addCollectionItems master-order-header-table:data-table:select@document->json-loader#load">
+            {% macro collection_item(detailForm, form) %}
+                <tr data-form-collection-target="item" data-item-identifier-name="masterOrderProductDetailId" data-item-identifier-value="{{ detailForm.vars.value.masterOrderProductDetail.id|default }}" {% if detailForm.isCanceled.vars.data %}class="d-none"{% endif %}>
+                    <td class="d-none">{{ form_widget(detailForm.masterOrderProductDetail , {'attr': {'data-item-field-name': 'masterOrderProductDetailId'}}) }}</td>
+                    <td class="d-none">{{ form_widget(detailForm.product, {'attr': {'data-item-field-name': 'productId'}}) }}</td>
+                    <td data-item-field-name="productCode">{{ detailForm.vars.value.product.code|default }}</td>
+                    <td data-item-field-name="productName">{{ detailForm.vars.value.product.name|default }}</td>
+                    <td class="text-end" data-json-loader-target="placeholder"
+                        data-property-path="qualityControlSortingDetails.{{ detailForm.vars.name }}.quantityOrder">
+                        {{ detailForm.vars.value.quantityOrder|default|number_format(2) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.quantityGood, {'label': false, 'attr': {
+                            'size': 3,
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 2)'}}
+                            ]|json_encode,
+                        }}) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.quantityRejectPrinting, {'label': false, 'attr': {
+                            'size': 3,
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 2)'}}
+                            ]|json_encode,
+                        }}) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.quantityRejectCoating, {'label': false, 'attr': {
+                            'size': 3,
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 2)'}}
+                            ]|json_encode,
+                        }}) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.quantityRejectCutting, {'label': false, 'attr': {
+                            'size': 3,
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 2)'}}
+                            ]|json_encode,
+                        }}) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.quantityRejectDiecutting, {'label': false, 'attr': {
+                            'size': 3,
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 2)'}}
+                            ]|json_encode,
+                        }}) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.quantityRejectGlueing, {'label': false, 'attr': {
+                            'size': 3,
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 2)'}}
+                            ]|json_encode,
+                        }}) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.quantityRejectFinishing, {'label': false, 'attr': {
+                            'size': 3,
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 2)'}}
+                            ]|json_encode,
+                        }}) }}
+                    </td>
+                    <td>
+                        {{ form_row(detailForm.quantityRejectOthers, {'label': false, 'attr': {
+                            'size': 3,
+                            'data-controller': 'dom-element',
+                            'data-action': 'change->dom-element#bind change->json-loader#load',
+                            'data-dom-element-bind-specifications-param': [
+                                {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$helper.localizer.number($element.value, 2)'}}
+                            ]|json_encode,
+                        }}) }}
+                    </td>
+                    <td class="text-end" data-json-loader-target="placeholder"
+                        data-property-path="qualityControlSortingDetails.{{ detailForm.vars.name }}.totalQuantitySorting">
+                        {{ detailForm.vars.value.totalQuantitySorting|default|number_format(2) }}
+                    </td>
+                    <td class="text-end" data-json-loader-target="placeholder"
+                        data-property-path="qualityControlSortingDetails.{{ detailForm.vars.name }}.totalQuantityReject">
+                        {{ detailForm.vars.value.totalQuantityReject|default|number_format(2) }}
+                    </td>
+                    <td class="text-end" data-json-loader-target="placeholder"
+                        data-property-path="qualityControlSortingDetails.{{ detailForm.vars.name }}.quantityRemaining">
+                        {{ detailForm.vars.value.quantityRemaining|default|number_format(2) }}
+                    </td>
+                    <td>{{ form_row(detailForm.memo, {'label': false}) }}</td>
+                    <td>
+                        {% if (detailForm.vars.value.id == null) %}
+                            <button type="button" class="btn btn-outline-dark" data-action="form-collection#removeCollectionItem"><i class="bi-x-lg"></i></button>
+                        {% else %}
+                            <button type="button" class="btn btn-danger"
+                                    data-controller="dom-element"
+                                    data-action="dom-element#bind json-loader#load"
+                                    data-dom-element-bind-specifications-param="{{ [
+                                        {'destinationsTarget': '#' ~ detailForm.isCanceled.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'checked', 'value': 'true'}},
+                                        {'destinations': '[$element.closest("tr")]', 'action': 'addClass', 'descriptor': {'name': 'd-none'}},
+                                    ]|json_encode }}">
+                                <i class="bi-x-lg"></i>
+                            </button>
+                        {% endif %}
+                        <div class="d-none">
+                            {{ form_row(detailForm.isCanceled) }}
+                        </div>
+                    </td>
+                </tr>
+            {% endmacro %}
+            {% for detailForm in form.qualityControlSortingDetails %}
+                {{ _self.collection_item(detailForm) }}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

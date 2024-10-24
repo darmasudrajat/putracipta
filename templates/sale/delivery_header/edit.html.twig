@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Delivery' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_sale_delivery_header_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_sale_delivery_header_show', {'id': deliveryHeader.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('sale/delivery_header/_form.html.twig') }}
+{% endblock %}

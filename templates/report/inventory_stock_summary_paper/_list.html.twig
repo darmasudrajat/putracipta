@@ -1,0 +1,110 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+<div class="d-print-none">
+    {{ grid.form(form) }}
+
+    <div class="my-3 px-3 bg-light" {{ grid.filter_link(form) }}>
+        <div class="row">
+            <div class="col">
+                <div class="my-2 row">
+                    <label class="col-sm-2 col-form-label w-25">Periode</label>
+                    <div class="col-sm-10 w-75">
+                        <div class="row">
+                            <div class="col">
+                                <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'inventory:transactionDate', [form.filter['inventory:transactionDate'].0.vars.choices.0.value, true, false]) }} value="{{ form.filter['inventory:transactionDate'].1.vars.value }}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="my-2 row">
+                    <label class="col-sm-2 col-form-label w-25">Gudang</label>
+                    <div class="col-sm-10 w-75">
+                        <select class="form-select" {{ grid.filter_link_item(form, 'inventory:warehouse') }}>
+                            <option value="" {% if form.filter['inventory:warehouse'].1.vars.value == '' %}selected="selected"{% endif %}></option>
+                            {% for choice in form.filter['inventory:warehouse'].1.vars.choices %}
+                                <option value="{{ choice.value }}" {% if form.filter['inventory:warehouse'].1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="my-2 row">
+                    <label class="col-sm-2 col-form-label w-25">Kode Kertas</label>
+                    <div class="col-sm-10 w-75">
+                        <input class="form-control" type="text" {{ grid.filter_link_item(form, 'code') }} value="{{ form.filter.code.1.vars.value }}" />
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="my-2 row">
+                    <label class="col-sm-2 col-form-label w-25">Nama Kertas</label>
+                    <div class="col-sm-10 w-75">
+                        <input class="form-control" type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-grid">
+        <div class="row">
+            <div class="col text-center">
+                <button type="submit" class="btn btn-primary btn-sm"
+                        data-controller="redirection"
+                        data-redirection-url-value="{{ path('app_report_inventory_stock_summary_paper__list') }}"
+                        data-redirection-form-target-value="form[name={{ form.vars.name }}]"
+                        data-redirection-extra-values-param="{{ {export: 'export'}|json_encode }}"
+                        data-action="redirection#redirect">
+                    Export
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{ grid.info(form, count, papers) }}
+
+    <hr />
+</div>
+
+<div class="report">
+    <div class="report-header">
+        <div class="report-title">PT. Putracipta Karindomas</div>
+        <div class="report-title">Laporan Stok Gudang Kertas</div>
+        <div>
+            {% set endDate = form.vars.value.filter['inventory:transactionDate'].1|default %}
+            {{ endDate ? endDate|date('j F Y') }}
+        </div>
+    </div>
+
+    <br />
+
+    <table class="report-data">
+        <thead class="border-top-solid-bold border-bottom-solid-bold">
+            <tr>
+                <th class="text-start" style="width: 15%">Kode Kertas</th>
+                <th class="text-start" style="width: 35%">Nama Kertas</th>
+                <th class="text-start" style="width: 10%">Stok</th>
+            </tr>
+        </thead>
+        <tbody class="border-top-solid-bold border-bottom-solid-bold">
+            {% for paper in papers %}
+                {% set endingStock = endingStockList[paper.id]|default(0) %}
+                <tr>
+                    <td class="text-start" style="width: 15%">{{ paper.codeNumber|default }}</td>
+                    <td class="text-start">{{ paper.name|default }}</td>
+                    <td class="text-end" style="width: 15%">{{ endingStock|number_format(2) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="d-print-none">
+    <br />
+    {{ grid.navigation(form, count, papers) }}
+</div>

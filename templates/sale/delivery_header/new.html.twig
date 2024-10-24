@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'New Delivery' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_sale_delivery_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('sale/delivery_header/_form.html.twig') }}
+{% endblock %}

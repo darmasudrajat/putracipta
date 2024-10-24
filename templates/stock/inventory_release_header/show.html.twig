@@ -1,0 +1,139 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Pengeluaran Material ke Produksi' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_stock_inventory_release_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_MATERIAL_RELEASE_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_stock_inventory_release_header_edit', {'id': inventoryReleaseHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_MATERIAL_RELEASE_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_stock_inventory_release_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Code Number</th>
+                <td>{{ inventoryReleaseHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ inventoryReleaseHeader.transactionDate ? inventoryReleaseHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Gudang</th>
+                <td>{{ inventoryReleaseHeader.warehouse.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Divisi</th>
+                <td>{{ inventoryReleaseHeader.division.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Part #</th>
+                <td>{{ inventoryReleaseHeader.partNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Jenis Pengeluaran</th>
+                <td>{{ inventoryReleaseHeader.releaseMode|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ inventoryReleaseHeader.note|default }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ inventoryReleaseHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ inventoryReleaseHeader.createdTransactionDateTime ? inventoryReleaseHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ inventoryReleaseHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ inventoryReleaseHeader.modifiedTransactionDateTime ? inventoryReleaseHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ inventoryReleaseHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Kode</th>
+                {% if (inventoryReleaseHeader.releaseMode == 'paper') %}
+                    <th>Nama Kertas</th>
+                    <th>WO #</th>
+                {% elseif (inventoryReleaseHeader.releaseMode == 'material') %} 
+                    <th>Nama Material</th>
+                    <th></th>
+                {% endif %} 
+                <th>Qty</th>
+                <th>Satuan</th>
+                <th>Permintaan #</th>
+                <th>Tanggal</th>
+                <th>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if (inventoryReleaseHeader.releaseMode == 'paper') %}
+                {% for inventoryReleasePaperDetail in inventoryReleaseHeader.inventoryReleasePaperDetails %}
+                    {% if inventoryReleasePaperDetail.isCanceled == false and inventoryReleasePaperDetail.quantity > 0 %}
+                        <tr>
+                            <td>{{ inventoryReleasePaperDetail.paper.codeNumber|default }}</td>
+                            <td>{{ inventoryReleasePaperDetail.paper.name|default }}</td>
+                            <td>{{ inventoryReleasePaperDetail.inventoryRequestPaperDetail.masterOrderHeader.codeNumber|default }}</td>
+                            <td>{{ inventoryReleasePaperDetail.quantity|default|number_format(2) }}</td>
+                            <td>{{ inventoryReleasePaperDetail.unit.name|default }}</td>
+                            <td>
+                                {% if (inventoryReleasePaperDetail.inventoryRequestPaperDetail != null) %}
+                                    {{ inventoryReleasePaperDetail.inventoryRequestPaperDetail.inventoryRequestHeader.codeNumber|default }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if (inventoryReleasePaperDetail.inventoryRequestPaperDetail != null) %}
+                                    {{ inventoryReleasePaperDetail.inventoryRequestPaperDetail.inventoryRequestHeader.transactionDate ? inventoryReleasePaperDetail.inventoryRequestPaperDetail.inventoryRequestHeader.transactionDate|date('d M Y') : '' }}
+                                {% endif %}
+                            </td>
+                            <td>{{ inventoryReleasePaperDetail.memo|default }}</td>
+                        </tr>
+                    {% endif %} 
+                {% endfor %}
+            {% elseif (inventoryReleaseHeader.releaseMode == 'material') %} 
+                {% for inventoryReleaseMaterialDetail in inventoryReleaseHeader.inventoryReleaseMaterialDetails %}
+                    {% if inventoryReleaseMaterialDetail.isCanceled == false and inventoryReleaseMaterialDetail.quantity > 0 %}
+                        <tr>
+                            <td>{{ inventoryReleaseMaterialDetail.material.code|default }}</td>
+                            <td>{{ inventoryReleaseMaterialDetail.material.name|default }}</td>
+                            <td></td>
+                            <td>{{ inventoryReleaseMaterialDetail.quantity|default|number_format(2) }}</td>
+                            <td>{{ inventoryReleaseMaterialDetail.unit.name|default }}</td>
+                            <td>
+                                {% if (inventoryReleaseMaterialDetail.inventoryRequestMaterialDetail != null) %}
+                                    {{ inventoryReleaseMaterialDetail.inventoryRequestMaterialDetail.inventoryRequestHeader.codeNumber|default }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if (inventoryReleaseMaterialDetail.inventoryRequestMaterialDetail != null) %}
+                                    {{ inventoryReleaseMaterialDetail.inventoryRequestMaterialDetail.inventoryRequestHeader.transactionDate ? inventoryReleaseMaterialDetail.inventoryRequestMaterialDetail.inventoryRequestHeader.transactionDate|date('d M Y') : '' }}
+                                {% endif %}
+                            </td>
+                            <td>{{ inventoryReleaseMaterialDetail.memo|default }}</td>
+                        </tr>
+                    {% endif %} 
+                {% endfor %}
+            {% endif %} 
+        </tbody>
+    </table>
+
+    {# {{ include('stock/inventory_release_header/_delete_form.html.twig') }} #}
+{% endblock %}

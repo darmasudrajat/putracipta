@@ -1,0 +1,156 @@
+{{ form_start(form) }}
+    {#<div class="mb-3">
+        <label for="{{ form.customer.vars.id }}-text" class="form-label">Customer</label>
+        {{ form_row(form.customer, {
+            'attr': {
+                'data-controller': 'dom-element',
+                'data-action': 'customer-table:data-table:select@document->dom-element#bind',
+                'data-dom-element-bind-specifications-param': [
+                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.customerId'}},
+                ]|json_encode,
+            },
+        }) }}
+        <input type="text" id="{{ form.customer.vars.id }}-text" class="form-control readonly-form-input {% if not form.customer.vars.valid %}is-invalid{% endif %}" value="{{ product.customer.company|default }}" readonly="readonly"
+               data-bs-toggle="modal" data-bs-target="#customer-dialog"
+               data-controller="dom-element"
+               data-action="customer-table:data-table:select@document->dom-element#bind"
+               data-dom-element-bind-specifications-param="{{ [
+                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.customerCompany'}},
+               ]|json_encode }}" />
+        {{ form_errors(form.customer) }}
+    </div>#}
+    {{ form_row(form.customer) }}
+    <div class="mb-3">
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.code, {
+                    'attr': {
+                        'data-controller': 'dom-element',
+                        'data-action': 'dom-element#bind',
+                        'data-dom-element-bind-specifications-param': [
+                            {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$element.value.toUpperCase()'}},
+                        ]|json_encode,
+                    },
+                }) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.name) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.material) }}
+            </div>
+            {#<div class="col">
+                <label for="{{ form.paper.vars.id }}-text" class="form-label">Material Kertas</label>
+                {{ form_row(form.paper, {
+                    'attr': {
+                        'data-controller': 'dom-element',
+                        'data-action': 'paper-table:data-table:select@document->dom-element#bind',
+                        'data-dom-element-bind-specifications-param': [
+                            {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.paperId'}},
+                        ]|json_encode,
+                    },
+                }) }}
+                <input type="text" id="{{ form.paper.vars.id }}-text" class="form-control readonly-form-input {% if not form.paper.vars.valid %}is-invalid{% endif %}" value="{{ masterOrderHeader.paper.paperNameSizeCombination|default }}" readonly="readonly"
+                       data-bs-toggle="modal" data-bs-target="#paper-dialog"
+                       data-controller="dom-element"
+                       data-action="paper-table:data-table:select@document->dom-element#bind"
+                       data-dom-element-bind-specifications-param="{{ [
+                           {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.paperName'}},
+                       ]|json_encode }}" />
+                {{ form_errors(form.paper) }}
+            </div>#}
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.length) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.width) }}
+            </div>
+            <div class="col">
+                {{ form_label(form.height) }}
+                <div class="input-group">
+                    {{ form_widget(form.height) }}
+                    {{ form_errors(form.height) }}
+                    <span class="input-group-text">mm</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="row">
+            <div class="col">
+                <label class="form-label">Berat/pcs</label>
+                <div class="input-group">
+                    {{ form_widget(form.weight) }}
+                    {{ form_errors(form.weight) }}
+                    <span class="input-group-text">gr</span>
+                </div>
+            </div>
+            {#<div class="col">
+                <label class="form-label">Glossiness</label>
+                <div class="input-group">
+                    {{ form_widget(form.glossiness) }}
+                    {{ form_errors(form.glossiness) }}
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>#}
+            <div class="col">
+                {{ form_row(form.unit) }}
+            </div>
+        </div>
+    </div>
+    {{ form_row(form.note) }}
+    {{ form_row(form.isInactive) }}
+
+    <fieldset class="border border-secondary rounded mb-3 p-3">
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.transactionFile, {
+                    'label': transactionFileExists ? 'A Layout File has been uploaded' : 'Upload Layout File (Max 5MB)', 
+                    'label_attr': {
+                        'class': transactionFileExists ? 'text-danger fw-bold' : ''
+                    }
+                }) }}
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="d-grid">
+        <div class="row">
+            <div class="col text-center">
+                <a class="btn btn-danger" href="{{ path('app_master_product_index') }}"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                    Cancel
+                </a>
+                <button class="btn btn-success"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                    Save
+                </button>
+            </div>
+        </div>
+        <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+    </div>
+{{ form_end(form) }}
+
+{% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+{{ dialog.start('customer-dialog', 'Customer List') }}
+    <div data-controller="html-loader"
+         data-html-loader-url-value="{{ path('app_shared_customer__list') }}"
+         data-html-loader-auto-load-value="true">
+    </div>
+{{ dialog.end() }}
+
+{{ dialog.start('paper-dialog', 'Paper List') }}
+    <div data-controller="html-loader"
+         data-html-loader-url-value="{{ path('app_shared_paper__list') }}"
+         data-html-loader-auto-load-value="true">
+    </div>
+{{ dialog.end() }}

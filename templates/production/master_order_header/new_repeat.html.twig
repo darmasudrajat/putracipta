@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Repeat Master Order' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_master_order_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('production/master_order_header/_form.html.twig') }}
+{% endblock %}

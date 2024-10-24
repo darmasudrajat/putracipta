@@ -1,0 +1,15 @@
+{
+    "totalAmount": "{{ salePaymentHeader.totalAmount|default|number_format(2) }}",
+    "totalReceivable": "{{ salePaymentHeader.totalReceivable|default|number_format(2) }}",
+    "receivedAmount": "{{ salePaymentHeader.receivedAmount|default|number_format(2) }}",
+    "salePaymentDetails": {
+        {%- for salePaymentDetailForm in form.salePaymentDetails -%}
+            {%- set salePaymentDetail = salePaymentDetailForm.vars.data -%}
+            "{{ salePaymentDetailForm.vars.name }}": {
+                "serviceTaxNominal": "{{ salePaymentDetail.serviceTaxNominal|default|number_format(2) }}",
+                "receivableAmount": "{{ salePaymentDetail.receivableAmount|default|number_format(2) }}"
+            }
+            {%- if not loop.last -%},{%- endif -%}
+        {%- endfor -%}
+    }
+}

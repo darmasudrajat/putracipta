@@ -1,0 +1,75 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, materials) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="material-table"
+           data-controller="data-table"
+           data-data-table-selected-identifiers-target-value="#material-table-identifiers"
+           data-data-table-selected-class="table-primary"
+           data-data-table-active-class="table-active">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'code') }}>
+                    Code {{ grid.sort_char(form.sort.code.vars.value) }}
+                </th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    Name {{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'materialCategory:name') }}>
+                    Category {{ grid.sort_char(form.sort['materialCategory:name'].vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'materialSubCategory:name') }}>
+                    Sub Category {{ grid.sort_char(form.sort['materialSubCategory:name'].vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'code') }} value="{{ form.filter.code.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'materialSubCategory:materialCategory') }}>
+                        <option value="" {% if form.filter['materialSubCategory:materialCategory'].1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter['materialSubCategory:materialCategory'].1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter['materialSubCategory:materialCategory'].1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'materialSubCategory') }}>
+                        <option value="" {% if form.filter.materialSubCategory.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.materialSubCategory.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.materialSubCategory.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for material in materials %}
+                <tr data-data-table-target="selectable" data-selected-identifier="{{ material.id }}" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'materialId': material.id,
+                    'materialCode': material.codeNumber,
+                    'materialName': material.name,
+                    'unitId': material.unit.id,
+                    'unitName': material.unit.name}|json_encode }}">
+                    <td>{{ material.codeNumber }}</td>
+                    <td>{{ material.name }}</td>
+                    <td>{{ material.materialSubCategory.materialCategory.name|default }}</td>
+                    <td>{{ material.materialSubCategory.name|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, materials) }}

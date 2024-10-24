@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit User' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_admin_user_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_admin_user_show', {'id': user.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('admin/user/_form.html.twig') }}
+{% endblock %}

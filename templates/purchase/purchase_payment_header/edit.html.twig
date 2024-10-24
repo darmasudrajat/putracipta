@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Purchase Payment' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_purchase_purchase_payment_header_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_purchase_purchase_payment_header_show', {'id': purchasePaymentHeader.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('purchase/purchase_payment_header/_form.html.twig') }}
+{% endblock %}

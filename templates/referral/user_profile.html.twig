@@ -1,0 +1,18 @@
+<div class="dropdown pb-4">
+    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi-person-circle" style="font-size: 2rem"></i>
+        &nbsp;
+        <span class="d-none d-sm-inline mx-1">{{ app.user.username|default }}</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+        {% if employee is not null %}
+            <li><a class="dropdown-item" href="{{ path('app_referral_show_profile', {'id': app.user.id}) }}">Show Profile</a></li>
+            <li><a class="dropdown-item" href="{{ path('app_referral_change_profile', {'id': app.user.id}) }}">Change Profile</a></li>
+        {% endif %}
+        <li><a class="dropdown-item" href="{{ path('app_referral_change_password', {'id': app.user.id}) }}">Change Password</a></li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li><a class="dropdown-item" href="{{ logout_path('main') }}">Logout</a></li>
+    </ul>
+</div>

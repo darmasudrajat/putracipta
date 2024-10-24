@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add Journal Voucher Header' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_accounting_journal_voucher_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('accounting/journal_voucher_header/_form.html.twig') }}
+{% endblock %}

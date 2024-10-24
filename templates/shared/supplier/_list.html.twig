@@ -1,0 +1,62 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, suppliers) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="supplier-table" data-controller="data-table">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'company') }}>
+                    Company {{ grid.sort_char(form.sort.company.vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'name') }}>
+                    PIC {{ grid.sort_char(form.sort.name.vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'email') }}>
+                    Email {{ grid.sort_char(form.sort.email.vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(form, 'note') }}>
+                    Note {{ grid.sort_char(form.sort.note.vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'company') }} value="{{ form.filter.company.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'name') }} value="{{ form.filter.name.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'email') }} value="{{ form.filter.email.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'note') }} value="{{ form.filter.note.1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for supplier in suppliers %}
+                <tr data-bs-dismiss="modal" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'supplierId': supplier.id, 
+                    'supplierCompany': supplier.company, 
+                    'currencyCode': supplier.currency.code|default,
+                    'currencyIsLocal': supplier.currency.isLocal|default,
+                    'category': supplier.categoryList ? supplier.categoryList|join(', ') : '',
+                    'paymentTerm': supplier.paymentTerm}|json_encode }}">
+                    <td>{{ supplier.company }}</td>
+                    <td>{{ supplier.name }}</td>
+                    <td>{{ supplier.email }}</td>
+                    <td>{{ supplier.note }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, suppliers) }}

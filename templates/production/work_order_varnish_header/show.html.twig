@@ -1,0 +1,69 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Work Order Varnish Header' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_work_order_varnish_header_index') }}">Manage</a>
+    <a class="btn btn-warning btn-sm" href="{{ path('app_production_work_order_varnish_header_edit', {'id': workOrderVarnishHeader.id}) }}">Edit</a>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Uv Oil Quantity</th>
+                <td>{{ workOrderVarnishHeader.uvOilQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Alcohol Quantity</th>
+                <td>{{ workOrderVarnishHeader.alcoholQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Wb Quantity</th>
+                <td>{{ workOrderVarnishHeader.wbQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Work Order Return Date</th>
+                <td>{{ workOrderVarnishHeader.workOrderReturnDate ? workOrderVarnishHeader.workOrderReturnDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Is Canceled</th>
+                <td>{{ workOrderVarnishHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Is Read</th>
+                <td>{{ workOrderVarnishHeader.isRead ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Ordinal</th>
+                <td>{{ workOrderVarnishHeader.codeNumberOrdinal }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Month</th>
+                <td>{{ workOrderVarnishHeader.codeNumberMonth }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Year</th>
+                <td>{{ workOrderVarnishHeader.codeNumberYear }}</td>
+            </tr>
+            <tr>
+                <th>Created Production Date Time</th>
+                <td>{{ workOrderVarnishHeader.createdProductionDateTime ? workOrderVarnishHeader.createdProductionDateTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Modified Production Date Time</th>
+                <td>{{ workOrderVarnishHeader.modifiedProductionDateTime ? workOrderVarnishHeader.modifiedProductionDateTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Production Date</th>
+                <td>{{ workOrderVarnishHeader.transactionDate ? workOrderVarnishHeader.transactionDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ workOrderVarnishHeader.note }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{ include('production/work_order_varnish_header/_delete_form.html.twig') }}
+{% endblock %}

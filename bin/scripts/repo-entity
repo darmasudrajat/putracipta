@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+for class in $@
+do
+  composer dump-autoload && php bin/console custom:make:repository $class
+done

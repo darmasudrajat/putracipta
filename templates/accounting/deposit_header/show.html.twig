@@ -1,0 +1,89 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Deposit Header' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_accounting_deposit_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_DEPOSIT_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_accounting_deposit_header_edit', {'id': depositHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_DEPOSIT_ADD') %}
+    <a class="btn btn-success btn-sm" href="{{ path('app_accounting_deposit_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Penerimaan #</th>
+                <td>{{ depositHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ depositHeader.transactionDate ? depositHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Account</th>
+                <td>{{ depositHeader.account.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ depositHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ depositHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ depositHeader.createdTransactionDateTime ? depositHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ depositHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ depositHeader.modifiedTransactionDateTime ? depositHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Is Canceled</th>
+                <td>{{ depositHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Kode</th>
+                <th>Nama</th>
+                <th>Category</th>
+                <th>Deskripsi</th>
+                <th>Keterangan</th>
+                <th>Jumlah</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for depositDetail in depositHeader.depositDetails %}
+                <tr>
+                    <td>{{ depositDetail.account.code|default }}</td>
+                    <td>{{ depositDetail.account.name|default }}</td>
+                    <td>{{ depositDetail.account.accountCategory.name|default }}</td>
+                    <td>{{ depositDetail.description|default }}</td>
+                    <td>{{ depositDetail.memo|default }}</td>
+                    <td class="text-end">{{ depositDetail.amount|default|number_format(2) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5" class="text-end"><strong>Total</strong></td>
+                <td class="text-end"><strong>{{ depositHeader.totalAmount|default|number_format(2) }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    {#{{ include('accounting/deposit_header/_delete_form.html.twig') }}#}
+{% endblock %}

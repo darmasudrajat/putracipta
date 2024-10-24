@@ -1,0 +1,9 @@
+<form method="post" action="{{ path('app_sale_sale_order_header_reject', {'id': saleOrderHeader.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ saleOrderHeader.id) }}">
+    <button class="btn btn-danger btn-sm"
+            data-controller="dom-element"
+            data-action="dom-element#confirm"
+            data-dom-element-confirm-message-param="Are you sure you want to reject this transaction?">
+        Reject
+    </button>
+</form>

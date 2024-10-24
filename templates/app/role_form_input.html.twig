@@ -1,0 +1,39 @@
+{% macro check(roleIndexes, form, name, label = false) %}
+    {% set childForm = form.roles.children[roleIndexes[name]] %}
+    {% set labelText = label is same as true ? childForm.vars.label : (label is same as false ? ' ' : label) %}
+    {% set isCheckedText = childForm.vars.value in form.roles.vars.value ? 'true' : 'false' %}
+    {{ form_widget(childForm, {'label': labelText, 'attr': {
+        'data-controller': 'dom-element',
+        'data-action': 'DOMContentLoaded@document->dom-element#bind input->dom-element#bind',
+        'data-dom-element-bind-specifications-param': [
+            {
+                'eventTypes': ['input'],
+                'destinationsTarget': "[data-role-parent*=#{childForm.vars.value}]",
+                'action': 'setPropertyValue',
+                'descriptor': {'property': 'checked', 'value': 'false'},
+                'condition': '$element.checked',
+            },
+            {
+                'eventTypes': ['input'],
+                'destinationsTarget': "[data-role-parent*=#{childForm.vars.value}]",
+                'action': 'setPropertyValue',
+                'descriptor': {'property': 'disabled', 'value': '$element.checked'},
+            },
+            {
+                'eventTypes': ['DOMContentLoaded'],
+                'destinationsTarget': "[data-role-parent*=#{childForm.vars.value}]",
+                'action': 'setPropertyValue',
+                'descriptor': {'property': 'checked', 'value': 'false'},
+                'condition': isCheckedText ~ ' && $element.checked',
+            },
+            {
+                'eventTypes': ['DOMContentLoaded'],
+                'destinationsTarget': "[data-role-parent*=#{childForm.vars.value}]",
+                'action': 'setPropertyValue',
+                'descriptor': {'property': 'disabled', 'value': '$element.checked'},
+                'condition': isCheckedText,
+            },
+        ]|json_encode,
+        'data-role-parent': role_ref.data[childForm.vars.value]|join(' '),
+    }}) }}
+{% endmacro %}

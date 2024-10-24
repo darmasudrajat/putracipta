@@ -1,0 +1,107 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, masterOrderHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Master Order # {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'customer:company') }}>
+                    Customer {{ grid.sort_char(form.sort['customer:company'].vars.value) }}
+                </th>
+                <th style="min-width: 350px" {{ grid.sort_link_item(form, 'masterOrderProductNameList') }}>
+                    Product Name {{ grid.sort_char(form.sort.masterOrderProductNameList.vars.value) }}
+                </th>
+                <th style="min-width: 150px" {{ grid.sort_link_item(form, 'saleOrderReferenceNumberList') }}>
+                    PO # {{ grid.sort_char(form.sort.saleOrderReferenceNumberList.vars.value) }}
+                </th>
+                <th style="min-width: 250px" {{ grid.sort_link_item(form, 'masterOrderProductList') }}>
+                    Product Code {{ grid.sort_char(form.sort.masterOrderProductList.vars.value) }}
+                </th>
+                <th style="min-width: 350px">Design Code</th>
+                <th style="min-width: 130px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberOrdinal') }} value="{{ form.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Production\\MasterOrderHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\ProductionHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>/</small></span>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberYear') }} value="{{ form.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'customer:company') }} value="{{ form.filter['customer:company'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'masterOrderProductNameList') }} value="{{ form.filter.masterOrderProductNameList.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'saleOrderReferenceNumberList') }} value="{{ form.filter.saleOrderReferenceNumberList.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'masterOrderProductList') }} value="{{ form.filter.masterOrderProductList.1.vars.value }}" />
+                </th>
+                <th>
+                    P<input style="width: 100px" type="text" {{ grid.filter_link_item(form, 'designCode:code') }} value="{{ form.filter['designCode:code'].1.vars.value }}" />-
+                    V<input style="width: 100px" type="text" {{ grid.filter_link_item(form, 'designCode:variant') }} value="{{ form.filter['designCode:variant'].1.vars.value }}" />-
+                    R<input style="width: 64px" type="text" {{ grid.filter_link_item(form, 'designCode:version') }} value="{{ form.filter['designCode:version'].1.vars.value }}" />
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterOrderHeader in masterOrderHeaders %}
+                <tr data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'masterOrderHeaderId': masterOrderHeader.id, 
+                    'masterOrderHeaderCodeNumber': masterOrderHeader.codeNumber, 
+                    'masterOrderHeaderDate': masterOrderHeader.transactionDate ? masterOrderHeader.transactionDate|date('d M Y') : '', 
+                    'masterOrderHeaderPrintingMachine': masterOrderHeader.machinePrinting.name|default, 
+                    'customerCompany': masterOrderHeader.customer.company|default,
+                    'saleOrderCodeNumber': masterOrderHeader.saleOrderDetail.saleOrderHeader.codeNumber|default,
+                    'masterOrderHeaderQuantity': masterOrderHeader.totalQuantityOrder}|json_encode }}">
+                    {% set masterOrderProductDetails = masterOrderHeader.masterOrderProductDetails %}
+                    <td>{{ masterOrderHeader.codeNumber|default }}</td>
+                    <td>{{ masterOrderHeader.transactionDate ? masterOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ masterOrderHeader.customer.company|default }}</td>
+                    <td>{{ masterOrderHeader.masterOrderProductNameList|default }}</td>
+                    <td>{{ masterOrderHeader.saleOrderReferenceNumberList|default }}</td>
+                    <td>{{ masterOrderHeader.masterOrderProductList|default }}</td>
+                    <td>{{ masterOrderHeader.designCode.codeNumber|default }}</td>
+                    <td>
+                        {% if is_granted('ROLE_MASTER_ORDER_VIEW') or is_granted('ROLE_MASTER_ORDER_EDIT') or is_granted('ROLE_MASTER_ORDER_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_production_master_order_header_show', {'id': masterOrderHeader.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_MASTER_ORDER_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_production_master_order_header_edit', {'id': masterOrderHeader.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_MASTER_ORDER_ADD') %}
+                            <a class="btn btn-success btn-sm" href="{{ path('app_production_master_order_header_new_repeat', {'source_id': masterOrderHeader.id}) }}"><i class="bi-c-square"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, masterOrderHeaders) }}

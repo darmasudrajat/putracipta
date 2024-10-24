@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Warehouse' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_warehouse_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_master_warehouse_show', {'id': warehouse.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/warehouse/_form.html.twig') }}
+{% endblock %}

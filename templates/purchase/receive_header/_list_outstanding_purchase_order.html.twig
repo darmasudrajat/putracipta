@@ -1,0 +1,177 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(formMaterial) }}
+
+{{ grid.info(formMaterial, countMaterial, purchaseOrderDetails) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 280px" role="button" {{ grid.sort_link_item(formMaterial, ['purchaseOrderHeader:codeNumberOrdinal', 'purchaseOrderHeader:codeNumberMonth', 'purchaseOrderHeader:codeNumberYear']) }}>
+                    PO # {{ grid.sort_char(formMaterial.sort['purchaseOrderHeader:codeNumberOrdinal'].vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(formMaterial, 'purchaseOrderHeader:transactionDate') }}>
+                    Tanggal {{ grid.sort_char(formMaterial.sort['purchaseOrderHeader:transactionDate'].vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(formMaterial, 'supplier:company') }}>
+                    Supplier {{ grid.sort_char(formMaterial.sort['supplier:company'].vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(formMaterial, 'material:code') }}>
+                    Code {{ grid.sort_char(formMaterial.sort['material:code'].vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(formMaterial, 'material:name') }}>
+                    Material {{ grid.sort_char(formMaterial.sort['material:name'].vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(formMaterial, 'quantity') }}>
+                    Quantity {{ grid.sort_char(formMaterial.sort.quantity.vars.value) }}
+                </th>
+                <th style="min-width: 50px">
+                    Satuan
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(formMaterial, 'purchaseOrderHeader:transactionStatus') }}>
+                    Status {{ grid.sort_char(formMaterial.sort['purchaseOrderHeader:transactionStatus'].vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(formMaterial) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(formMaterial, 'purchaseOrderHeader:codeNumberOrdinal') }} value="{{ formMaterial.filter['purchaseOrderHeader:codeNumberOrdinal'].1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Purchase\\PurchaseOrderHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(formMaterial, 'purchaseOrderHeader:codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\PurchaseHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if formMaterial.filter['purchaseOrderHeader:codeNumberMonth'].1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>/</small></span>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(formMaterial, 'purchaseOrderHeader:codeNumberYear') }} value="{{ formMaterial.filter['purchaseOrderHeader:codeNumberYear'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(formMaterial, 'purchaseOrderHeader:transactionDate') }} value="{{ formMaterial.filter['purchaseOrderHeader:transactionStatus'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(formMaterial, 'supplier:company') }} value="{{ formMaterial.filter['supplier:company'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(formMaterial, 'material:code') }} value="{{ formMaterial.filter['material:code'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(formMaterial, 'material:name') }} value="{{ formMaterial.filter['material:name'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(formMaterial, 'quantity') }} value="{{ formMaterial.filter.quantity.1.vars.value }}" />
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseOrderDetail in purchaseOrderDetails %}
+                <tr>
+                    <td>{{ purchaseOrderDetail.purchaseOrderHeader.codeNumber|default }}</td>
+                    <td>{{ purchaseOrderDetail.purchaseOrderHeader.transactionDate ? purchaseOrderDetail.purchaseOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ purchaseOrderDetail.purchaseOrderHeader.supplier.company|default }}</td>
+                    <td>{{ purchaseOrderDetail.material.codeNumber|default }}</td>
+                    <td>{{ purchaseOrderDetail.material.name|default }}</td>
+                    <td>{{ purchaseOrderDetail.quantity|default|number_format(2) }}</td>
+                    <td>{{ purchaseOrderDetail.material.unit.name|default }}</td>
+                    <td>{{ purchaseOrderDetail.purchaseOrderHeader.transactionStatus|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(formMaterial, countMaterial, purchaseOrderDetails) }}
+
+{{ grid.form(formPaper) }}
+
+{{ grid.info(formPaper, countPaper, purchaseOrderPaperDetails) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 280px" role="button" {{ grid.sort_link_item(formPaper, ['purchaseOrderPaperHeader:codeNumberOrdinal', 'purchaseOrderPaperHeader:codeNumberMonth', 'purchaseOrderPaperHeader:codeNumberYear']) }}>
+                    PO # {{ grid.sort_char(formPaper.sort['purchaseOrderPaperHeader:codeNumberOrdinal'].vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(formPaper, 'purchaseOrderPaperHeader:transactionDate') }}>
+                    Tanggal {{ grid.sort_char(formPaper.sort['purchaseOrderPaperHeader:transactionDate'].vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(formPaper, 'supplier:company') }}>
+                    Supplier {{ grid.sort_char(formPaper.sort['supplier:company'].vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(formPaper, 'paper:code') }}>
+                    Code {{ grid.sort_char(formPaper.sort['paper:code'].vars.value) }}
+                </th>
+                <th style="min-width: 250px" role="button" {{ grid.sort_link_item(formPaper, 'paper:name') }}>
+                    Kertas {{ grid.sort_char(formPaper.sort['paper:name'].vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(formPaper, 'quantity') }}>
+                    Quantity {{ grid.sort_char(formPaper.sort.quantity.vars.value) }}
+                </th>
+                <th style="min-width: 50px">
+                    Satuan
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(formPaper, 'purchaseOrderPaperHeader:transactionStatus') }}>
+                    Status {{ grid.sort_char(formPaper.sort['purchaseOrderPaperHeader:transactionStatus'].vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(formPaper) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(formPaper, 'purchaseOrderPaperHeader:codeNumberOrdinal') }} value="{{ formPaper.filter['purchaseOrderPaperHeader:codeNumberOrdinal'].1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Purchase\\purchaseOrderPaperHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(formPaper, 'purchaseOrderPaperHeader:codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\PurchaseHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if formPaper.filter['purchaseOrderPaperHeader:codeNumberMonth'].1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>/</small></span>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(formPaper, 'purchaseOrderPaperHeader:codeNumberYear') }} value="{{ formPaper.filter['purchaseOrderPaperHeader:codeNumberYear'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(formPaper, 'purchaseOrderPaperHeader:transactionDate') }} value="{{ formPaper.filter['purchaseOrderPaperHeader:transactionStatus'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(formPaper, 'supplier:company') }} value="{{ formPaper.filter['supplier:company'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(formPaper, 'paper:code') }} value="{{ formPaper.filter['paper:code'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(formPaper, 'paper:name') }} value="{{ formPaper.filter['paper:name'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(formPaper, 'quantity') }} value="{{ formPaper.filter.quantity.1.vars.value }}" />
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseOrderPaperDetail in purchaseOrderPaperDetails %}
+                <tr>
+                    <td>{{ purchaseOrderPaperDetail.purchaseOrderPaperHeader.codeNumber }}</td>
+                    <td>{{ purchaseOrderPaperDetail.purchaseOrderPaperHeader.transactionDate ? purchaseOrderPaperDetail.purchaseOrderPaperHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ purchaseOrderPaperDetail.purchaseOrderPaperHeader.supplier.company|default }}</td>
+                    <td>{{ purchaseOrderPaperDetail.paper.codeNumber|default }}</td>
+                    <td>{{ purchaseOrderPaperDetail.paper.name|default }}</td>
+                    <td>{{ purchaseOrderPaperDetail.quantity|default|number_format(2) }}</td>
+                    <td>{{ purchaseOrderPaperDetail.paper.unit.name|default }}</td>
+                    <td>{{ purchaseOrderPaperDetail.purchaseOrderPaperHeader.transactionStatus|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(formPaper, countPaper, purchaseOrderPaperDetails) }}

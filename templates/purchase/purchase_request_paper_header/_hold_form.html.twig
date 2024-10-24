@@ -1,0 +1,9 @@
+<form method="post" action="{{ path('app_purchase_purchase_request_paper_header_hold', {'id': purchaseRequestPaperHeader.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('hold' ~ purchaseRequestPaperHeader.id) }}">
+    <button class="btn btn-warning btn-sm"
+            data-controller="dom-element"
+            data-action="dom-element#confirm"
+            data-dom-element-confirm-message-param="Are you sure you want to hold this transaction?">
+        Hold PO
+    </button>
+</form>

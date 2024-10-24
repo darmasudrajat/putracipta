@@ -1,0 +1,43 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Tanggal Kirim PO Customer' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_stock_stock_sale_order_detail_index') }}">Manage</a>
+    <a class="btn btn-warning btn-sm" href="{{ path('app_stock_stock_sale_order_detail_edit', {'id': saleOrderDetail.id}) }}">Edit</a>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Customer</th>
+                <td>{{ saleOrderDetail.saleOrderHeader.customer.company }}</td>
+            </tr>
+            <tr>
+                <th>PO #</th>
+                <td>{{ saleOrderDetail.saleOrderHeader.referenceNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal PO</th>
+                <td>{{ saleOrderDetail.saleOrderHeader.transactionDate ? saleOrderDetail.saleOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Kirim</th>
+                <td>{{ saleOrderDetail.deliveryDate ? saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Product</th>
+                <td>{{ saleOrderDetail.product.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Quantity</th>
+                <td>{{ saleOrderDetail.quantity|default|number_format(2) }}</td>
+            </tr>
+            <tr>
+                <th>Satuan</th>
+                <td>{{ saleOrderDetail.unit.name|default }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

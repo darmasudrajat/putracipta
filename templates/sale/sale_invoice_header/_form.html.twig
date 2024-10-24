@@ -1,0 +1,161 @@
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id'}|json_encode }}"
+     data-json-loader-url-value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}"
+     data-json-loader-form-target-value="{{ "form[name=#{form.vars.name}]" }}">
+
+    {{ form_start(form) }}
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Header</legend>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.transactionDate, {'label': 'Tanggal Invoice', 'attr': {
+                        'data-controller': 'flatpickr-element',
+                        'data-action': 'change->json-loader#load',
+                        'class': 'readonly-form-input',
+                        'data-flatpickr-element-options-value': {'dateFormat': 'j M Y'}|json_encode
+                    }}) }}
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal Jatuh Tempo</label>
+                        <input type="text" class="form-control readonly-form-input" value="{{ saleInvoiceHeader.dueDate ? saleInvoiceHeader.dueDate|date('d M Y') : '' }}" readonly="readonly"
+                        data-json-loader-target="placeholder"
+                        data-property-path="dueDate" />
+                    </div>
+                    {{ form_row(form.invoiceTaxCodeNumber, {'label': 'Faktur Pajak #'}) }}
+                    {{ form_row(form.invoiceTaxDate, {'label': 'Tanggal Faktur Pajak', 'attr': {'data-controller': 'flatpickr-element', 'class': 'readonly-form-input', 'data-flatpickr-element-options-value': {'dateFormat': 'j M Y'}|json_encode}}) }}
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="{{ form.customer.vars.id }}-text" class="form-label">Customer</label>
+                        {{ form_row(form.customer, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'customer-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.customerId'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        <input type="text" id="{{ form.customer.vars.id }}-text" class="form-control readonly-form-input {% if not form.customer.vars.valid %}is-invalid{% endif %}" value="{{ saleInvoiceHeader.customer.company|default }}" readonly="readonly"
+                               {% if saleInvoiceHeader.id == null %}data-bs-toggle="modal" data-bs-target="#customer-dialog"{% endif %}
+                               data-controller="dom-element"
+                               data-action="customer-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.customerCompany'}},
+                               ]|json_encode }}" />
+                        {{ form_errors(form.customer) }}
+                    </div>
+                    <div id="customer-tax-address-1" class="d-none">{{ saleInvoiceHeader.customer.addressTax1|default }}</div>
+                    <div id="customer-tax-address-2" class="d-none">{{ saleInvoiceHeader.customer.addressTax2|default }}</div>
+                    <div id="customer-tax-address-3" class="d-none">{{ saleInvoiceHeader.customer.addressTax3|default }}</div>
+                    <div id="customer-tax-address-4" class="d-none">{{ saleInvoiceHeader.customer.addressTax4|default }}</div>
+                    <div id="customer-tax-address-5" class="d-none">{{ saleInvoiceHeader.customer.addressTax5|default }}</div>
+                    <div class="mb-3">
+                        <label class="form-label">Alamat NPWP</label>
+                        <select class="form-select"
+                                data-controller="dom-element"
+                                data-action="DOMContentLoaded@document->dom-element#bind customer-table:data-table:select@document->dom-element#bind change->dom-element#bind"
+                                data-dom-element-bind-specifications-param="{{ [
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': '""'}},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="0"></option>`'}},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="1"' ~ (saleInvoiceHeader.customerAddressTaxOrdinal == 1 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-tax-address-1").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-tax-address-1").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="2"' ~ (saleInvoiceHeader.customerAddressTaxOrdinal == 2 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-tax-address-2").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-tax-address-2").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="3"' ~ (saleInvoiceHeader.customerAddressTaxOrdinal == 3 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-tax-address-3").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-tax-address-3").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="4"' ~ (saleInvoiceHeader.customerAddressTaxOrdinal == 4 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-tax-address-4").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-tax-address-4").textContent !== ""'},
+                                    {'eventTypes': ['DOMContentLoaded'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="5"' ~ (saleInvoiceHeader.customerAddressTaxOrdinal == 5 ? ' selected="selected"' : '') ~ '>${document.querySelector("#customer-tax-address-5").textContent}</option>`'}, 'condition': 'document.querySelector("#customer-tax-address-5").textContent !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'replace', 'content': '""'}},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="0"></option>`'}},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="1">${$event.detail.addressTax1}</option>`'}, 'condition': '$event.detail.addressTax1 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="2">${$event.detail.addressTax2}</option>`'}, 'condition': '$event.detail.addressTax2 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="3">${$event.detail.addressTax3}</option>`'}, 'condition': '$event.detail.addressTax3 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="4">${$event.detail.addressTax4}</option>`'}, 'condition': '$event.detail.addressTax4 !== ""'},
+                                    {'eventTypes': ['customer-table:data-table:select'], 'action': 'putHtmlContent', 'descriptor': {'mode': 'append', 'content': '`<option value="5">${$event.detail.addressTax5}</option>`'}, 'condition': '$event.detail.addressTax5 !== ""'},
+                                    {'eventTypes': ['change'], 'destinationsTarget': '#' ~ form.customerAddressTaxOrdinal.vars.id, 'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$element.value'}},
+                                ]|json_encode }}">
+                        </select>
+                        {{ form_row(form.customerAddressTaxOrdinal, {'label': false, 'attr': {'class': 'd-none'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kawasan Berikat/Bebas</label>
+                        <input type="text" class="form-control" value="{{ saleInvoiceHeader.customer.bondedZoneLiteral|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="customer-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.bondedZoneLiteral'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">TOP (hari)</label>
+                        <input type="text" class="form-control" value="{{ saleInvoiceHeader.customer.paymentTerm|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="customer-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.paymentTerm'}},
+                               ]|json_encode }}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">NPWP</label>
+                        <input type="text" class="form-control" value="{{ saleInvoiceHeader.customerTaxNumber|default }}" readonly="readonly"
+                               data-controller="dom-element"
+                               data-action="customer-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.customerTaxNumber'}},
+                               ]|json_encode }}" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.note) }}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Details</legend>
+            <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#delivery-detail-dialog">Add Detail</button>
+            {{ include('sale/sale_invoice_header/_details_form.html.twig') }}
+        </fieldset>
+
+        <div class="d-grid">
+            <div class="row">
+                <div class="col text-center">
+                    <a class="btn btn-danger" href="{{ path('app_sale_sale_invoice_header_index') }}"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                        Cancel
+                    </a>
+                    <button class="btn btn-success"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                        Save
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+        </div>
+    {{ form_end(form) }}
+
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('customer-dialog', 'Customer List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_customer__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+
+    {{ dialog.start('delivery-detail-dialog', 'Delivery List') }}
+        <input type="hidden" id="delivery-detail-table-identifiers" />
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_delivery_detail__list') }}"
+             data-html-loader-auto-load-value="true"
+             data-action="customer-table:data-table:select@document->html-loader#load">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+            Done
+        </button>
+    {{ dialog.end() }}
+</div>

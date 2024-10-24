@@ -1,0 +1,115 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Penerimaan Produksi FG' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_stock_inventory_product_receive_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_FINISHED_GOODS_RECEIVE_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_stock_inventory_product_receive_header_edit', {'id': inventoryProductReceiveHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_FINISHED_GOODS_RECEIVE_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_stock_inventory_product_receive_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Penerimaan #</th>
+                <td>{{ inventoryProductReceiveHeader.getCodeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ inventoryProductReceiveHeader.transactionDate ? inventoryProductReceiveHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>MO #</th>
+                <td>{{ inventoryProductReceiveHeader.masterOrderHeader.codeNumber|default }}</td>
+            </tr>
+            <tr>
+                <th>Customer</th>
+                <td>{{ inventoryProductReceiveHeader.masterOrderHeader.customer.company|default }}</td>
+            </tr>
+            <tr>
+                <th>Gudang</th>
+                <td>{{ inventoryProductReceiveHeader.warehouse.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ inventoryProductReceiveHeader.note|default }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ inventoryProductReceiveHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ inventoryProductReceiveHeader.createdTransactionDateTime ? inventoryProductReceiveHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ inventoryProductReceiveHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ inventoryProductReceiveHeader.modifiedTransactionDateTime ? inventoryProductReceiveHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ inventoryProductReceiveHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>PO #</th>
+                <th>WO #</th>
+                <th>Kode</th>
+                <th>Nama Produk</th>
+                <th>Tanggal Kirim</th>
+                <th>Qty PO</th>
+                <th>Qty Hasil Produksi</th>
+                <th>Qty WIP</th>
+                <th>Qty Pcs/Box</th>
+                <th>Qty Box</th>
+                <th>Qty Pcs</th>
+                <th>Total Pcs</th>
+                <th>Satuan</th>
+                <th>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inventoryProductReceiveDetail in inventoryProductReceiveHeader.inventoryProductReceiveDetails %}
+                {% if inventoryProductReceiveDetail.isCanceled == false and inventoryProductReceiveDetail.quantityTotalPieces > 0 %}
+                    <tr>
+                        <td>{{ inventoryProductReceiveDetail.masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                        <td>{{ inventoryProductReceiveDetail.masterOrderProductDetail.masterOrderHeader.codeNumber|default }}</td>
+                        <td>{{ inventoryProductReceiveDetail.product.code|default }}</td>
+                        <td>{{ inventoryProductReceiveDetail.product.name|default }}</td>
+                        <td>{{ inventoryProductReceiveDetail.masterOrderProductDetail.saleOrderDetail.deliveryDate|default ? inventoryProductReceiveDetail.masterOrderProductDetail.saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                        <td>{{ inventoryProductReceiveDetail.masterOrderProductDetail.saleOrderDetail.quantity|default|number_format(2) }}</td>
+                        <td>{{ inventoryProductReceiveDetail.masterOrderProductDetail.quantityShortage|default|number_format(2) }}</td>
+                        <td>{{ inventoryProductReceiveDetail.masterOrderProductDetail.remainingProduction|default|number_format(2) }}</td>
+                        <td>{{ inventoryProductReceiveDetail.quantityPiecePerBox|default|number_format(2) }}</td>
+                        <td>{{ inventoryProductReceiveDetail.quantityBox|default|number_format(2) }}</td>
+                        <td>{{ inventoryProductReceiveDetail.quantityBoxExtraPieces|default|number_format(2) }}</td>
+                        <td>{{ inventoryProductReceiveDetail.quantityTotalPieces|default|number_format(2) }}</td>
+                        <td>{{ inventoryProductReceiveDetail.product.unit.name|default }}</td>
+                        <td>{{ inventoryProductReceiveDetail.memo|default }}</td>
+                    </tr>
+                {% endif %} 
+            {% endfor %}
+        </tbody>
+    </table>    
+
+    <br />
+    
+    <div class="d-inline-block">
+        <a target="_blank" class="btn btn-info btn-sm" href="{{ path('app_stock_inventory_product_receive_header_memo', {'id': inventoryProductReceiveHeader.id}) }}">Print</a>
+    </div>
+
+    {# {{ include('stock/inventory_product_receive_header/_delete_form.html.twig') }} #}
+{% endblock %}

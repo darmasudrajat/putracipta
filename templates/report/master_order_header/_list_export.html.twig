@@ -1,0 +1,151 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="11"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="11"><strong>Laporan Master Order</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="11">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>MO #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Customer</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kertas</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Mesin Cetak</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Design Code</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Pisau Die Cut #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Film Dieline #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Hot Stamping</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Jenis MO</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Status Cetakan</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Pisau Die Cut</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Pengembangan Produk Baru</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Jenis Pengembangan</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Warna/Pantone</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Berat per pcs</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Glossiness</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Ukuran Mountage / Kris (cm)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Jumlah Up Cetak</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>% Insit Cetak</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Insit Cetak (dreek)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>% Insit Sortir</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Insit Cetak (dreek)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Quantity Kertas (rim)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kebutuhan (dreek)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Mountage Kertas (up)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Total Kertas (dreek)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Uk Kertas (cm)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Uk Potong 1 (cm)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Uk Potong 2 (cm)</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>PO Kertas #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal PO</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Supplier</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Cyan</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Magenta</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Yellow</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Black</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Khusus-1</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Khusus-2</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Khusus-3</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Khusus-4</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>OPV/WB/UV</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Laminating</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Hot Stamping</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Lem</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Karet</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kertas Packing</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Dus</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Lakban besar</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Lakban kecil</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Plastik</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>PO#</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kode Produk</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Nama Produk</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal Kirim</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Qty Order</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Stock</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Kekurangan</strong></th>
+        </tr>
+        <tr>
+            <th colspan="20"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for masterOrderHeader in masterOrderHeaders %}
+            {% for masterOrderProductDetail in masterOrderHeader.masterOrderProductDetails %}
+                <tr>
+                    <td style="text-align: left">{{ masterOrderHeader.getCodeNumber|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.transactionDate|default ? masterOrderHeader.transactionDate|date('j M Y') }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.customer.company|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.paper.paperNameSizeCombination|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.machinePrinting.name|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.designCode.codeNumber|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.diecutKnife.codeNumber|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.dielineMillar.codeNumber|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.hotStamping|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.orderType|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.printingStatus ? masterOrderHeader.printingStatus|join(', ') : '' }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.dieCutBlade|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.productDevelopment.codeNumber|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.productDevelopment.developmentTypeList|default ? masterOrderHeader.productDevelopment.developmentTypeList|join(', ') : '' }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.color }} / {{ masterOrderHeader.pantone }} + {{ masterOrderHeader.colorPantoneAdditional }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.weightPerPiece|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.glossiness|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.mountageSize|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.quantityPrinting|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.insitPrintingPercentage|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.insitPrintingQuantity|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.insitSortingPercentage|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.insitSortingQuantity|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.quantityPaper|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.paperRequirement|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.paperMountage|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.paperTotal|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.paperPlanoLength|default }} x {{ masterOrderHeader.paperPlanoWidth|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.cuttingLengthSize1|default }} x {{ masterOrderHeader.cuttingWidthSize1|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.cuttingLengthSize2|default }} x {{ masterOrderHeader.cuttingWidthSize2|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.purchaseOrderPaperHeader.getCodeNumber|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.purchaseOrderPaperHeader.transactionDate|default ? masterOrderHeader.purchaseOrderPaperHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.purchaseOrderPaperHeader.supplier.company|default }}</td>
+                    <td style="text-align: left">{{ masterOrderHeader.inkCyanPercentage|default }}% = {{ masterOrderHeader.inkCyanWeight|default }} kg</td>
+                    <td style="text-align: left">{{ masterOrderHeader.inkMagentaPercentage }}% = {{ masterOrderHeader.inkMagentaWeight|default }} kg</td>
+                    <td style="text-align: left">{{ masterOrderHeader.inkYellowPercentage }}% = {{ masterOrderHeader.inkYellowWeight|default }} kg</td>
+                    <td style="text-align: left">{{ masterOrderHeader.inkBlackPercentage }}% = {{ masterOrderHeader.inkBlackWeight|default }} kg</td>
+                    <td style="text-align: left">{{ masterOrderHeader.inkK1Color|default }} : {{ masterOrderHeader.inkK1Percentage|default }}% = {{ masterOrderHeader.inkK1Weight|default }} kg</td>
+                    <td style="text-align: left">{{ masterOrderHeader.inkK2Color }} : {{ masterOrderHeader.inkK2Percentage }}% = {{ masterOrderHeader.inkK2Weight|default }} kg</td>
+                    <td style="text-align: left">{{ masterOrderHeader.inkK3Color }} : {{ masterOrderHeader.inkK3Percentage }}% = {{ masterOrderHeader.inkK3Weight|default }} kg</td>
+                    <td style="text-align: left">{{ masterOrderHeader.inkK4Color }} : {{ masterOrderHeader.inkK4Percentage }}% = {{ masterOrderHeader.inkK4Weight|default }} kg</td>
+                    <td style="text-align: left">{{ masterOrderHeader.inkOpvPercentage }}% = {{ masterOrderHeader.inkOpvWeight|default }} KG</td>
+                    <td style="text-align: left">{{ masterOrderHeader.inkLaminatingSize }} cm = {{ masterOrderHeader.inkLaminatingQuantity|default }} roll</td>
+                    <td style="text-align: left">{{ masterOrderHeader.inkHotStampingSize }} cm = {{ masterOrderHeader.inkHotStampingQuantity|default }} roll</td>
+                    <td style="text-align: left">{{ masterOrderHeader.packagingGlueQuantity }} cm/pcs = {{ masterOrderHeader.packagingGlueWeight }} kg</td>
+                    <td style="text-align: left">{{ masterOrderHeader.packagingRubberQuantity }} pcs/ikat = {{ masterOrderHeader.packagingRubberWeight }} pcs</td>
+                    <td style="text-align: left">{{ masterOrderHeader.packagingPaperQuantity }} pcs/pak = {{ masterOrderHeader.packagingPaperWeight }} lbr</td>
+                    <td style="text-align: left">{{ masterOrderHeader.packagingBoxQuantity }} pcs/dus = {{ masterOrderHeader.packagingBoxWeight }} pcs</td>
+                    <td style="text-align: left">{{ masterOrderHeader.packagingTapeLargeQuantity }} cm/pak (dus) = {{ masterOrderHeader.packagingTapeLargeSize }} roll</td>
+                    <td style="text-align: left">{{ masterOrderHeader.packagingTapeSmallQuantity }} cm/pak (dus) = {{ masterOrderHeader.packagingTapeSmallSize }} roll</td>
+                    <td style="text-align: left">{{ masterOrderHeader.packagingPlasticQuantity }} cm2/pack = {{ masterOrderHeader.packagingPlasticSize }} m2</td>
+                    <td style="text-align: left">{{ masterOrderProductDetail.saleOrderDetail.saleOrderHeader.referenceNumber|default }}</td>
+                    <td style="text-align: left">{{ masterOrderProductDetail.product.code|default }}</td>
+                    <td style="text-align: left">{{ masterOrderProductDetail.product.name|default }}</td>
+                    <td style="text-align: left">{{ masterOrderProductDetail.saleOrderDetail.deliveryDate ? masterOrderProductDetail.saleOrderDetail.deliveryDate|date('d M Y') : '' }}</td>
+                    <td style="text-align: center">{{ masterOrderProductDetail.quantityOrder|default }}</td>
+                    <td style="text-align: center">{{ masterOrderProductDetail.quantityStock|default }}</td>
+                    <td style="text-align: center">{{ masterOrderProductDetail.quantityShortage|default }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>

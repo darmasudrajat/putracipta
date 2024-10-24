@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Work Order Color Mixing' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_work_order_color_mixing_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_production_work_order_color_mixing_show', {'id': workOrderColorMixing.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('production/work_order_color_mixing/_form.html.twig') }}
+{% endblock %}

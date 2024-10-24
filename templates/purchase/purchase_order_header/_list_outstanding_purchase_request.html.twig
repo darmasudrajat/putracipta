@@ -1,0 +1,44 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, purchaseRequestDetails) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 150px">Request Material #</th>
+                <th style="min-width: 120px">Tanggal</th>
+                <th style="min-width: 150px">Gudang</th>
+                <th style="min-width: 150px">Material Code</th>
+                <th style="min-width: 250px">Material Name</th>
+                <th style="min-width: 150px">Tgl Pakai</th>
+                <th style="min-width: 100px">Qty</th>
+                <th style="min-width: 80px">Satuan</th>
+                <th style="min-width: 150px">Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseRequestDetail in purchaseRequestDetails %}
+                <tr>
+                    <td>{{ purchaseRequestDetail.purchaseRequestHeader.codeNumber }}</td>
+                    <td>{{ purchaseRequestDetail.purchaseRequestHeader.transactionDate ? purchaseRequestDetail.purchaseRequestHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ purchaseRequestDetail.purchaseRequestHeader.warehouse.name|default }}</td>
+                    <td>{{ purchaseRequestDetail.material.code|default }}</td>
+                    <td>{{ purchaseRequestDetail.material.name|default }}</td>
+                    <td>{{ purchaseRequestDetail.usageDate ? purchaseRequestDetail.usageDate|date('d M Y') : '' }}</td>
+                    <td style="text-align: right">{{ purchaseRequestDetail.quantity|default|number_format(0) }}</td>
+                    <td>{{ purchaseRequestDetail.unit.name|default }}</td>
+                    <td>{{ purchaseRequestDetail.memo|default }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="10">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, purchaseRequestDetails) }}

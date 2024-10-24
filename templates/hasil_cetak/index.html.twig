@@ -1,0 +1,47 @@
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}HasilCetak index{% endblock %}
+
+{% block body %}
+    <h1>HasilCetak index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nomo</th>
+                <th>Tanggal</th>
+                <th>Operator</th>
+                <th>Good</th>
+                <th>Ng</th>
+                <th>Mesin</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for hasil_cetak in hasil_cetaks %}
+            <tr>
+                <td>{{ hasil_cetak.id }}</td>
+                <td>{{ hasil_cetak.nomo }}</td>
+                <td>{{ hasil_cetak.tanggal ? hasil_cetak.tanggal|date('Y-m-d') : '' }}</td>
+                <td>{{ hasil_cetak.operator }}</td>
+                <td>{{ hasil_cetak.good }}</td>
+                <td>{{ hasil_cetak.ng }}</td>
+                <td>{{ hasil_cetak.mesin }}</td>
+                <td>
+                    <a href="{{ path('app_hasil_cetak_show', {'id': hasil_cetak.id}) }}">show</a>
+                    <a href="{{ path('app_hasil_cetak_edit', {'id': hasil_cetak.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_hasil_cetak_new') }}">Create new</a>
+{% endblock %}

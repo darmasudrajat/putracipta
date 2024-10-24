@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add Purchase Request' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_purchase_purchase_request_header_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('purchase/purchase_request_header/_form.html.twig') }}
+{% endblock %}

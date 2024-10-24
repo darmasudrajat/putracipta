@@ -1,0 +1,61 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Work Order Cutting Header' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_work_order_cutting_header_index') }}">Manage</a>
+    <a class="btn btn-warning btn-sm" href="{{ path('app_production_work_order_cutting_header_edit', {'id': workOrderCuttingHeader.id}) }}">Edit</a>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Is Size Fit</th>
+                <td>{{ workOrderCuttingHeader.isSizeFit ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Work Order Return Date</th>
+                <td>{{ workOrderCuttingHeader.workOrderReturnDate ? workOrderCuttingHeader.workOrderReturnDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Is Canceled</th>
+                <td>{{ workOrderCuttingHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Is Read</th>
+                <td>{{ workOrderCuttingHeader.isRead ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Ordinal</th>
+                <td>{{ workOrderCuttingHeader.codeNumberOrdinal }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Month</th>
+                <td>{{ workOrderCuttingHeader.codeNumberMonth }}</td>
+            </tr>
+            <tr>
+                <th>Code Number Year</th>
+                <td>{{ workOrderCuttingHeader.codeNumberYear }}</td>
+            </tr>
+            <tr>
+                <th>Created Production Date Time</th>
+                <td>{{ workOrderCuttingHeader.createdProductionDateTime ? workOrderCuttingHeader.createdProductionDateTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Modified Production Date Time</th>
+                <td>{{ workOrderCuttingHeader.modifiedProductionDateTime ? workOrderCuttingHeader.modifiedProductionDateTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Production Date</th>
+                <td>{{ workOrderCuttingHeader.transactionDate ? workOrderCuttingHeader.transactionDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ workOrderCuttingHeader.note }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{ include('production/work_order_cutting_header/_delete_form.html.twig') }}
+{% endblock %}

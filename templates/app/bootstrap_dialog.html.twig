@@ -1,0 +1,17 @@
+{% macro start(id, title, size = 'xl') %}
+    <div id="{{ id }}" class="modal fade" role="dialog" data-controller="bootstrap-modal">
+        <div class="modal-dialog modal-{{ size }}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+{% endmacro %}
+
+{% macro end() %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

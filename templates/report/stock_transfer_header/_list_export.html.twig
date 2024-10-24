@@ -1,0 +1,95 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>Laporan Stok Transfer</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Transfer #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Asal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tujuan</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Jenis</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+        </tr>
+        <tr>
+            <th></th>
+            <th style="text-align: center"><strong>Kode</strong></th>
+            <th style="text-align: center"><strong>Nama Item</strong></th>
+            <th style="text-align: center"><strong>Qty Stok</strong></th>
+            <th style="text-align: center"><strong>Qty Transfer</strong></th>
+            <th style="text-align: center"><strong>Satuan</strong></th>
+            <th style="text-align: center"><strong>Memo</strong></th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stockTransferHeader in stockTransferHeaders %}
+            <tr>
+                <td style="text-align: left">{{ stockTransferHeader.codeNumber|default }}</td>
+                <td style="text-align: left">{{ stockTransferHeader.transactionDate|default ? stockTransferHeader.transactionDate|date('j M Y') }}</td>
+                <td style="text-align: left">{{ stockTransferHeader.warehouseFrom.name|default }}</td>
+                <td style="text-align: left">{{ stockTransferHeader.warehouseTo.name|default }}</td>
+                <td style="text-align: left">{{ stockTransferHeader.transferMode|default }}</td>
+                <td style="text-align: left">{{ stockTransferHeader.note|default }}</td>
+            </tr>
+            {% if (stockTransferHeader.transferMode == 'paper') %}
+                {% for stockTransferPaperDetail in stockTransferHeader.stockTransferPaperDetails %}
+                    <tr>
+                        <td style="text-align: left"></td>
+                        <td style="text-align: left">{{ stockTransferPaperDetail.paper.codeNumber|default }}</td>
+                        <td style="text-align: left">{{ stockTransferPaperDetail.paper.name|default }}</td>
+                        <td style="text-align: center">{{ stockTransferPaperDetail.quantityCurrent|default }}</td>
+                        <td style="text-align: center">{{ stockTransferPaperDetail.quantity|default }}</td>
+                        <td style="text-align: left">{{ stockTransferPaperDetail.unit.name|default }}</td>
+                        <td style="text-align: left">{{ stockTransferPaperDetail.memo|default }}</td>
+                    </tr>
+                {% endfor %}
+            {% elseif (stockTransferHeader.transferMode == 'material') %} 
+                {% for stockTransferMaterialDetail in stockTransferHeader.stockTransferMaterialDetails %}
+                    <tr>
+                        <td style="text-align: left"></td>
+                        <td style="text-align: left">{{ stockTransferMaterialDetail.material.code|default }}</td>
+                        <td style="text-align: left">{{ stockTransferMaterialDetail.material.name|default }}</td>
+                        <td style="text-align: center">{{ stockTransferMaterialDetail.quantityCurrent|default }}</td>
+                        <td style="text-align: center">{{ stockTransferMaterialDetail.quantity|default }}</td>
+                        <td style="text-align: left">{{ stockTransferMaterialDetail.unit.name|default }}</td>
+                        <td style="text-align: left">{{ stockTransferMaterialDetail.memo|default }}</td>
+                    </tr>
+                {% endfor %}
+            {% elseif (stockTransferHeader.transferMode == 'product') %} 
+                {% for stockTransferProductDetail in stockTransferHeader.stockTransferProductDetails %}
+                    <tr>
+                        <td style="text-align: left"></td>
+                        <td style="text-align: left">{{ stockTransferProductDetail.product.code|default }}</td>
+                        <td style="text-align: left">{{ stockTransferProductDetail.product.name|default }}</td>
+                        <td style="text-align: center">{{ stockTransferProductDetail.quantityCurrent|default }}</td>
+                        <td style="text-align: center">{{ stockTransferProductDetail.quantity|default }}</td>
+                        <td style="text-align: left">{{ stockTransferProductDetail.unit.name|default }}</td>
+                        <td style="text-align: left">{{ stockTransferProductDetail.memo|default }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %} 
+            <tr>
+                <td style="text-align: right" colspan="4"><strong>Total Amount</strong></td>
+                <td style="text-align: right"><strong>{{ stockTransferHeader.totalAmount|default }}</strong></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

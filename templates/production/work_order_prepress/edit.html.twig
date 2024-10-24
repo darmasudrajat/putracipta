@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Work Order Prepress' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_production_work_order_prepress_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_production_work_order_prepress_show', {'id': workOrderPrepress.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('production/work_order_prepress/_form.html.twig') }}
+{% endblock %}

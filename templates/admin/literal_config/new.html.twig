@@ -1,0 +1,11 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Add Literal Config' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_admin_literal_config_index') }}">Manage</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('admin/literal_config/_form.html.twig') }}
+{% endblock %}

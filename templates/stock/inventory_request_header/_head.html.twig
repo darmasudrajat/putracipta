@@ -1,0 +1,66 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, inventoryRequestHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 200px">
+                    Request Number
+                </th>
+                <th style="min-width: 150px">
+                    Tanggal
+                </th>
+                <th style="min-width: 250px">
+                    Pickup Date
+                </th>
+                <th style="min-width: 150px">
+                    Gudang
+                </th>
+                <th style="min-width: 150px">
+                    Divisi
+                </th>
+                <th style="min-width: 150px">
+                    Work Order Number
+                </th>
+                <th style="min-width: 150px">
+                    Customer
+                </th>
+                <th style="min-width: 100px">
+                    Part Number
+                </th>
+                <th style="min-width: 100px">
+                    Note
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inventoryRequestHeader in inventoryRequestHeaders %}
+                <tr>
+                    <td>{{ inventoryRequestHeader.codeNumber }}</td>
+                    <td>{{ inventoryRequestHeader.transactionDate ? inventoryRequestHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ inventoryRequestHeader.pickupDate ? inventoryRequestHeader.pickupDate|date('d M Y') : '' }}</td>
+                    <td>{{ inventoryRequestHeader.warehouse.name|default }}</td>
+                    <td>{{ inventoryRequestHeader.division.name|default }}</td>
+                    <td>{{ inventoryRequestHeader.masterOrderHeader.codeNumber|default }}</td>
+                    <td>{{ inventoryRequestHeader.masterOrderHeader.customer.company|default }}</td>
+                    <td>{{ inventoryRequestHeader.partNumber|default }}</td>
+                    <td>{{ inventoryRequestHeader.note }}</td>
+                    <td>
+                        {{ include('stock/inventory_request_header/_read_form.html.twig') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="10">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, inventoryRequestHeaders) }}

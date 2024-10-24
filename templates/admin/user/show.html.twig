@@ -1,0 +1,31 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show User' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_admin_user_index') }}">Manage</a>
+    <a class="btn btn-warning btn-sm" href="{{ path('app_admin_user_edit', {'id': user.id}) }}">Edit</a>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Username</th>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>
+                    <ul>
+                        {% for role in user.roles %}
+                            <li>{{ role }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    {#{{ include('admin/user/_delete_form.html.twig') }}#}
+{% endblock %}

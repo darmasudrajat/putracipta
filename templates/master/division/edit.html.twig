@@ -1,0 +1,12 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Edit Division' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_master_division_index') }}">Manage</a>
+    <a class="btn btn-info btn-sm" href="{{ path('app_master_division_show', {'id': division.id}) }}">Show</a>
+{% endblock %}
+
+{% block content %}
+    {{ include('master/division/_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,80 @@
+{% import 'app/role_form_input.html.twig' as input %}
+
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <td class="bg-success text-light">
+                <div class="d-flex justify-content-center"><strong>{{ input.check(indexes, form, 'ROLE_PURCHASE', 'PEMBELIAN') }}</strong></div>
+            </td>
+            <td class="text-center bg-primary text-light" style="width: 10%"><strong>New</strong></td>
+            <td class="text-center bg-primary text-light" style="width: 10%"><strong>Edit</strong></td>
+            <td class="text-center bg-primary text-light" style="width: 10%"><strong>View</strong></td>
+        </tr>
+        <tr>
+            <td>Order Pembelian Material</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_ORDER_MATERIAL_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_ORDER_MATERIAL_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_ORDER_MATERIAL_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Order Pembelian Kertas</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_ORDER_PAPER_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_ORDER_PAPER_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_ORDER_PAPER_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Invoice Pembelian</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_INVOICE_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_INVOICE_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_INVOICE_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Pembayaran Pembelian</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_PAYMENT_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_PAYMENT_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_PURCHASE_PAYMENT_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td class="bg-success text-light">
+                <div class="d-flex justify-content-center"><strong>{{ input.check(indexes, form, 'ROLE_SALE', 'PENJUALAN') }}</strong></div>
+            </td>
+            <td colspan="3" class="bg-primary text-light"></td>
+        </tr>
+        <tr>
+            <td>Customer PO</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_SALE_ORDER_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_SALE_ORDER_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_SALE_ORDER_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Invoice Penjualan</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_SALE_INVOICE_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_SALE_INVOICE_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_SALE_INVOICE_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Pelunasan Penjualan</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_SALE_PAYMENT_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_SALE_PAYMENT_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_SALE_PAYMENT_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td class="bg-success text-light">
+                <div class="d-flex justify-content-center"><strong>{{ input.check(indexes, form, 'ROLE_FINANCE', 'FINANCE/ACCOUNTING') }}</strong></div>
+            </td>
+            <td colspan="3" class="bg-primary text-light"></td>
+        </tr>
+        <tr>
+            <td>Pengeluaran Kas/Bank</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_EXPENSE_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_EXPENSE_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_EXPENSE_VIEW') }}</div></td>
+        </tr>
+        <tr>
+            <td>Penerimaan Kas/Bank</td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_DEPOSIT_ADD') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_DEPOSIT_EDIT') }}</div></td>
+            <td><div class="d-flex justify-content-center">{{ input.check(indexes, form, 'ROLE_DEPOSIT_VIEW') }}</div></td>
+        </tr>
+    </tbody>
+</table>

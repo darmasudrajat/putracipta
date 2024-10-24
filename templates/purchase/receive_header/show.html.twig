@@ -1,0 +1,114 @@
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Show Receive' %}
+
+{% block toolbar %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_purchase_receive_header_index') }}">Manage</a>
+    {% if is_granted('ROLE_RECEIVE_EDIT') %}
+        <a class="btn btn-warning btn-sm" href="{{ path('app_purchase_receive_header_edit', {'id': receiveHeader.id}) }}">Edit</a>
+    {% endif %}
+    {% if is_granted('ROLE_RECEIVE_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_purchase_receive_header_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Penerimaan #</th>
+                <td>{{ receiveHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td>{{ receiveHeader.transactionDate ? receiveHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>PO #</th>
+                <td>{{ receiveHeader.purchaseOrderHeader is null ? receiveHeader.purchaseOrderPaperHeader.getCodeNumber : receiveHeader.purchaseOrderHeader.getCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal PO</th>
+                <td>{{ receiveHeader.purchaseOrderHeader is null ? receiveHeader.purchaseOrderPaperHeader.transactionDate ? receiveHeader.purchaseOrderPaperHeader.transactionDate|date('d M Y') : '' : receiveHeader.purchaseOrderHeader.transactionDate ? receiveHeader.purchaseOrderHeader.transactionDate|date('d M Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Supplier</th>
+                <td>{{ receiveHeader.supplier.company}}</td>
+            </tr>
+            <tr>
+                <th>Supplier SJ #</th>
+                <td>{{ receiveHeader.supplierDeliveryCodeNumber }}</td>
+            </tr>
+            <tr>
+                <th>Gudang</th>
+                <td>{{ receiveHeader.warehouse.name|default }}</td>
+            </tr>
+            <tr>
+                <th>Note</th>
+                <td>{{ receiveHeader.note }}</td>
+            </tr>
+            <tr>
+                <th>Retur Transaksi</th>
+                <td>{{ receiveHeader.hasReturnTransaction ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>User Created</th>
+                <td>{{ receiveHeader.createdTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>{{ receiveHeader.createdTransactionDateTime ? receiveHeader.createdTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User Edited</th>
+                <td>{{ receiveHeader.modifiedTransactionUser.username|default }}</td>
+            </tr>
+            <tr>
+                <th>Edited Date</th>
+                <td>{{ receiveHeader.modifiedTransactionDateTime ? receiveHeader.modifiedTransactionDateTime|date('d M Y H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Transaction Canceled?</th>
+                <td>{{ receiveHeader.isCanceled ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="bg-info">
+                <th>Kode</th>
+                <th>Nama Material</th>
+                <th>Quantity Order</th>
+                <th>Quantity Sisa</th>
+                <th>Quantity Terima</th>
+                <th>Satuan</th>
+                <th>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for receiveDetail in receiveHeader.receiveDetails %}
+                {% if receiveDetail.isCanceled == false and receiveDetail.receivedQuantity > 0 %}
+                    <tr>
+                        <td>{{ receiveDetail.material is null ? receiveDetail.paper.codeNumber|default : receiveDetail.material.code|default }}</td>
+                        <td>{{ receiveDetail.material is null ? receiveDetail.paper.name|default : receiveDetail.material.name|default }}</td>
+                        <td style="text-align: right">{{ receiveDetail.purchaseOrderDetail is null ? receiveDetail.purchaseOrderPaperDetail.quantity|default|number_format(2) : receiveDetail.purchaseOrderDetail.quantity|default|number_format(2) }}</td>
+                        <td style="text-align: right">{{ receiveDetail.remainingQuantity|default|number_format(2) }}</td>
+                        <td style="text-align: right">{{ receiveDetail.receivedQuantity|default|number_format(2) }}</td>
+                        <td>{{ receiveDetail.unit.name|default }}</td>
+                        <td>{{ receiveDetail.memo|default }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" style="text-align: right"><strong>Total</strong></td>
+                <td style="text-align: right"><strong>{{ receiveHeader.totalQuantity|default|number_format(2) }}</strong></td>
+                <td colspan="2"></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    {#{{ include('purchase/receive_header/_delete_form.html.twig') }}#}
+{% endblock %}

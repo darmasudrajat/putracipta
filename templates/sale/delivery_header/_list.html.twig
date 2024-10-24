@@ -1,0 +1,108 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, deliveryHeaders) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 280px" role="button"{{ grid.sort_link_item(form, ['codeNumberOrdinal', 'codeNumberMonth', 'codeNumberYear']) }}>
+                    Pengiriman # {{ grid.sort_char(form.sort.codeNumberOrdinal.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'transactionDate') }}>
+                    Tanggal {{ grid.sort_char(form.sort.transactionDate.vars.value) }}
+                </th>
+                <th style="min-width: 350px" role="button" {{ grid.sort_link_item(form, 'customer:company') }}>
+                    Customer {{ grid.sort_char(form.sort['customer:company'].vars.value) }}
+                </th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'saleOrderReferenceNumbers') }}>
+                    PO # {{ grid.sort_char(form.sort.saleOrderReferenceNumbers.vars.value) }}
+                </th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'deliveryDetailProductList') }}>
+                    Product Code {{ grid.sort_char(form.sort.deliveryDetailProductList.vars.value) }}
+                </th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'deliveryDetailProductCodeList') }}>
+                    Product Name {{ grid.sort_char(form.sort.deliveryDetailProductCodeList.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'warehouse:name') }}>
+                    Gudang {{ grid.sort_char(form.sort['warehouse:name'].vars.value) }}
+                </th>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'note') }}>
+                    Note {{ grid.sort_char(form.sort.note.vars.value) }}
+                </th>
+                <th style="min-width: 90px"></th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberOrdinal') }} value="{{ form.filter.codeNumberOrdinal.1.vars.value }}" />
+                    <span><small>/{{ constant('App\\Entity\\Sale\\DeliveryHeader::CODE_NUMBER_CONSTANT') }}/</small></span>
+                    <select {{ grid.filter_link_item(form, 'codeNumberMonth') }}>
+                        {% for value, label in constant('App\\Entity\\SaleHeader::MONTH_ROMAN_NUMERALS') %}
+                            {% set val = value == 0 ? '' : value %}
+                            <option value="{{ val }}" {% if form.filter.codeNumberMonth.1.vars.value == val %}selected="selected"{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <span><small>/</small></span>
+                    <input style="width: 64px" type="number" {{ grid.filter_link_item(form, 'codeNumberYear') }} value="{{ form.filter.codeNumberYear.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control readonly-form-input" type="text" data-controller="flatpickr-element" {{ grid.filter_link_item(form, 'transactionDate') }} value="{{ form.filter.transactionDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'customer:company') }} value="{{ form.filter['customer:company'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'saleOrderReferenceNumbers') }} value="{{ form.filter.saleOrderReferenceNumbers.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'deliveryDetailProductCodeList') }} value="{{ form.filter.deliveryDetailProductCodeList.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'deliveryDetailProductList') }} value="{{ form.filter.deliveryDetailProductList.1.vars.value }}" />
+                </th>
+                <th>
+                    <select class="form-select" {{ grid.filter_link_item(form, 'warehouse') }}>
+                        <option value="" {% if form.filter.warehouse.1.vars.value == '' %}selected="selected"{% endif %}></option>
+                        {% for choice in form.filter.warehouse.1.vars.choices %}
+                            <option value="{{ choice.value }}" {% if form.filter.warehouse.1.vars.value == choice.value %}selected="selected"{% endif %}>{{ choice.label }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'note') }} value="{{ form.filter.note.1.vars.value }}" />
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deliveryHeader in deliveryHeaders %}
+                <tr>
+                    <td>{{ deliveryHeader.codeNumber }}</td>
+                    <td>{{ deliveryHeader.transactionDate ? deliveryHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ deliveryHeader.customer.company|default }}</td>
+                    <td>{{ deliveryHeader.saleOrderReferenceNumbers|default }}</td>
+                    <td>{{ deliveryHeader.deliveryDetailProductCodeList|default }}</td>
+                    <td>{{ deliveryHeader.deliveryDetailProductList|default }}</td>
+                    <td>{{ deliveryHeader.warehouse.name|default }}</td>
+                    <td>{{ deliveryHeader.note }}</td>
+                    <td>
+                        {% if is_granted('ROLE_DELIVERY_VIEW') or is_granted('ROLE_DELIVERY_EDIT') or is_granted('ROLE_DELIVERY_ADD') %}
+                            <a class="btn btn-info btn-sm" href="{{ path('app_sale_delivery_header_show', {'id': deliveryHeader.id}) }}"><i class="bi-search"></i></a>
+                        {% endif %}
+                        {% if is_granted('ROLE_DELIVERY_EDIT') %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('app_sale_delivery_header_edit', {'id': deliveryHeader.id}) }}"><i class="bi-pencil"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, deliveryHeaders) }}

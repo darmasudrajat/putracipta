@@ -1,0 +1,103 @@
+{{ form_start(form) }}
+    <div class="row">
+        <div class="col d-none">
+            {{ form_row(form.code, {
+                'attr': {
+                    'data-controller': 'dom-element',
+                    'data-action': 'dom-element#bind',
+                    'data-dom-element-bind-specifications-param': [
+                        {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$element.value.toUpperCase()'}},
+                    ]|json_encode,
+                },
+            }) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.materialCategory, {
+                'attr': {
+                    'data-controller': 'dom-element',
+                    'data-action': 'DOMContentLoaded@document->dom-element#bind change->dom-element#bind',
+                    'data-dom-element-bind-action-param': '
+                        if ($event.type === "change") {
+                            const materialCategoryChoiceElement = document.querySelector("select#' ~ form.materialSubCategory.vars.id ~ '");
+                            materialCategoryChoiceElement.value = "";
+                        }
+                        const materialCategoryId = $element.value;
+                        const materialSubCategoryChoiceElements = document.querySelectorAll("select#' ~ form.materialSubCategory.vars.id ~ ' > option[data-material-category]");
+                        for (const materialSubCategoryChoiceElement of materialSubCategoryChoiceElements) {
+                            if (materialCategoryId === materialSubCategoryChoiceElement.getAttribute("data-material-category")) {
+                                materialSubCategoryChoiceElement.disabled = false;
+                                materialSubCategoryChoiceElement.classList.remove("d-none");
+                            } else {
+                                materialSubCategoryChoiceElement.disabled = true;
+                                materialSubCategoryChoiceElement.classList.add("d-none");
+                            }
+                        }
+                    ',
+                },
+            }) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.materialSubCategory) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.name) }}
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.thickness) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.variant) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.density) }}
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.viscosity) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.unit) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.note) }}
+        </div>
+    </div>        
+        
+    <div class="row">
+        <div class="mb-3">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        {{ form_widget(form.isInactive) }}
+                        {{ form_errors(form.isInactive) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <div class="d-grid">
+        <div class="row">
+            <div class="col text-center">
+                <a class="btn btn-danger" href="{{ path('app_master_material_index') }}"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                    Cancel
+                </a>
+                <button class="btn btn-success"
+                        data-controller="dom-element"
+                        data-action="dom-element#confirm"
+                        data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                    Save
+                </button>
+            </div>
+        </div>
+        <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+    </div>
+{{ form_end(form) }}

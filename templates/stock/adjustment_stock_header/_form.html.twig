@@ -1,0 +1,104 @@
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward data-choice:select->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id', 'data-choice:select': 'id'}|json_encode }}"
+     data-json-loader-url-value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}"
+     data-json-loader-form-target-value="{{ "form[name=#{form.vars.name}]" }}">
+
+    {{ form_start(form) }}
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Header</legend>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.transactionDate, {'label': 'Tanggal', 'attr': {'data-controller': 'flatpickr-element', 'class': 'readonly-form-input', 'data-flatpickr-element-options-value': {'dateFormat': 'j M Y'}|json_encode}}) }}
+                    {{ form_row(form.adjustmentMode, {
+                        'label': 'Jenis',
+                        'attr': {
+                            'readonly': adjustmentStockHeader.id is not null,
+                            'data-controller': 'dom-element data-choice',
+                            'data-action': 'change->dom-element#bind change->data-choice#select',
+                            'data-dom-element-bind-specifications-param': [
+                                {'destinationsTarget': "#detail-material-container", 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value !== "material"'},
+                                {'destinationsTarget': "#detail-material-container", 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value === "material"'},
+                                {'destinationsTarget': "#detail-paper-container", 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value !== "paper"'},
+                                {'destinationsTarget': "#detail-paper-container", 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value === "paper"'},
+                                {'destinationsTarget': "#detail-product-container", 'action': 'addClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value !== "product"'},
+                                {'destinationsTarget': "#detail-product-container", 'action': 'removeClass', 'descriptor': {'name': 'd-none'}, 'condition': '$element.value === "product"'},
+                            ]|json_encode,
+                        },
+                    }) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form.warehouse, {
+                        'label': 'Gudang',
+                        'attr': {
+                            'data-action': 'json-loader#load',
+                        },
+                    }) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.note) }}
+                </div>
+            </div>
+        </fieldset>
+
+        {% if not isFinishedGoods %}
+            <fieldset class="border border-secondary rounded mb-3 p-3 {% if adjustmentStockHeader.adjustmentMode != constant('ADJUSTMENT_MODE_MATERIAL', adjustmentStockHeader) %}d-none{% endif %}" id="detail-material-container">
+                <legend class="float-none w-auto text-dark px-1">Detail Materials</legend>
+                <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#material-dialog">Add Material</button>
+                {{ include('stock/adjustment_stock_header/_details_material_form.html.twig') }}
+            </fieldset>
+
+            <fieldset class="border border-secondary rounded mb-3 p-3 {% if adjustmentStockHeader.adjustmentMode != constant('ADJUSTMENT_MODE_PAPER', adjustmentStockHeader) %}d-none{% endif %}" id="detail-paper-container">
+                <legend class="float-none w-auto text-dark px-1">Detail Kertas</legend>
+                <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#paper-dialog">Add Kertas</button>
+                {{ include('stock/adjustment_stock_header/_details_paper_form.html.twig') }}
+            </fieldset>
+        {% endif %}
+
+        <div class="d-grid">
+            <div class="row">
+                <div class="col text-center">
+                    <a class="btn btn-danger" href="{{ path('app_stock_adjustment_stock_header_index') }}"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to cancel this transaction?">
+                        Cancel
+                    </a>
+                    <button class="btn btn-success"
+                            data-controller="dom-element"
+                            data-action="dom-element#confirm"
+                            data-dom-element-confirm-message-param="Are you sure you want to save this transaction?">
+                        Save
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" name="{{ idempotent_token_name() }}" value="{{ idempotent_token_value() }}" />
+        </div>
+    {{ form_end(form) }}
+
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('material-dialog', 'Material List') }}
+        <input type="hidden" id="material-table-identifiers" />
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_material__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+            Done
+        </button>
+    {{ dialog.end() }}
+    
+    {{ dialog.start('paper-dialog', 'Kertas List') }}
+        <input type="hidden" id="paper-table-identifiers" />
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_paper__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+            Done
+        </button>
+    {{ dialog.end() }}
+</div>

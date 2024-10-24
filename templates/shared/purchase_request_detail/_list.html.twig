@@ -1,0 +1,87 @@
+{% import 'app/data_grid.html.twig' as grid %}
+
+{{ grid.form(form) }}
+
+{{ grid.info(form, count, purchaseRequestDetails) }}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" id="purchase-request-detail-table" 
+           data-controller="data-table"
+           data-data-table-selected-identifiers-target-value="#purchase-request-detail-table-identifiers"
+           data-data-table-selected-class="table-primary"
+           data-data-table-active-class="table-active">
+        <thead>
+            <tr class="table-primary" {{ grid.sort_link(form) }}>
+                <th style="min-width: 200px" role="button" {{ grid.sort_link_item(form, 'material:name') }}>
+                    Material {{ grid.sort_char(form.sort['material:name'].vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'quantity') }}>
+                    Quantity {{ grid.sort_char(form.sort.quantity.vars.value) }}
+                </th>
+                <th style="min-width: 100px" role="button" {{ grid.sort_link_item(form, 'unit:name') }}>
+                    Satuan {{ grid.sort_char(form.sort['unit:name'].vars.value) }}
+                </th>
+                <th style="min-width: 250px">
+                    Request #
+                </th>
+                <th style="min-width: 150px">
+                    Tanggal
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'usageDate') }}>
+                    Tanggal Pakai {{ grid.sort_char(form.sort.usageDate.vars.value) }}
+                </th>
+                <th style="min-width: 150px" role="button" {{ grid.sort_link_item(form, 'memo') }}>
+                    Keterangan {{ grid.sort_char(form.sort.memo.vars.value) }}
+                </th>
+            </tr>
+            <tr class="table-light" {{ grid.filter_link(form) }}>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'material:name') }} value="{{ form.filter['material:name'].1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'quantity') }} value="{{ form.filter.quantity.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'unit:name') }} value="{{ form.filter['unit:name'].1.vars.value }}" />
+                </th>
+                <th></th>
+                <th></th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'usageDate') }} value="{{ form.filter.usageDate.1.vars.value }}" />
+                </th>
+                <th>
+                    <input class="form-control" type="text" {{ grid.filter_link_item(form, 'memo') }} value="{{ form.filter.memo.1.vars.value }}" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchaseRequestDetail in purchaseRequestDetails %}
+                <tr data-data-table-target="selectable" data-selected-identifier="{{ purchaseRequestDetail.id }}" data-action="click->data-table#select" data-data-table-values-param="{{ {
+                    'purchaseRequestDetailId': purchaseRequestDetail.id,
+                    'purchaseRequestHeaderCodeNumber': purchaseRequestDetail.purchaseRequestHeader.codeNumber,
+                    'purchaseRequestHeaderTransactionDate': purchaseRequestDetail.purchaseRequestHeader.transactionDate ? purchaseRequestDetail.purchaseRequestHeader.transactionDate|date('d M Y') : '',
+                    'materialName': purchaseRequestDetail.material.name,
+                    'materialCode': purchaseRequestDetail.material.code,
+                    'materialId': purchaseRequestDetail.material.id,
+                    'purchaseRequestDetailUsageDate': purchaseRequestDetail.usageDate ? purchaseRequestDetail.usageDate|date('Y-m-d') : '',
+                    'purchaseRequestDetailMemo': purchaseRequestDetail.memo,
+                    'unitId': purchaseRequestDetail.unit.id,
+                    'purchaseRequestDetailQuantity': purchaseRequestDetail.quantity|number_format(0)}|json_encode }}">
+                    <td>{{ purchaseRequestDetail.material.name|default }}</td>
+                    <td class="text-center">{{ purchaseRequestDetail.quantity|number_format(0) }}</td>
+                    <td>{{ purchaseRequestDetail.unit.name|default }}</td>
+                    <td>{{ purchaseRequestDetail.purchaseRequestHeader.codeNumber|default }}</td>
+                    <td>{{ purchaseRequestDetail.purchaseRequestHeader.transactionDate ? purchaseRequestDetail.purchaseRequestHeader.transactionDate|date('d M Y') : '' }}</td>
+                    <td>{{ purchaseRequestDetail.usageDate ? purchaseRequestDetail.usageDate|date('d M Y') : ''  }}</td>
+                    <td>{{ purchaseRequestDetail.memo }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">No records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ grid.navigation(form, count, purchaseRequestDetails) }}

@@ -1,0 +1,60 @@
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>PT. Putracipta Karindomas</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7"><strong>Laporan PO Material per Supplier</strong></th>
+        </tr>
+        <tr>
+            <th style="text-align: center" colspan="7">
+                <strong>
+                    {% set startDate = form.vars.value.filter.transactionDate.1|default %}
+                    {% set endDate = form.vars.value.filter.transactionDate.2|default %}
+                    {{ startDate ? startDate|date('j F Y') }} &nbsp;&ndash;&nbsp; {{ endDate ? endDate|date('j F Y') }}
+                </strong>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+        <tr>
+            <th style="text-align: center; width: 100pt"><strong>Kode</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Nama Supplier</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Note</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>PO #</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Tanggal</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Status</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Remark</strong></th>
+            <th style="text-align: center; width: 100pt"><strong>Total</strong></th>
+        </tr>
+        <tr>
+            <th colspan="7"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for supplier in suppliers %}
+            {% set totalSum = '0.00' %}
+            {% for purchaseOrderHeader in purchaseOrderHeaders[supplier.id] %}
+                <tr>
+                    <td style="text-align: left">{{ supplier.code|default }}</td>
+                    <td style="text-align: left">{{ supplier.company|default }}</td>
+                    <td style="text-align: left">{{ supplier.code|default }}</td>
+                    <td style="text-align: left">{{ purchaseOrderHeader.codeNumber|default }}</td>
+                    <td style="text-align: left">{{ purchaseOrderHeader.transactionDate|default ? purchaseOrderHeader.transactionDate|date('j F Y') }}</td>
+                    <td style="text-align: left">{{ purchaseOrderHeader.transactionStatus|default }}</td>
+                    <td style="text-align: left">{{ purchaseOrderHeader.note|default }}</td>
+                    <td style="text-align: right">{{ purchaseOrderHeader.grandTotal|default }}</td>
+                </tr>
+                {% set totalSum = totalSum + purchaseOrderHeader.grandTotal %}
+            {% endfor %}
+            <tr>
+                <td style="text-align: right; border-top: 1px solid" colspan="7"><strong>Grand Total</strong></td>
+                <td style="text-align: right; border-top: 1px solid"><strong>{{ totalSum|default }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="7"></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,123 @@
+security:
+    enable_authenticator_manager: true
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\Admin\User
+                property: username
+        backend_users:
+            memory:
+                users:
+                    a: { password: '$2a$12$rb0GpZKO9F8TJNMYmf8r7.8mdppryJdBzHei0AHwBu8jLqilITGNe', roles: ['ROLE_USER'] }
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_MASTER, ROLE_USER_MANAGEMENT, ROLE_SETTING, ROLE_PURCHASE, ROLE_SALE, ROLE_INVENTORY, ROLE_PRODUCTION, ROLE_FINANCE, ROLE_REPORT, ROLE_APPROVAL, ROLE_MARKETING]
+        ROLE_MASTER: [
+            ROLE_EMPLOYEE_ADD, ROLE_EMPLOYEE_EDIT, ROLE_EMPLOYEE_VIEW,
+            ROLE_SUPPLIER_ADD, ROLE_SUPPLIER_EDIT, ROLE_SUPPLIER_VIEW,
+            ROLE_CUSTOMER_ADD, ROLE_CUSTOMER_EDIT, ROLE_CUSTOMER_VIEW, 
+            ROLE_MATERIAL_ADD, ROLE_MATERIAL_EDIT, ROLE_MATERIAL_VIEW,
+            ROLE_PAPER_ADD, ROLE_PAPER_EDIT, ROLE_PAPER_VIEW,
+            ROLE_PRODUCT_ADD, ROLE_PRODUCT_EDIT, ROLE_PRODUCT_VIEW,
+            ROLE_DESIGN_CODE_ADD, ROLE_DESIGN_CODE_EDIT, ROLE_DESIGN_CODE_VIEW,
+            ROLE_DIECUT_ADD, ROLE_DIECUT_EDIT, ROLE_DIECUT_VIEW,
+            ROLE_MILLAR_ADD, ROLE_MILLAR_EDIT, ROLE_MILLAR_VIEW,
+            ROLE_PROCESS_ADD, ROLE_PROCESS_EDIT, ROLE_PROCESS_VIEW,
+            ROLE_DISTRIBUTION_ADD, ROLE_DISTRIBUTION_EDIT, ROLE_DISTRIBUTION_VIEW,
+            ROLE_CHECK_SHEET_ADD, ROLE_CHECK_SHEET_EDIT, ROLE_CHECK_SHEET_VIEW,
+            ROLE_PRINTING_MACHINE_ADD, ROLE_PRINTING_MACHINE_EDIT, ROLE_PRINTING_MACHINE_VIEW,
+            ROLE_MATERIAL_CATEGORY_ADD, ROLE_MATERIAL_CATEGORY_EDIT, ROLE_MATERIAL_CATEGORY_VIEW,
+            ROLE_MATERIAL_SUB_CATEGORY_ADD, ROLE_MATERIAL_SUB_CATEGORY_EDIT, ROLE_MATERIAL_SUB_CATEGORY_VIEW,
+            ROLE_WAREHOUSE_ADD, ROLE_WAREHOUSE_EDIT, ROLE_WAREHOUSE_VIEW,
+            ROLE_TRANSPORTATION_ADD, ROLE_TRANSPORTATION_EDIT, ROLE_TRANSPORTATION_VIEW,
+            ROLE_UNIT_ADD, ROLE_UNIT_EDIT, ROLE_UNIT_VIEW,
+            ROLE_PAYMENT_TYPE_ADD, ROLE_PAYMENT_TYPE_EDIT, ROLE_PAYMENT_TYPE_VIEW,
+            ROLE_ACCOUNT_ADD, ROLE_ACCOUNT_EDIT, ROLE_ACCOUNT_VIEW,
+            ROLE_DIVISION_ADD, ROLE_DIVISION_EDIT, ROLE_DIVISION_VIEW,
+        ]
+        ROLE_PURCHASE: [
+            ROLE_PURCHASE_ORDER_MATERIAL_ADD, ROLE_PURCHASE_ORDER_MATERIAL_EDIT, ROLE_PURCHASE_ORDER_MATERIAL_VIEW,
+            ROLE_PURCHASE_ORDER_PAPER_ADD, ROLE_PURCHASE_ORDER_PAPER_EDIT, ROLE_PURCHASE_ORDER_PAPER_VIEW,
+            ROLE_PURCHASE_INVOICE_ADD, ROLE_PURCHASE_INVOICE_EDIT, ROLE_PURCHASE_INVOICE_VIEW,
+            ROLE_PURCHASE_PAYMENT_ADD, ROLE_PURCHASE_PAYMENT_EDIT, ROLE_PURCHASE_PAYMENT_VIEW,
+        ]
+        ROLE_SALE: [
+            ROLE_SALE_ORDER_ADD, ROLE_SALE_ORDER_EDIT, ROLE_SALE_ORDER_VIEW,
+            ROLE_SALE_INVOICE_ADD, ROLE_SALE_INVOICE_EDIT, ROLE_SALE_INVOICE_VIEW,
+            ROLE_SALE_PAYMENT_ADD, ROLE_SALE_PAYMENT_EDIT, ROLE_SALE_PAYMENT_VIEW,
+        ]
+        ROLE_FINANCE: [
+            ROLE_EXPENSE_ADD, ROLE_EXPENSE_EDIT, ROLE_EXPENSE_VIEW,
+            ROLE_DEPOSIT_ADD, ROLE_DEPOSIT_EDIT, ROLE_DEPOSIT_VIEW,
+        ]
+        ROLE_PRODUCTION: [
+            ROLE_NEW_PRODUCT_ADD, ROLE_NEW_PRODUCT_EDIT, ROLE_NEW_PRODUCT_VIEW,
+            ROLE_DEVELOPMENT_PRODUCT_ADD, ROLE_DEVELOPMENT_PRODUCT_EDIT, ROLE_DEVELOPMENT_PRODUCT_VIEW,
+            ROLE_MASTER_ORDER_ADD, ROLE_MASTER_ORDER_EDIT, ROLE_MASTER_ORDER_VIEW,
+            ROLE_MATERIAL_REQUEST_ADD, ROLE_MATERIAL_REQUEST_EDIT, ROLE_MATERIAL_REQUEST_VIEW,
+            ROLE_QUALITY_CONTROL_SORTING_ADD, ROLE_QUALITY_CONTROL_SORTING_EDIT, ROLE_QUALITY_CONTROL_SORTING_VIEW,
+        ]
+        ROLE_INVENTORY: [
+            ROLE_ADJUSTMENT_ADD, ROLE_ADJUSTMENT_EDIT, ROLE_ADJUSTMENT_VIEW,
+            ROLE_MATERIAL_RELEASE_ADD, ROLE_MATERIAL_RELEASE_EDIT, ROLE_MATERIAL_RELEASE_VIEW,
+            ROLE_TRANSFER_ADD, ROLE_TRANSFER_EDIT, ROLE_TRANSFER_VIEW,
+            ROLE_FINISHED_GOODS_RECEIVE_ADD, ROLE_FINISHED_GOODS_RECEIVE_EDIT, ROLE_FINISHED_GOODS_RECEIVE_VIEW,
+            ROLE_PURCHASE_REQUEST_MATERIAL_ADD, ROLE_PURCHASE_REQUEST_MATERIAL_EDIT, ROLE_PURCHASE_REQUEST_MATERIAL_VIEW,
+            ROLE_PURCHASE_REQUEST_PAPER_ADD, ROLE_PURCHASE_REQUEST_PAPER_EDIT, ROLE_PURCHASE_REQUEST_PAPER_VIEW,
+            ROLE_RECEIVE_ADD, ROLE_RECEIVE_EDIT, ROLE_RECEIVE_VIEW,
+            ROLE_PURCHASE_RETURN_ADD, ROLE_PURCHASE_RETURN_EDIT, ROLE_PURCHASE_RETURN_VIEW,
+            ROLE_DELIVERY_ADD, ROLE_DELIVERY_EDIT, ROLE_DELIVERY_VIEW,
+            ROLE_SALE_RETURN_ADD, ROLE_SALE_RETURN_EDIT, ROLE_SALE_RETURN_VIEW,
+        ]
+        ROLE_REPORT: [
+            ROLE_PURCHASE_REPORT, 
+            ROLE_SALE_REPORT, 
+            ROLE_INVENTORY_MATERIAL_REPORT, 
+            ROLE_INVENTORY_FINISHED_GOODS_REPORT, 
+            ROLE_PRODUCTION_REPORT, 
+            ROLE_FINANCE_REPORT
+        ]
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+            form_login:
+                login_path: app_login_page
+                check_path: app_login
+                default_target_path: app_home_page
+                enable_csrf: true
+            logout:
+                path: app_logout
+                target: app_login_page
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#the-firewall
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }
+
+when@test:
+    security:
+        password_hashers:
+            # By default, password hashers are resource intensive and take time. This is
+            # important to generate secure password hashes. In tests however, secure hashes
+            # are not important, waste resources and increase test times. The following
+            # reduces the work factor to the lowest possible values.
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Lowest possible value for bcrypt
+                time_cost: 3 # Lowest possible value for argon
+                memory_cost: 10 # Lowest possible value for argon
