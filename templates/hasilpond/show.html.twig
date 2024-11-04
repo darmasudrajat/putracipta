@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hasilpond{% endblock %}
+
+{% block body %}
+    <h1>Hasilpond</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ hasilpond.id }}</td>
+            </tr>
+            <tr>
+                <th>Nomo</th>
+                <td>{{ hasilpond.nomo }}</td>
+            </tr>
+            <tr>
+                <th>Operator</th>
+                <td>{{ hasilpond.operator }}</td>
+            </tr>
+            <tr>
+                <th>Good</th>
+                <td>{{ hasilpond.good }}</td>
+            </tr>
+            <tr>
+                <th>Ng</th>
+                <td>{{ hasilpond.ng }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_hasilpond_index') }}">back to list</a>
+
+    <a href="{{ path('app_hasilpond_edit', {'id': hasilpond.id}) }}">edit</a>
+
+    {{ include('hasilpond/_delete_form.html.twig') }}
+{% endblock %}

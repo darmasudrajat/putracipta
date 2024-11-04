@@ -164,7 +164,8 @@ class UserMenuConfig
             'MENU_REPORT_ACCOUNT_PAYABLE' => ['route' => 'app_report_supplier_payable_summary_index', 'pattern' => '/^app_report_supplier_payable_summary_.+$/', 'roles' => ['ROLE_FINANCE_REPORT']],
             
             
-            'MENU_PROSES_PRODUKSI_CETAK' => ['route' => 'app_home_page', 'roles' => ['ROLE_USER']],
+            'MENU_PROSES_PRODUKSI_CETAK' => ['route' => 'app_hasil_cetak_index', 'pattern' => '/^app_hasil_cetak_index_.+$/', 'roles' => ['ROLE_USER']],
+
 
             'MENU_TRANSACTION_LOG' => ['route' => 'app_report_transaction_log_index', 'roles' => ['ROLE_ADMIN']],
         ];

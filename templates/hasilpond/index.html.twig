@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hasilpond index{% endblock %}
+
+{% block body %}
+    <h1>Hasilpond index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nomo</th>
+                <th>Operator</th>
+                <th>Good</th>
+                <th>Ng</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for hasilpond in hasilponds %}
+            <tr>
+                <td>{{ hasilpond.id }}</td>
+                <td>{{ hasilpond.nomo }}</td>
+                <td>{{ hasilpond.operator }}</td>
+                <td>{{ hasilpond.good }}</td>
+                <td>{{ hasilpond.ng }}</td>
+                <td>
+                    <a href="{{ path('app_hasilpond_show', {'id': hasilpond.id}) }}">show</a>
+                    <a href="{{ path('app_hasilpond_edit', {'id': hasilpond.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_hasilpond_new') }}">Create new</a>
+{% endblock %}

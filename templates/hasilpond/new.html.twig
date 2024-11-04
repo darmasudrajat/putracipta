@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Hasilpond{% endblock %}
+
+{% block body %}
+    <h1>Create new Hasilpond</h1>
+
+    {{ include('hasilpond/_form.html.twig') }}
+
+    <a href="{{ path('app_hasilpond_index') }}">back to list</a>
+     <button class="btn">{{ button_label|default('Save') }}</button>
+{% endblock %}

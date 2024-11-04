@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{# {% extends 'base.html.twig' %}
 
 {% block title %}Edit HasilCetak{% endblock %}
 
@@ -10,4 +10,58 @@
     <a href="{{ path('app_hasil_cetak_index') }}">back to list</a>
 
     {{ include('hasil_cetak/_delete_form.html.twig') }}
+{% endblock %}
+ #}
+
+
+
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Hasil Produksi Cetak' %}
+
+{% block toolbar %}
+    {% if is_granted('ROLE_CUSTOMER_ADD') %}
+         <a class="btn btn-primary btn-sm" href="{{ path('app_hasil_cetak_index') }}">Manage</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% for type, flashes in app.session.flashBag.all %}
+        {% for flash in flashes %}
+            <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                <strong>{{ flash.title }}</strong> {{ flash.message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
+    {% endfor %}
+{# <div style="text-align: center;"> #}
+    
+         {{ include('hasil_cetak/_form.html.twig', {'button_label': 'Update'  }) }}
+{# </div> #}
+ 
+    {# <a class="btn btn-outline-success btn-sm"  href="{{ path('app_hasil_cetak_index') }}">back to list</a> #}
+    {# {{ include('hasil_cetak/_delete_form.html.twig') }} #}
+ 
+ 
+ 
+ 
+ {# <div class="container mt-3">
+  <h2>Dropdowns</h2>
+  <p>The .dropdown-divider class is used to separate links inside the dropdown menu with a thin horizontal line:</p>
+
+  <div class="dropdown">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+      Dropdown button
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="#">Link 1</a></li>
+      <li><a class="dropdown-item" href="#">Link 2</a></li>
+      <li><a class="dropdown-item" href="#">Link 3</a></li>
+      <li><hr class="dropdown-divider"></li>
+      <li><a class="dropdown-item" href="#">Another link</a></li>
+    </ul>
+  </div>
+</div> #}
+
 {% endblock %}

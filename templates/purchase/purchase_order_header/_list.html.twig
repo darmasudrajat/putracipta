@@ -60,6 +60,7 @@
             </tr>
         </thead>
         <tbody>
+            {# ========================= #}
             {% for purchaseOrderHeader in purchaseOrderHeaders %}
                 <tr>
                     <td>{{ purchaseOrderHeader.codeNumber }}</td>
@@ -81,6 +82,7 @@
                     </td>
                 </tr>
             {% else %}
+            {# ========================= #}
                 <tr>
                     <td colspan="6">No records found</td>
                 </tr>

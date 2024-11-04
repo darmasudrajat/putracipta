@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{# {% extends 'base.html.twig' %}
 
 {% block title %}HasilCetak{% endblock %}
 
@@ -43,4 +43,71 @@
     <a href="{{ path('app_hasil_cetak_edit', {'id': hasil_cetak.id}) }}">edit</a>
 
     {{ include('hasil_cetak/_delete_form.html.twig') }}
+{% endblock %} #}
+
+
+
+{% extends 'layout_page.html.twig' %}
+
+{% block title 'Hasil Produksi Cetak' %}
+
+{% block toolbar %}
+    {% if is_granted('ROLE_CUSTOMER_ADD') %}
+         <a class="btn btn-primary btn-sm" href="{{ path('app_hasil_cetak_index') }}">Manage</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% for type, flashes in app.session.flashBag.all %}
+        {% for flash in flashes %}
+            <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                <strong>{{ flash.title }}</strong> {{ flash.message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
+    {% endfor %}
+
+   
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ hasil_cetak.id }}</td>
+            </tr>
+            <tr>
+                <th>Nomo</th>
+                <td>{{ hasil_cetak.nomo }}</td>
+            </tr>
+            <tr>
+                <th>Tanggalxxxxxxxxxxxxxxxx</th>
+                <td>{{ hasil_cetak.tanggal ? hasil_cetak.tanggal|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Operator</th>
+                <td>{{ hasil_cetak.operator }}</td>
+            </tr>
+            <tr>
+                <th>Good</th>
+                <td>{{ hasil_cetak.good }}</td>
+            </tr>
+            <tr>
+                <th>Ngs</th>
+                <td>{{ hasil_cetak.ng }}</td>
+            </tr>
+            <tr>
+                <th>Mesin</th>
+                <td>{{ hasil_cetak.mesin }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary btn-sm" href="{{ path('app_hasil_cetak_index') }}">back to list</a>
+
+    <a href="{{ path('app_hasil_cetak_edit', {'id': hasil_cetak.id}) }}">edit</a>
+
+    {{ include('hasil_cetak/_delete_form.html.twig') }}
+
+
 {% endblock %}

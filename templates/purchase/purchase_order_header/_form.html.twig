@@ -20,7 +20,10 @@
                                ]|json_encode }}" />
                     </div>
                 </div>
+
                 <div class="col">
+                {# CONTOH #}
+
                     <div class="mb-3">
                         <label for="{{ form.supplier.vars.id }}-text" class="form-label">Supplier</label>
                         {{ form_row(form.supplier, {
@@ -41,6 +44,8 @@
                                ]|json_encode }}" />
                         {{ form_errors(form.supplier) }}
                     </div>
+                {# CONTOH #}
+
                     <div class="mb-3">
                         <label class="form-label">Currency</label>
                         <input type="text" class="form-control" value="{{ purchaseOrderHeader.supplier.currency.code|default }}" readonly="readonly"
@@ -51,7 +56,6 @@
                                ]|json_encode }}" />
                     </div>
                 </div>
-            </div>
             <div class="row">
                 <div class="col">
                     {{ form_row(form.note) }}
@@ -89,12 +93,14 @@
 
     {% import 'app/bootstrap_dialog.html.twig' as dialog %}
 
+    {# CONTOH #}
     {{ dialog.start('supplier-dialog', 'Supplier List') }}
         <div data-controller="html-loader"
              data-html-loader-url-value="{{ path('app_shared_supplier__list') }}"
              data-html-loader-auto-load-value="true">
         </div>
     {{ dialog.end() }}
+    {# CONTOH #}
 
     {{ dialog.start('material-dialog', 'Material List') }}
         <input type="hidden" id="material-table-identifiers" />

@@ -1,4 +1,199 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+
+
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id'}|json_encode }}"
+     data-json-loader-url-value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}"
+     data-json-loader-form-target-value="{{ "form[name=#{form.vars.name}]" }}">
+
+
+{# templates/my_template.html.twig #}
+{% block body %}
+    {{ form_start(form) }}
+    {# TETS #}
+    <fieldset>
+      <legend>TEST</legend>
+        <div class="row">
+          {# BIKIN FORM 1 #}
+            {# <div class="mb-3">
+                        <label for="var1-text" class="form-label">var1</label>
+                        {{ form_row(form, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': 'var1'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        <input type="text" id="var1-text" class="form-control readonly-form-input" value="default" readonly="readonly"
+                               data-bs-toggle="modal" data-bs-target="#var1-dialog"
+                               data-controller="dom-element"
+                               data-action="dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.supplierCompany'}},
+                               ]|json_encode }}"
+                               />
+            </div> #}
+          {# END FORM 1 #}
+
+          {# FORM 2 #}
+            <div class="mb-3">
+                        <label for="{{ form.supplier.vars.id }}-text" class="form-label">Supplier</label>
+                        {{ form_row(form.supplier, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'supplier-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.supplierId'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        <input type="text" id="{{ form.supplier.vars.id }}-text" class="form-control readonly-form-input {% if not form.supplier.vars.valid %}is-invalid{% endif %}" value="{{ purchaseOrderHeader.supplier.company|default }}" readonly="readonly"
+                               data-bs-toggle="modal" data-bs-target="#supplier-dialog"
+                               data-controller="dom-element"
+                               data-action="supplier-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.supplierCompany'}},
+                               ]|json_encode }}" />
+                        {{ form_errors(form.supplier) }}
+                    </div>
+          {# END FORM 2 #}
+          {# END #}
+        </div>
+    </fieldset>
+         <button class="btn">{{ button_label|default('Save') }}</button>
+
+    {{ form_end(form) }}
+
+    {# Modal Structure #}
+   
+        
+           
+ <div  id="myModal" class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+
+         
+      
+      
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+        
+
+
+{# <div id="myModal" class="modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="display:none;"> #}
+ <div id="myModal2" class="modal" style="display:none;">
+  {# <span class="close" onclick="closeModal()">&times;</span> #}
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="closeModalButton" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Get It</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+    {# ADD DIALOG FORM 1 #}
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('var1-dialog', 'Var1 List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_supplier__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+
+    {# ADD DIALOG FORM 2 #}
+    {{ dialog.start('supplier-dialog', 'Supplier List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_supplier__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+    {# ADD DOM panggil modal
+
+
+
+{# templates/my_form.html.twig #}
+{# {% block javascripts %}
+    <script>
+        function handleClick() {
+            alert('Button was clicked!');
+            // Additional logic can be added here
+        }
+        function openModalMesin(){
+        document.getElementById('hasil_cetak').alert('test');
+    }
+    </script>
+{% endblock %} #}
+
+
+
+{% block javascripts %}
+<script>
+        function handleClick() {
+            //    $('myModal').modal('show');
+              alert('Button was clicked!');
+            // document.getElementById('myModal2').style.display = 'block';
+            // Additional logic can be added here
+
+        }
+
+
+   function openModal() {
+        document.getElementById('myModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('myModal').style.display = 'none';
+    }
+
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+        const modal = document.getElementById('myModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+
+
+
+
+
+    
+</script>
+
+
+
+{% endblock %}
+
+</div>

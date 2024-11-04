@@ -1,6 +1,9 @@
+
+
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
     <div class="container-fluid">
         <div class="row flex-nowrap">
             <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
@@ -20,6 +23,16 @@
                             'MENU_USER_MANAGEMENT': 'User Management', 
                             'MENU_TRANSACTION_SETTING': 'Transaction Setting'
                         }) }}
+
+
+                         {{ menu.render_2('MENU_PROSES_PRODUKSI',{
+                            
+                            'MENU_PROSES_PRODUKSI_CETAK': 'Hasil Cetak', 
+                         }) }}
+
+
+
+
                         {{ menu.render_2('MENU_MASTER', {
                             'MENU_EMPLOYEE': 'Employee', 
                             'MENU_SUPPLIER': 'Supplier', 
@@ -158,10 +171,7 @@
                         }) }}
                         {#{{ menu.render_1('MENU_MASTER', null, 'app_menu_master') }}
                         {{ menu.render_1('MENU_REPORT', null, 'app_menu_report') }}#}
-                         {{ menu.render_2('MENU_PROSES_PRODUKSI',{
-                            
-                            'MENU_PROSES_PRODUKSI_CETAK': 'Hasil Cetak', 
-                         }) }}
+                        
                         {{ menu.render_1('MENU_TRANSACTION_LOG') }}
                     {{ menu.end() }}
 
