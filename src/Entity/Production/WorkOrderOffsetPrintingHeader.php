@@ -74,6 +74,68 @@ class WorkOrderOffsetPrintingHeader extends ProductionHeader
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $blackPlateQuantity = null;
 
+// ----------------
+
+
+#[ORM\Column]
+private ?int $col1name= null;
+
+
+#[ORM\Column]
+private ?int $col1PrintingQuantity = null;
+
+#[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+private ?string $col1InkQuantity = null;
+
+#[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+private ?string $col1PlateQuantity = null;
+
+#[ORM\Column]
+private ?int $col2name = null;
+
+#[ORM\Column]
+private ?int $col2PrintingQuantity = null;
+
+#[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+private ?string $col2InkQuantity = null;
+
+#[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+private ?string $col2PlateQuantity = null;
+
+#[ORM\Column]
+private ?int $col3name = null;
+
+#[ORM\Column]
+private ?int $col3PrintingQuantity = null;
+
+#[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+private ?string $col3InkQuantity = null;
+
+#[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+private ?string $col3PlateQuantity = null;
+
+#[ORM\Column]
+private ?int $col4name = null;
+
+#[ORM\Column]
+private ?int $col4PrintingQuantity = null;
+
+#[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+private ?string $col4InkQuantity = null;
+
+#[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+private ?string $col4PlateQuantity = null;
+
+
+
+
+
+
+//----------------------------
+
+
+
+
     #[ORM\OneToMany(mappedBy: 'workOrderOffsetPrintingHeader', targetEntity: WorkOrderOffsetPrintingDetail::class)]
     private Collection $workOrderOffsetPrintingDetails;
 
@@ -275,6 +337,10 @@ class WorkOrderOffsetPrintingHeader extends ProductionHeader
         return $this;
     }
 
+
+
+
+
     public function getBlackPrintingQuantity(): ?int
     {
         return $this->blackPrintingQuantity;
@@ -310,6 +376,186 @@ class WorkOrderOffsetPrintingHeader extends ProductionHeader
 
         return $this;
     }
+
+// /------------------------
+
+public function getCol1name(): ?string
+{
+    return $this->col1name;
+}
+
+public function getCol1PrintingQuantity(): ?int
+{
+    return $this->col1PrintingQuantity;
+}
+
+public function setCol1PrintingQuantity(int $col1PrintingQuantity): self
+{
+    $this->col1PrintingQuantity = $col1PrintingQuantity;
+
+    return $this;
+}
+
+public function getCol1InkQuantity(): ?string
+{
+    return $this->col1InkQuantity;
+}
+
+public function setCol1kInkQuantity(string $col1InkQuantity): self
+{
+    $this->col1InkQuantity = $col1InkQuantity;
+
+    return $this;
+}
+
+public function getCol1PlateQuantity(): ?string
+{
+    return $this->col1PlateQuantity;
+}
+
+public function setCol1PlateQuantity(string $col1PlateQuantity): self
+{
+    $this->col1PlateQuantity = $col1PlateQuantity;
+
+    return $this;
+}
+
+// --------------------------
+
+public function getCol2name(): ?string
+{
+    return $this->col2name;
+}
+
+
+public function getCol2PrintingQuantity(): ?int
+{
+    return $this->col2PrintingQuantity;
+}
+
+public function setCol2PrintingQuantity(int $col2PrintingQuantity): self
+{
+    $this->col2PrintingQuantity = $col2PrintingQuantity;
+
+    return $this;
+}
+
+public function getCol2InkQuantity(): ?string
+{
+    return $this->col2InkQuantity;
+}
+
+public function setCol2kInkQuantity(string $col2InkQuantity): self
+{
+    $this->col2InkQuantity = $col2InkQuantity;
+
+    return $this;
+}
+
+public function getCol2PlateQuantity(): ?string
+{
+    return $this->col2PlateQuantity;
+}
+
+public function setCol2PlateQuantity(string $col2PlateQuantity): self
+{
+    $this->col2PlateQuantity = $col2PlateQuantity;
+
+    return $this;
+}
+
+// /---------------------------
+
+public function getCol3name(): ?string
+{
+    return $this->col3name;
+}
+
+public function getCol3PrintingQuantity(): ?int
+{
+    return $this->col3PrintingQuantity;
+}
+
+public function setCol3PrintingQuantity(int $col3PrintingQuantity): self
+{
+    $this->col3PrintingQuantity = $col3PrintingQuantity;
+
+    return $this;
+}
+
+public function getCol3InkQuantity(): ?string
+{
+    return $this->col3InkQuantity;
+}
+
+public function setCol3InkQuantity(string $col3InkQuantity): self
+{
+    $this->col3InkQuantity = $col3InkQuantity;
+
+    return $this;
+}
+
+public function getCol3PlateQuantity(): ?string
+{
+    return $this->col3PlateQuantity;
+}
+
+public function setCol3PlateQuantity(string $col3PlateQuantity): self
+{
+    $this->col3PlateQuantity = $col3PlateQuantity;
+
+    return $this;
+}
+
+
+// /---------------------------
+
+public function getCol4name(): ?string
+{
+    return $this->col4name;
+}
+
+public function getCol4PrintingQuantity(): ?int
+{
+    return $this->col4PrintingQuantity;
+}
+
+public function setCol4PrintingQuantity(int $col4PrintingQuantity): self
+{
+    $this->col4PrintingQuantity = $col4PrintingQuantity;
+
+    return $this;
+}
+
+public function getCol4InkQuantity(): ?string
+{
+    return $this->col4InkQuantity;
+}
+
+public function setCol4InkQuantity(string $col4InkQuantity): self
+{
+    $this->col4InkQuantity = $col4InkQuantity;
+
+    return $this;
+}
+
+public function getCol4PlateQuantity(): ?string
+{
+    return $this->col4PlateQuantity;
+}
+
+public function setCol4PlateQuantity(string $col4PlateQuantity): self
+{
+    $this->col4PlateQuantity = $col4PlateQuantity;
+
+    return $this;
+}
+
+
+
+
+
+// ---------------------------------
 
     /**
      * @return Collection<int, WorkOrderOffsetPrintingDetail>

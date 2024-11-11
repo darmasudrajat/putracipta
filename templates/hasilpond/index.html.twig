@@ -1,9 +1,18 @@
-{% extends 'base.html.twig' %}
+
+{% extends 'layout_page.html.twig' %}
+
 
 {% block title %}Hasilpond index{% endblock %}
 
-{% block body %}
-    <h1>Hasilpond index</h1>
+{% block toolbar %}
+    {% if is_granted('ROLE_HASIL_PRODUKSI_ADD') %}
+        <a class="btn btn-success btn-sm" href="{{ path('app_hasilpond_new') }}">Add</a>
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
 
     <table class="table">
         <thead>
@@ -38,4 +47,14 @@
     </table>
 
     <a href="{{ path('app_hasilpond_new') }}">Create new</a>
+
+//     <script>
+// $(document).ready(function() {
+//     $('#userTable').DataTable({
+//         scrollY: '300px', // Set the height of the scrollable area
+//         scrollCollapse: true, // Allow the table to reduce in height if there are fewer records
+//         paging: false // Disable pagination to allow for continuous scrolling
+//     });
+// });
+// </script>
 {% endblock %}

@@ -1,4 +1,51 @@
+<div data-controller="event-emitter json-loader"
+     data-action="data-table:select->event-emitter#forward"
+     data-event-emitter-attributes-list-param="{{ {'data-table:select': 'id'}|json_encode }}"
+     data-json-loader-url-value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_format': 'json'})) }}"
+     data-json-loader-form-target-value="{{ "form[name=#{form.vars.name}]" }}">
+
+
+
 {{ form_start(form) }}
+<div class="mb-3">
+                        <label for="{{ form.supplier.vars.id }}-text" class="form-label">Supplier</label>
+                        {{ form_row(form.supplier, {
+                            'attr': {
+                                'data-controller': 'dom-element',
+                                'data-action': 'supplier-table:data-table:select@document->dom-element#bind',
+                                'data-dom-element-bind-specifications-param': [
+                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.supplierId'}},
+                                ]|json_encode,
+                            },
+                        }) }}
+                        <input type="text" id="{{ form.supplier.vars.id }}-text" class="form-control readonly-form-input {% if not form.supplier.vars.valid %}is-invalid{% endif %}" value="{{ purchaseOrderHeader.supplier.company|default }}" readonly="readonly"
+                               data-bs-toggle="modal" data-bs-target="#supplier-dialog"
+                               data-controller="dom-element"
+                               data-action="supplier-table:data-table:select@document->dom-element#bind"
+                               data-dom-element-bind-specifications-param="{{ [
+                                   {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail.supplierCompany'}},
+                               ]|json_encode }}" />
+                        {{ form_errors(form.supplier) }}
+                    </div>
+
     {{ form_widget(form) }}
     <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
+
+
+    {% import 'app/bootstrap_dialog.html.twig' as dialog %}
+
+    {{ dialog.start('var1-dialog', 'Var1 List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_supplier__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}
+
+    {# ADD DIALOG FORM 2 #}
+    {{ dialog.start('supplier-dialog', 'Supplier List') }}
+        <div data-controller="html-loader"
+             data-html-loader-url-value="{{ path('app_shared_supplier__list') }}"
+             data-html-loader-auto-load-value="true">
+        </div>
+    {{ dialog.end() }}

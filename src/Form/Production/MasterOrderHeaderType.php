@@ -26,6 +26,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 
+// TEST
+use App\Entity\Master\Supplier;
+use App\Entity\Purchase\PurchaseOrderDetail;
+use App\Entity\Purchase\PurchaseOrderHeader;
+
+
 class MasterOrderHeaderType extends AbstractType
 {
     private CustomerRepository $customerRepository;
@@ -177,6 +183,7 @@ class MasterOrderHeaderType extends AbstractType
                 'prototype_data' => new MasterOrderProductDetail(),
                 'label' => false,
             ])
+            ->add('supplier', EntityHiddenType::class, ['class' => Supplier::class])
         ;
     }
 

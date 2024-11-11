@@ -2,9 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\Admin\User;
+
 use App\Repository\HasilCetakRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: HasilCetakRepository::class)]
 class HasilCetak
@@ -108,4 +112,5 @@ class HasilCetak
 
         return $this;
     }
+    
 }

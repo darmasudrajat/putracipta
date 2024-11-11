@@ -38,6 +38,7 @@
                                 ]|json_encode,
                             },
                         }) }}
+
                         <input type="text" id="{{ form.receiveHeader.vars.id }}-text" class="form-control readonly-form-input {% if not form.receiveHeader.vars.valid %}is-invalid{% endif %}" value="{{ purchaseInvoiceHeader.receiveHeader.codeNumber|default }}" readonly="readonly"
                                {% if purchaseInvoiceHeader.id == null %}data-bs-toggle="modal" data-bs-target="#receive-header-dialog"{% endif %}
                                data-controller="dom-element"
@@ -46,6 +47,7 @@
                                    {'action': 'setPropertyValue', 'descriptor': {'property': 'value', 'value': '$event.detail[0].receiveHeaderCodeNumber'}},
                                ]|json_encode }}" />
                         {{ form_errors(form.receiveHeader) }}
+                    
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Supplier</label>

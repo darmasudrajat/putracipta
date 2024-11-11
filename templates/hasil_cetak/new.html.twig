@@ -1,11 +1,31 @@
-{% extends 'base.html.twig' %}
 
-{% block title %}New HasilCetak{% endblock %}
 
-{% block body %}
-    <h1>Create new HasilCetak</h1>
+{% extends 'layout_page.html.twig' %}
 
-    {{ include('hasil_cetak/_form.html.twig') }}
+{% block title 'Hasil Produksi Cetak' %}
 
-    <a href="{{ path('app_hasil_cetak_index') }}">back to list</a>
-{% endblock %}
+{# {% block toolbar %}
+    {% if is_granted('ROLE_CUSTOMER_ADD') %}
+         <a class="btn btn-primary btn-sm" href="{{ path('app_hasil_cetak_index') }}">Manage</a>
+    {% endif %}
+{% endblock %} #}
+
+{% block content %}
+    {% for type, flashes in app.session.flashBag.all %}
+        {% for flash in flashes %}
+            <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+
+                <strong>{{ flash.title }}</strong> {{ flash.message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+        {% endfor %}
+
+    {% endfor %}
+
+         {{ include('hasil_cetak/_form.html.twig') }}
+
+ <a href="{{ path('app_hasil_cetak_index') }}">back to list</a>
+
+
+ {% endblock %}
